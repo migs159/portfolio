@@ -4,9 +4,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Admin Login</title>
+  <title>CRUD Login</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/css/iziToast.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -223,5 +224,30 @@
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/js/iziToast.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      <?php if (!empty($error)): ?>
+        iziToast.error({
+          title: 'Error',
+          message: <?php echo json_encode($error); ?>,
+          position: 'topRight',
+          timeout: 5000
+        });
+      <?php endif; ?>
+      <?php if (!empty($success)): ?>
+        iziToast.success({
+          title: 'Success',
+          message: <?php echo json_encode($success); ?>,
+          position: 'topRight',
+          timeout: 4000
+        });
+      <?php endif; ?>
+      <?php if (!empty($error) || !empty($success)): ?>
+        // hide inline bootstrap alerts when showing iziToast
+        document.querySelectorAll('.alert').forEach(function(el){ el.style.display = 'none'; });
+      <?php endif; ?>
+    });
+  </script>
 </body>
 </html>

@@ -32,7 +32,12 @@ class Projects extends CI_Controller {
         if ($this->input->method() === 'post') {
             $payload = $this->input->post();
             $payload['tags'] = isset($payload['tags']) ? array_map('trim', explode(',', $payload['tags'])) : [];
-            $this->Project_model->create($payload);
+            $id = $this->Project_model->create($payload);
+            if ($id) {
+                $this->session->set_flashdata('success', 'Project created successfully.');
+            } else {
+                $this->session->set_flashdata('error', 'Unable to create project.');
+            }
             redirect('projects');
         }
         $this->load->view('project_form');
@@ -45,7 +50,12 @@ class Projects extends CI_Controller {
         if ($this->input->method() === 'post') {
             $payload = $this->input->post();
             $payload['tags'] = isset($payload['tags']) ? array_map('trim', explode(',', $payload['tags'])) : [];
-            $this->Project_model->update($id, $payload);
+            $ok = $this->Project_model->update($id, $payload);
+            if ($ok) {
+                $this->session->set_flashdata('success', 'Project updated successfully.');
+            } else {
+                $this->session->set_flashdata('error', 'Unable to update project.');
+            }
             redirect('projects');
         }
         $data['project'] = $this->Project_model->get($id);
@@ -56,7 +66,12 @@ class Projects extends CI_Controller {
     {
         if (!$this->require_login()) return;
         if ($id) {
-            $this->Project_model->delete($id);
+            $ok = $this->Project_model->delete($id);
+            if ($ok) {
+                $this->session->set_flashdata('success', 'Project deleted.');
+            } else {
+                $this->session->set_flashdata('error', 'Project could not be deleted.');
+            }
         }
         redirect('projects');
     }

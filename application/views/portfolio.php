@@ -129,6 +129,7 @@
             padding:0 3rem;
             z-index:2;
             animation:fadeInLeft 0.8s ease-out;
+            order:1;
         }
         
         @keyframes fadeInLeft {
@@ -180,10 +181,15 @@
             display:flex;
             align-items:center;
             justify-content:center;
-            padding:0 3rem;
+            padding:8px; /* smaller padding so image fills more of the frame */
             animation:fadeInRight 0.8s ease-out;
+            order:2;
+            border-radius:14px;
+            background:linear-gradient(135deg,#ffffff 0%,var(--light-bg) 100%);
+            box-shadow:0 18px 40px rgba(99,102,241,0.06);
+            max-width:380px; /* constrain frame width */
         }
-        
+
         @keyframes fadeInRight {
             from {
                 opacity:0;
@@ -194,18 +200,19 @@
                 transform:translateX(0);
             }
         }
-        
+
         .hero-profile {
             position:relative;
             z-index:2;
-            max-width:380px;
+            max-width:340px; /* fit better inside the tightened frame */
             width:100%;
-            height:380px;
-            border-radius:20px;
-            object-fit:cover;
-            box-shadow:0 25px 60px rgba(99,102,241,0.25);
-            border:3px solid #fff;
-            background:#e2e8f0;
+            height:auto;
+            aspect-ratio:1/1;
+            border-radius:14px;
+            object-fit:cover; /* cover so image fills the available area */
+            box-shadow:0 24px 60px rgba(99,102,241,0.22);
+            border:3px solid rgba(255,255,255,0.9);
+            background:transparent;
             animation:float 3s ease-in-out infinite;
         }
         
@@ -334,9 +341,11 @@
         }
         
         .project-card .card-img-top {
-            height:220px;
-            object-fit:cover;
+            height:140px;
+            object-fit:contain;
             transition:transform 0.4s ease;
+            image-rendering:crisp-edges;
+            padding:10px 0;
         }
         
         .project-card:hover .card-img-top {
@@ -589,6 +598,22 @@
 <header class="hero">
     <div class="container">
         <div class="hero-inner">
+            <div class="hero-right">
+                <?php $initial = isset($site_title) ? strtoupper(substr(trim($site_title),0,1)) : 'M'; ?>
+                    <?php
+                        $initial = isset($site_title) ? strtoupper(substr(trim($site_title),0,1)) : 'M';
+                        // Prefer PNG (transparent) but check disk in case of name mismatch
+                        $profile_rel = 'assets/img/profile.png';
+                        $profile_file = defined('FCPATH') ? rtrim(FCPATH, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$profile_rel : NULL;
+                        $profile_exists = $profile_file ? file_exists($profile_file) : false;
+                        $profile_url = $profile_exists && function_exists('base_url') ? base_url($profile_rel) : (function_exists('base_url') ? base_url('assets/img/profile.png') : '/assets/img/profile.png');
+                    ?>
+                    <img src="<?php echo htmlspecialchars($profile_url); ?>" alt="Miguel Andrei Portrait" class="hero-profile" id="hero-profile-img" onerror="console.warn('Profile image failed to load:', this.src);this.style.display='none';document.getElementById('hero-initial').style.display='flex'">
+                    <div id="hero-initial" aria-hidden="true"><?php echo htmlspecialchars($initial); ?></div>
+                    <?php if (!$profile_exists): ?>
+                        <div style="color:#d9534f;margin-top:0.5rem;font-size:0.9rem;">Debug: profile image file not found on server at <strong><?php echo htmlspecialchars($profile_file ?: 'unknown'); ?></strong></div>
+                    <?php endif; ?>
+            </div>
             <div class="hero-left">
                 <div class="greeting">Welcome to my portfolio</div>
                 <h1 class="name">Miguel Andrei del Rosario</h1>
@@ -602,11 +627,6 @@
                         <i class="fas fa-envelope"></i>
                     </a>
                 </div>
-            </div>
-            <div class="hero-right">
-                <?php $initial = isset($site_title) ? strtoupper(substr(trim($site_title),0,1)) : 'M'; ?>
-                <img src="/assets/img/profile.jpg" alt="Miguel Andrei Portrait" class="hero-profile" onerror="this.style.display='none';document.getElementById('hero-initial').style.display='flex'">
-                <div id="hero-initial" aria-hidden="true"><?php echo htmlspecialchars($initial); ?></div>
             </div>
         </div>
     </div>

@@ -16,11 +16,13 @@ class Auth extends CI_Controller {
         // show registration success message if redirected after register
         $data['success'] = $this->session->flashdata('register_success');
         if ($this->input->method() === 'post') {
-            $u = $this->input->post('username');
-            $p = $this->input->post('password');
+            $u = trim($this->input->post('username'));
+            $p = trim($this->input->post('password'));
             if ($this->User_model->verify($u, $p)) {
                 $this->session->set_userdata('logged_in', true);
                 $this->session->set_userdata('username', $u);
+                // Set a flash message so the dashboard can show a toast after redirect
+                $this->session->set_flashdata('login_success', 'Signed in successfully.');
                 redirect('crud');
             }
             $data['error'] = 'Invalid credentials';

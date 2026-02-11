@@ -7,8 +7,8 @@ class Portfolio extends CI_Controller {
         $this->load->helper('url');
         $data['site_title'] = 'My Portfolio';
         $data['projects'] = [
-            ['title'=>'AConnect','description'=>'Short description of AConnect','image'=>'/assets/img/proj-a.jpg','url'=>'https://github.com/rgbsedano/AConnect','tags'=>['PHP','CI']],
-            ['title'=>'CRUD','description'=>'Short description of CRUD','image'=>'/assets/img/proj-b.jpg','url'=>site_url('auth/login'),'tags'=>['JS','UI']],
+            ['title'=>'AConnect','description'=>'Short description of AConnect','image'=>base_url('assets/img/proj-a.png'),'url'=>'https://github.com/rgbsedano/AConnect','tags'=>['PHP','CI']],
+            ['title'=>'CRUD','description'=>'Short description of CRUD','image'=>base_url('assets/img/proj-b.png'),'url'=>site_url('auth/login'),'tags'=>['JS','UI']],
         ];
         $this->load->view('portfolio', $data);
     }
