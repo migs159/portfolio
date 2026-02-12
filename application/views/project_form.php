@@ -42,9 +42,35 @@
           <label class="form-label">Link URL</label>
           <input name="url" class="form-control" value="<?php echo isset($project['url']) ? htmlspecialchars($project['url']) : ''; ?>">
         </div>
+        <!-- Tags removed per request -->
         <div class="mb-3">
-          <label class="form-label">Tags (comma separated)</label>
-          <input name="tags" class="form-control" value="<?php echo isset($project['tags']) && is_array($project['tags']) ? htmlspecialchars(implode(',', $project['tags'])) : (isset($project['tags']) ? htmlspecialchars($project['tags']) : ''); ?>">
+          <label class="form-label">Framework/Language</label>
+          <?php
+            $typeOptions = [
+              'php' => 'PHP',
+              'javascript' => 'JS',
+              'html_css' => 'HTML/CSS',
+              'nodejs' => 'Node',
+              'react' => 'React',
+              'vue' => 'Vue',
+              'angular' => 'Angular',
+              'uiux' => 'UI',
+              'cli' => 'CLI',
+              'devops' => 'DevOps',
+              'other' => 'Other'
+            ];
+            $selectedTypes = [];
+            if (isset($project['type'])) {
+              if (is_array($project['type'])) $selectedTypes = $project['type'];
+              else $selectedTypes = array_map('trim', explode(',', $project['type']));
+            }
+          ?>
+          <select name="type[]" class="form-control" multiple size="6">
+            <?php foreach ($typeOptions as $val => $label): $sel = in_array($val, $selectedTypes) ? 'selected' : ''; ?>
+              <option value="<?php echo htmlspecialchars($val); ?>" <?php echo $sel; ?>><?php echo htmlspecialchars($label); ?></option>
+            <?php endforeach; ?>
+          </select>
+          <div class="form-text">Choose one or more frameworks or languages (hold Ctrl / Cmd to multi-select).</div>
         </div>
         <div class="d-flex gap-2">
           <button class="btn btn-primary"><?php echo isset($project) ? 'Save' : 'Create'; ?></button>
@@ -53,6 +79,22 @@
       </form>
     </div>
   </div>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/css/iziToast.min.css">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/js/iziToast.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function(){
+      try{
+        var flash_success = <?php echo json_encode($this->session->flashdata('success')); ?>;
+        var flash_error = <?php echo json_encode($this->session->flashdata('error')); ?>;
+        if (flash_success) {
+          iziToast.success({ title: 'Success', message: flash_success, position: 'topRight', timeout: 3500 });
+        }
+        if (flash_error) {
+          iziToast.error({ title: 'Error', message: flash_error, position: 'topRight', timeout: 5000 });
+        }
+      }catch(e){}
+    });
+  </script>
 </body>
 </html>

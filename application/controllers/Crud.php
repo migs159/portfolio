@@ -23,6 +23,21 @@ class Crud extends CI_Controller {
         $data['login_success'] = $this->session->flashdata('login_success');
         $projects = $this->Project_model->get_all();
         $data['projects_count'] = is_array($projects) ? count($projects) : 0;
+        // Prepare profile initial for navbar (first letter of username)
+        $username = $this->session->userdata('username') ?: '';
+        $data['__profile_initial'] = $username ? strtoupper(mb_substr($username, 0, 1)) : 'U';
+        // Load current user row (so view can show email and other fields)
+        $data['user'] = [];
+        if ($username) {
+            $userRow = $this->User_model->get_by_username($username);
+            if ($userRow) {
+                $data['user'] = $userRow;
+                // also make email available in session for backward compatibility
+                if (! $this->session->userdata('email') && ! empty($userRow['email'])) {
+                    $this->session->set_userdata('email', $userRow['email']);
+                }
+            }
+        }
         $this->load->view('crud_dashboard', $data);
     }
 

@@ -17,9 +17,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="<?php echo htmlspecialchars(function_exists('base_url') ? base_url('assets/css/theme.css') : '/assets/css/theme.css'); ?>">
     <style>
         * { scroll-behavior: smooth; }
-        :root{--primary:#6366f1;--primary-dark:#4f46e5;--secondary:#ec4899;--accent:#111827;--muted:#6b7280;--light-bg:#f8fafc;--surface:#ffffff}
         
         html { scroll-behavior: smooth; }
         body {
@@ -100,6 +100,10 @@
             font-weight:600;
             transition:all 0.3s ease;
             box-shadow:0 4px 15px rgba(99,102,241,0.3);
+            text-decoration:none !important;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
         }
         
         .contact-btn:hover {
@@ -342,10 +346,21 @@
         
         .project-card .card-img-top {
             height:140px;
-            object-fit:contain;
+            max-height:140px;
+            width:100%;
+            display:block;
+            object-fit:cover;
             transition:transform 0.4s ease;
             image-rendering:crisp-edges;
-            padding:10px 0;
+        }
+
+        /* Calculator-specific image: show the full banner without cropping */
+        .project-card .card-img-top.calculator-img {
+            height:140px;
+            max-height:140px;
+            object-fit:contain;
+            background:#fff;
+            padding:6px 8px;
         }
         
         .project-card:hover .card-img-top {
@@ -500,8 +515,8 @@
 
         /* Footer */
         footer {
-            background:var(--accent);
-            color:#fff;
+            background:var(--footer-bg);
+            color:var(--footer-text);
             padding:3rem 0;
             text-align:center;
             margin-top:4rem;
@@ -586,7 +601,7 @@
                     $logged = $ci->session->userdata('logged_in');
                 ?>
                 <?php if ($logged): ?>
-                    <li class="nav-item"><a class="nav-link" href="<?php echo htmlspecialchars(function_exists('site_url') ? site_url('projects') : '/projects'); ?>">Admin</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?php echo htmlspecialchars(function_exists('site_url') ? site_url('crud') : '/crud'); ?>">Admin</a></li>
                     <li class="nav-item"><a class="nav-link" href="<?php echo htmlspecialchars(function_exists('site_url') ? site_url('auth/logout') : '/auth/logout'); ?>">Logout</a></li>
                 <?php endif; ?>
                 <li class="nav-item ms-3 d-none d-lg-block"><a class="contact-btn" href="#contact">Get in Touch</a></li>
@@ -642,26 +657,128 @@
             </div>
 
             <div class="row g-4">
+                <!-- Static featured project for AConnect -->
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card project-card h-100">
+                        <?php
+                            $calc_rel = 'assets/img/calculator.png';
+                            $calc_file = defined('FCPATH') ? rtrim(FCPATH, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $calc_rel : null;
+                            $calc_exists = $calc_file ? file_exists($calc_file) : false;
+                            if ($calc_exists && function_exists('base_url')) {
+                                $calc_img_url = base_url($calc_rel);
+                            } elseif (function_exists('base_url')) {
+                                $calc_img_url = base_url('assets/img/aconnect.png');
+                            } else {
+                                $calc_img_url = 'https://via.placeholder.com/800x450?text=Calculator';
+                            }
+                        ?>
+                        <a href="http://localhost/calculator/index.php/calculator" target="_blank" rel="noopener" class="stretched-link" style="z-index:10">
+                            <img src="<?php echo htmlspecialchars($calc_img_url); ?>" class="card-img-top project-img calculator-img" alt="Calculator">
+                        </a>
+                        <div class="card-body">
+                            <h5 class="card-title">Calculator</h5>
+                            <p class="card-text">Calculator — CSS-only demo / featured project.</p>
+                            <div class="project-tags">
+                                <span class="tag">CSS</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <?php if (!empty($projects) && is_array($projects)): ?>
                     <?php foreach ($projects as $p): 
                         $title = isset($p['title']) ? $p['title'] : 'Untitled';
                         $desc  = isset($p['description']) ? $p['description'] : '';
                         $img   = isset($p['image']) && $p['image'] ? $p['image'] : 'https://via.placeholder.com/800x450?text=Project';
                         $url   = isset($p['url']) ? $p['url'] : '#';
+                        // Compute image basename and match AConnect by title, image name, or GitHub-hosted repo link
+                        $img_basename_check = '';
+                        $tmp = basename(parse_url($img, PHP_URL_PATH) ?: $img);
+                        if ($tmp) $img_basename_check = strtolower($tmp);
+                        $lower_title = isset($title) ? strtolower($title) : '';
+                        $lower_url = isset($p['url']) ? strtolower($p['url']) : '';
+                        if (strpos($lower_title, 'aconnect') !== false || strpos($img_basename_check, 'aconnect') !== false || (strpos($lower_url, 'github.com') !== false && strpos($lower_title, 'aconnect') !== false)) {
+                            $url = 'http://localhost/Aconnect_ci3/login';
+                            $p['url'] = $url;
+                        }
                         $tags  = isset($p['tags']) && is_array($p['tags']) ? $p['tags'] : [];
                     ?>
                     <div class="col-12 col-md-6 col-lg-4">
                         <div class="card project-card h-100">
-                            <a href="<?php echo htmlspecialchars($url); ?>" target="_blank" rel="noopener" class="stretched-link" style="z-index:10">
-                                <img src="<?php echo htmlspecialchars($img); ?>" class="card-img-top" alt="<?php echo htmlspecialchars($title); ?>">
+                                <a href="<?php echo htmlspecialchars($url); ?>" target="_blank" rel="noopener" class="stretched-link" style="z-index:10">
+                                <?php $img_basename = basename(parse_url($img, PHP_URL_PATH) ?: $img); ?>
+                                <img src="<?php echo htmlspecialchars($img); ?>" class="card-img-top project-img" alt="<?php echo htmlspecialchars($title); ?>" data-basename="<?php echo htmlspecialchars($img_basename); ?>">
                             </a>
                             <div class="card-body">
                                 <h5 class="card-title"><?php echo htmlspecialchars($title); ?></h5>
                                 <p class="card-text"><?php echo htmlspecialchars($desc); ?></p>
+                                <?php
+                                    // Normalize types (may be array, CSV string, or JSON-encoded array)
+                                    $types = [];
+                                    // Accept multiple possible fields that might contain type info
+                                    $typeSource = null;
+                                    if (isset($p['type'])) $typeSource = $p['type'];
+                                    elseif (isset($p['types'])) $typeSource = $p['types'];
+
+                                    if ($typeSource !== null) {
+                                        if (is_array($typeSource)) {
+                                            $types = $typeSource;
+                                        } else {
+                                            $raw = trim((string) $typeSource);
+                                            // Try JSON decode first (handles CRUD that saved JSON)
+                                            $decoded = null;
+                                            if ($raw !== '') {
+                                                $json = json_decode($raw, true);
+                                                if (json_last_error() === JSON_ERROR_NONE && is_array($json)) {
+                                                    $decoded = $json;
+                                                }
+                                            }
+                                            if (is_array($decoded)) {
+                                                $types = $decoded;
+                                            } elseif ($raw !== '') {
+                                                // Fallback to CSV parsing
+                                                $types = array_filter(array_map('trim', explode(',', $raw)));
+                                            }
+                                        }
+                                    }
+
+                                    $typeLabels = [
+                                        'php' => 'PHP',
+                                        'javascript' => 'JS',
+                                        'html_css' => 'HTML/CSS',
+                                        'nodejs' => 'Node',
+                                        'react' => 'React',
+                                        'vue' => 'Vue',
+                                        'angular' => 'Angular',
+                                        'uiux' => 'UI',
+                                        'cli' => 'CLI',
+                                        'devops' => 'DevOps',
+                                        'other' => 'Other'
+                                    ];
+                                ?>
                                 <div class="project-tags">
-                                    <?php foreach ($tags as $t): ?>
-                                        <span class="tag"><?php echo htmlspecialchars($t); ?></span>
-                                    <?php endforeach; ?>
+                                    <?php
+                                        // Render types first, mapping keys to readable labels
+                                        $printed = [];
+                                        foreach ($types as $tt) {
+                                            $key = trim((string) $tt);
+                                            if ($key === '') continue;
+                                            $label = isset($typeLabels[$key]) ? $typeLabels[$key] : $key;
+                                            $printed[strtolower($label)] = true;
+                                            echo '<span class="tag">' . htmlspecialchars($label) . '</span>';
+                                        }
+
+                                        // Render tags but avoid duplicates of types
+                                        foreach ($tags as $t) {
+                                            $tag = trim((string) $t);
+                                            if ($tag === '') continue;
+                                            if (isset($printed[strtolower($tag)])) continue;
+                                            // Also skip if tag matches one of the raw type keys (case-insensitive)
+                                            $match = false;
+                                            foreach ($types as $tt) { if (strcasecmp(trim((string)$tt), $tag) === 0) { $match = true; break; } }
+                                            if ($match) continue;
+                                            echo '<span class="tag">' . htmlspecialchars($tag) . '</span>';
+                                        }
+                                    ?>
                                 </div>
                             </div>
                         </div>
@@ -795,6 +912,57 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    var imgs = document.querySelectorAll('.project-img');
+    imgs.forEach(function(img){
+        img.addEventListener('error', function handler(){
+            var basename = img.dataset.basename || '';
+            var assetBase = '<?php echo base_url('assets/img/'); ?>';
+            var tries = [];
+
+            if (basename) {
+                var m = basename.match(/^(.*)\.(\w+)$/);
+                if (m) {
+                    var name = m[1];
+                    var ext = m[2];
+                    tries.push(assetBase + name + '@2x.' + ext);
+                    tries.push(assetBase + name + '-2x.' + ext);
+                    tries.push(assetBase + name + '.' + ext);
+                    tries.push(assetBase + name + '.webp');
+                } else {
+                    tries.push(assetBase + basename);
+                }
+            }
+            tries.push(assetBase + 'project-fallback.png');
+            tries.push('https://via.placeholder.com/1200x800?text=No+Image');
+
+            // set srcset when possible for high-DPI displays
+            try {
+                if (basename) {
+                    var m2 = basename.match(/^(.*)\.(\w+)$/);
+                    if (m2) {
+                        var n = m2[1], e = m2[2];
+                        img.setAttribute('srcset', assetBase + n + '@2x.' + e + ' 2x, ' + assetBase + basename + ' 1x');
+                        img.setAttribute('decoding', 'async');
+                        img.setAttribute('loading', 'lazy');
+                    }
+                }
+            } catch (err) {}
+
+            var i = 0;
+            img.removeEventListener('error', handler);
+            function next(){
+                if(i >= tries.length) return;
+                img.onerror = null;
+                img.src = tries[i++];
+                img.onerror = next;
+            }
+            next();
+        });
+    });
+});
+</script>
 <script>
 document.addEventListener('DOMContentLoaded', function(){
     // Navbar scroll effect

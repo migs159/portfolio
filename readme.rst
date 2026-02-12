@@ -69,3 +69,14 @@ Acknowledgement
 
 The CodeIgniter team would like to thank EllisLab, all the
 contributors to the CodeIgniter project and you, the CodeIgniter user.
+
+Local project configuration
+---------------------------
+
+This project adds a small OpenAI configuration file at
+`application/config/openai.php` to centralize the default model used by
+local clients. The current default (for testing) is `gpt-5-mini`.
+
+If you want to change the model used by all clients, update the
+`$config['openai_model']` value in that file or override it per-request in
+your API client code.

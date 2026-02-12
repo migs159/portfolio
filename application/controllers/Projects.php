@@ -22,6 +22,17 @@ class Projects extends CI_Controller {
     public function index()
     {
         if (!$this->require_login()) return;
+        // If not requested as embedded, redirect back to the CRUD dashboard
+        $embedded = $this->input->get('embedded');
+        if (empty($embedded)) {
+            redirect('crud');
+            return;
+        }
+
+        $mode = $this->input->get('mode') ?: 'read';
+        $allowed = ['read','update','delete'];
+        if (!in_array($mode, $allowed)) $mode = 'read';
+        $data['mode'] = $mode;
         $data['projects'] = $this->Project_model->get_all();
         $this->load->view('projects_index', $data);
     }
@@ -38,7 +49,23 @@ class Projects extends CI_Controller {
             } else {
                 $this->session->set_flashdata('error', 'Unable to create project.');
             }
-            redirect('projects');
+            // Allow quick-create form to request returning to the CRUD dashboard
+            $return_to = $this->input->post('return_to');
+            // If this was an AJAX request, return JSON instead of redirecting
+            if ($this->input->is_ajax_request()) {
+                header('Content-Type: application/json');
+                if ($id) echo json_encode(['success' => true, 'message' => 'Project created successfully.', 'id' => $id]);
+                else echo json_encode(['success' => false, 'message' => 'Unable to create project.']);
+                return;
+            }
+
+            if (!empty($return_to)) {
+                redirect($return_to);
+                return;
+            }
+            $embedded = $this->input->get('embedded') || $this->input->post('embedded');
+            $return = 'projects' . ($embedded ? '?embedded=1' : '');
+            redirect($return);
         }
         $this->load->view('project_form');
     }
@@ -56,7 +83,17 @@ class Projects extends CI_Controller {
             } else {
                 $this->session->set_flashdata('error', 'Unable to update project.');
             }
-            redirect('projects');
+            // If this was an AJAX request, return JSON so the frontend can update without reload
+            if ($this->input->is_ajax_request()) {
+                header('Content-Type: application/json');
+                $project = $this->Project_model->get($id);
+                if ($ok) echo json_encode(['success' => true, 'message' => 'Project updated successfully.', 'project' => $project]);
+                else echo json_encode(['success' => false, 'message' => 'Unable to update project.']);
+                return;
+            }
+
+            $return = 'projects' . ($this->input->get('embedded') ? '?embedded=1' : '');
+            redirect($return);
         }
         $data['project'] = $this->Project_model->get($id);
         $this->load->view('project_form', $data);
@@ -73,6 +110,15 @@ class Projects extends CI_Controller {
                 $this->session->set_flashdata('error', 'Project could not be deleted.');
             }
         }
-        redirect('projects');
+        // If this is an AJAX request, respond with JSON so the frontend can update without reload
+        if ($this->input->is_ajax_request()) {
+            header('Content-Type: application/json');
+            if (isset($ok) && $ok) echo json_encode(['success' => true, 'message' => 'Project deleted.', 'id' => $id]);
+            else echo json_encode(['success' => false, 'message' => 'Project could not be deleted.']);
+            return;
+        }
+
+        $return = 'projects' . ($this->input->get('embedded') ? '?embedded=1' : '');
+        redirect($return);
     }
 }

@@ -13,6 +13,11 @@ class Auth extends CI_Controller {
     public function login()
     {
         $data = [];
+        // If already logged in, redirect to the CRUD dashboard.
+        if ($this->session->userdata('logged_in')) {
+            redirect('crud');
+            return;
+        }
         // show registration success message if redirected after register
         $data['success'] = $this->session->flashdata('register_success');
         if ($this->input->method() === 'post') {

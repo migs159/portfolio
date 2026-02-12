@@ -1,0 +1,29 @@
+:root{
+  --primary:#2563eb;
+  --primary-dark:#1e40af;
+  --secondary:#06b6d4;
+  --accent:#111827;
+  --muted:#6b7280;
+  --light-bg:#f8fafc;
+  --surface:#ffffff;
+  --glass: rgba(37,99,235,0.08);
+  --card-shadow: 0 10px 30px rgba(2,6,23,0.06);
+  --radius: 12px;
+  --footer-bg: #0b1220; /* dark navy from provided image */
+  --footer-text: #ffffff;
+}
+
+/* small helpers to keep color usage consistent */
+.text-primary { color: var(--primary) !important; }
+.bg-primary { background: var(--primary) !important; }
+.bg-surface { background: var(--surface) !important; }
+
+/* Make gradient utilities consistent */
+.gradient-primary { background: linear-gradient(135deg, var(--primary), var(--secondary)); }
+.gradient-primary-dark { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); }
+
+/* Footer helper */
+.footer { background: var(--footer-bg); color: var(--footer-text); }
+
+/* Force footer color to avoid overrides from other styles */
+footer { background: var(--footer-bg) !important; color: var(--footer-text) !important; }
