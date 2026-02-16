@@ -6,26 +6,19 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title><?php echo isset($project) ? 'Edit' : 'Add'; ?> Project</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="<?php echo htmlspecialchars(function_exists('base_url') ? base_url('assets/css/project-form-custom.css') : '/assets/css/project-form-custom.css'); ?>">
 </head>
 <body>
-  <style>
-    :root{--primary:#6366f1;--muted:#6b7280;--surface:#fff}
-    body{font-family:Inter,system-ui,Arial;background:linear-gradient(135deg,#fff,#f8fafc);margin:0}
-    .wrap{max-width:760px;margin:2.5rem auto;padding:1rem}
-    .card{background:var(--surface);padding:1.25rem;border-radius:12px;box-shadow:0 8px 30px rgba(2,6,23,.06)}
-    .form-label{font-weight:600}
-  </style>
-
   <div class="wrap">
     <div class="card">
-      <a href="<?php echo site_url('projects'); ?>" class="btn btn-link">&larr; Back</a>
       <h3><?php echo isset($project) ? 'Edit' : 'Add'; ?> Project</h3>
 
       <?php if (!empty($this->session->flashdata('error'))): ?>
         <div class="alert alert-danger"><?php echo htmlspecialchars($this->session->flashdata('error')); ?></div>
       <?php endif; ?>
 
-      <form method="post">
+      <form method="post" enctype="multipart/form-data">
+        <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
         <div class="mb-3">
           <label class="form-label">Title</label>
           <input name="title" class="form-control" value="<?php echo isset($project['title']) ? htmlspecialchars($project['title']) : ''; ?>" required>
@@ -35,8 +28,17 @@
           <textarea name="description" class="form-control" rows="4"><?php echo isset($project['description']) ? htmlspecialchars($project['description']) : ''; ?></textarea>
         </div>
         <div class="mb-3">
-          <label class="form-label">Image URL</label>
-          <input name="image" class="form-control" value="<?php echo isset($project['image']) ? htmlspecialchars($project['image']) : ''; ?>">
+          <label class="form-label">Project Image</label>
+          <input type="file" name="image" class="form-control image-input" accept="image/png,image/jpeg,.png,.jpg,.jpeg">
+          <div class="form-text">Upload a PNG or JPG image (max 5MB). Leave blank to keep current image.</div>
+          <div class="image-preview<?php echo (!isset($project['image']) || empty($project['image'])) ? ' d-none' : ''; ?>">
+            <?php if (isset($project['image']) && !empty($project['image'])): ?>
+              <small class="text-muted">Current image:</small>
+            <?php else: ?>
+              <small class="text-muted">Preview:</small>
+            <?php endif; ?>
+            <img src="<?php echo (isset($project['image']) && !empty($project['image'])) ? base_url($project['image']) : ''; ?>" alt="Preview">
+          </div>
         </div>
         <div class="mb-3">
           <label class="form-label">Link URL</label>
@@ -72,6 +74,11 @@
           </select>
           <div class="form-text">Choose one or more frameworks or languages (hold Ctrl / Cmd to multi-select).</div>
         </div>
+        <div class="featured-checkbox-wrapper">
+          <input type="hidden" name="featured" value="0">
+          <input type="checkbox" id="featuredCheckbox" name="featured" value="1" class="form-check-input" <?php echo (isset($project['featured']) && intval($project['featured'])) ? 'checked' : ''; ?>>
+          <label for="featuredCheckbox">Mark as featured</label>
+        </div>
         <div class="d-flex gap-2">
           <button class="btn btn-primary"><?php echo isset($project) ? 'Save' : 'Create'; ?></button>
           <a href="<?php echo site_url('projects'); ?>" class="btn btn-outline-secondary">Cancel</a>
@@ -79,21 +86,53 @@
       </form>
     </div>
   </div>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/css/iziToast.min.css">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/js/iziToast.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3500,
+      timerProgressBar: true,
+      customClass: { container: 'swal2-top-toast' }
+    });
     document.addEventListener('DOMContentLoaded', function(){
       try{
         var flash_success = <?php echo json_encode($this->session->flashdata('success')); ?>;
         var flash_error = <?php echo json_encode($this->session->flashdata('error')); ?>;
         if (flash_success) {
-          iziToast.success({ title: 'Success', message: flash_success, position: 'topRight', timeout: 3500 });
+          Toast.fire({ icon: 'success', title: flash_success, timer: 3500 });
         }
         if (flash_error) {
-          iziToast.error({ title: 'Error', message: flash_error, position: 'topRight', timeout: 5000 });
+          Toast.fire({ icon: 'error', title: flash_error, timer: 5000 });
         }
       }catch(e){}
+
+      // Auto-preview for image input
+      var imageInput = document.querySelector('.image-input');
+      if (imageInput) {
+        imageInput.addEventListener('change', function(e) {
+          var file = this.files[0];
+          if (file) {
+            var reader = new FileReader();
+            reader.onload = function(event) {
+              var preview = imageInput.closest('.mb-3').querySelector('.image-preview');
+              if (preview) {
+                var img = preview.querySelector('img');
+                if (img) {
+                  img.src = event.target.result;
+                  preview.style.display = 'block';
+                  var label = preview.querySelector('small');
+                  if (label) label.textContent = 'Selected image:';
+                }
+              }
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      }
     });
   </script>
 </body>

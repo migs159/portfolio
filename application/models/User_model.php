@@ -41,13 +41,23 @@ class User_model extends CI_Model {
     public function create_user(array $data)
     {
         $now = date('Y-m-d H:i:s');
+        $fullname = '';
+        if (!empty($data['fullname'])) {
+            $fullname = $data['fullname'];
+        } else {
+            $first = isset($data['first_name']) ? trim($data['first_name']) : '';
+            $last  = isset($data['last_name']) ? trim($data['last_name']) : '';
+            $fullname = trim($first . ' ' . $last);
+        }
+
         $insert = [
-            'username' => $data['username'],
+            'username' => isset($data['username']) ? $data['username'] : null,
             'password' => password_hash($data['password'], PASSWORD_BCRYPT),
-            'email'    => $data['email'],
-            'first_name' => $data['first_name'],
-            'last_name'  => $data['last_name'],
-            'created_date' => $now,
+            'email'    => isset($data['email']) ? $data['email'] : null,
+            'fullname' => $fullname,
+            'role'     => isset($data['role']) ? $data['role'] : 'user',
+            'created_at' => $now,
+            'updated_at' => null,
         ];
 
         if ($this->db->insert('users', $insert)) {

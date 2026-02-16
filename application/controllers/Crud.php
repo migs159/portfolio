@@ -14,6 +14,14 @@ class Crud extends CI_Controller {
         if (!$this->session->userdata('logged_in')) {
             redirect('auth/login');
         }
+
+        // Source - https://stackoverflow.com/q/77147541
+// Posted by Shubham Nayak
+// Retrieved 2026-02-16, License - CC BY-SA 4.0
+
+$this->output->set_header('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inine';");
+
+    
     }
 
     public function index()
@@ -23,6 +31,8 @@ class Crud extends CI_Controller {
         $data['login_success'] = $this->session->flashdata('login_success');
         $projects = $this->Project_model->get_all();
         $data['projects_count'] = is_array($projects) ? count($projects) : 0;
+        // Pass projects to the view (used as $events in the view for backward compatibility)
+        $data['events'] = $projects;
         // Prepare profile initial for navbar (first letter of username)
         $username = $this->session->userdata('username') ?: '';
         $data['__profile_initial'] = $username ? strtoupper(mb_substr($username, 0, 1)) : 'U';

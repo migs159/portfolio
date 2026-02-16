@@ -1,0 +1,73 @@
+/* Project Form Styling */
+:root {
+    --primary: #6366f1;
+    --muted: #6b7280;
+    --surface: #fff;
+}
+
+body {
+    font-family: Inter, system-ui, Arial;
+    background: linear-gradient(135deg, #fff, #f8fafc);
+    margin: 0;
+}
+
+.wrap {
+    max-width: 760px;
+    margin: 2.5rem auto;
+    padding: 1rem;
+}
+
+.card {
+    background: var(--surface);
+    padding: 1.25rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(2, 6, 23, 0.06);
+}
+
+.form-label {
+    font-weight: 600;
+}
+
+/* Image preview styling */
+.image-preview {
+    margin-top: 0.75rem;
+}
+
+.image-preview small {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.image-preview img {
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+/* Featured checkbox styling */
+.featured-checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.featured-checkbox-wrapper .form-check-input {
+    width: 1.2rem;
+    height: 1.2rem;
+    cursor: pointer;
+}
+
+.featured-checkbox-wrapper label {
+    margin: 0;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+/* Ensure SweetAlert2 toasts appear above page chrome */
+.swal2-container.swal2-top-toast {
+    z-index: 3200 !important;
+}

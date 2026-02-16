@@ -24,8 +24,15 @@ class Auth extends CI_Controller {
             $u = trim($this->input->post('username'));
             $p = trim($this->input->post('password'));
             if ($this->User_model->verify($u, $p)) {
+                $userRow = $this->User_model->get_by_username($u);
                 $this->session->set_userdata('logged_in', true);
                 $this->session->set_userdata('username', $u);
+                if ($userRow && isset($userRow['id'])) {
+                    $this->session->set_userdata('user_id', $userRow['id']);
+                }
+                if ($userRow && !empty($userRow['email'])) {
+                    $this->session->set_userdata('email', $userRow['email']);
+                }
                 // Set a flash message so the dashboard can show a toast after redirect
                 $this->session->set_flashdata('login_success', 'Signed in successfully.');
                 redirect('crud');
@@ -46,6 +53,12 @@ class Auth extends CI_Controller {
             $password = $this->input->post('password');
             $confirm  = $this->input->post('confirm');
 
+            // Always pass form data back to the view (except passwords for security)
+            $data['first_name'] = $first;
+            $data['last_name'] = $last;
+            $data['email'] = $email;
+            $data['username'] = $username;
+
             if ($first === '' || $last === '' || $email === '' || $username === '' || $password === '' || $confirm === '') {
                 $data['error'] = 'Please fill in all fields.';
             } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -58,6 +71,8 @@ class Auth extends CI_Controller {
                     $data['error'] = 'Username is already taken.';
                 } elseif ($this->User_model->get_by_email($email)) {
                     $data['error'] = 'Email is already registered.';
+                    // Clear the email field if it's already registered
+                    $data['email'] = '';
                 } else {
                     $insert = [
                         'first_name' => $first,

@@ -4,12 +4,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="csrf-token" content="<?php echo $this->security->get_csrf_hash(); ?>">
   <title><?php echo isset($page_title) ? htmlspecialchars($page_title) : 'CRUD Dashboard'; ?></title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/css/iziToast.min.css">
+  <!-- using SweetAlert2 for toasts instead of iziToast -->
   <link rel="stylesheet" href="<?php echo htmlspecialchars(function_exists('base_url') ? base_url('assets/css/theme.css') : '/assets/css/theme.css'); ?>">
+  <link rel="stylesheet" href="<?php echo htmlspecialchars(function_exists('base_url') ? base_url('assets/css/crud-dashboard-custom.css') : '/assets/css/crud-dashboard-custom.css'); ?>">
   <style>
     * { scroll-behavior: smooth; }
     
@@ -27,11 +29,13 @@
       content: '';
       position: fixed;
       inset: 0;
-      background: radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.1), transparent 50%),
-                  radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.08), transparent 50%);
+      background: radial-gradient(circle at 20% 50%, rgba(0, 61, 153, 0.08), transparent 50%),
+                  radial-gradient(circle at 80% 80%, rgba(0, 61, 153, 0.05), transparent 50%);
       pointer-events: none;
       z-index: -1;
     }
+    /* Ensure SweetAlert2 toasts render above the navbar/header */
+    .swal2-container.swal2-top-toast { z-index: 3200 !important; }
     .navbar {
       background:rgba(255,255,255,0.95) !important;
       backdrop-filter:blur(10px);
@@ -47,10 +51,7 @@
     .navbar-brand {
       font-weight:700;
       font-size:1.3rem;
-      background:linear-gradient(135deg,var(--primary),var(--secondary));
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-      background-clip:text;
+      color: #003d99;
     }
 
     .navbar .nav-link {
@@ -137,7 +138,7 @@
       left: auto !important;
       transform: translateX(140px) !important; /* nudged slightly right from 135px */
       transform-origin: top right !important;
-      top: calc(100% + 8px) !important;
+      top: calc(100% + 8px) !important; 
       z-index: 1400 !important;
     }
 
@@ -159,27 +160,12 @@
 
     /* Space between navbar and page header */
     .page-header-top {
-      padding-top: 2.5rem;
+      padding-top: 1rem;
       padding-bottom: 1.5rem;
     }
 
     /* main content area should grow so footer stays at page bottom */
     .main-content { flex: 1 1 auto; }
-
-    /* Footer styles to keep it pinned to bottom and visually light */
-    footer {
-      margin-top: auto;
-      padding: 1rem 0;
-      color: #6b7280;
-      font-size: 0.95rem;
-      background: transparent;
-    }
-
-    footer .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 1.5rem;
-    }
 
     /* Header */
     .page-header {
@@ -241,9 +227,9 @@
       background: linear-gradient(135deg, var(--surface) 0%, var(--light-bg) 100%);
       border-radius: var(--radius);
       padding: 1.5rem;
-      box-shadow: 0 10px 30px rgba(37,99,235,0.08);
+      box-shadow: 0 10px 30px rgba(0,61,153,0.08);
       transition: transform 0.22s cubic-bezier(.2,.9,.3,1), box-shadow 0.22s ease, border-color 0.22s ease;
-      border: 1px solid rgba(37,99,235,0.12);
+      border: 1px solid rgba(0,61,153,0.12);
       display: flex;
       flex-direction: column;
       gap: 1rem;
@@ -254,8 +240,8 @@
 
     .dashboard-card:hover {
       transform: translateY(-8px) scale(1.01);
-      box-shadow: 0 20px 50px rgba(37,99,235,0.15);
-      border-color: rgba(37,99,235,0.2);
+      box-shadow: 0 20px 50px rgba(0,61,153,0.15);
+      border-color: rgba(0,61,153,0.2);
     }
 
     .card-icon {
@@ -264,7 +250,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, rgba(37, 99, 235, 0.12), rgba(6, 182, 212, 0.08));
+      background: linear-gradient(135deg, rgba(0, 61, 153, 0.12), rgba(6, 182, 212, 0.08));
       border-radius: 10px;
       font-size: 1.3rem;
       color: var(--primary);
@@ -286,11 +272,11 @@
     }
 
     /* Button system for dashboard actions */
-    .btn-pill{border-radius:999px;padding:.55rem 1rem;font-weight:700;display:inline-flex;align-items:center;gap:.6rem;transition:transform .12s ease,box-shadow .12s ease,opacity .12s ease}
-    .btn-primary-custom{background:linear-gradient(135deg, var(--primary), var(--primary-dark));color:#fff;border:0;box-shadow:0 8px 25px rgba(37, 99, 235, 0.25)}
-    .btn-primary-custom:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(30,64,175,0.16)}
-    .btn-ghost{background:transparent;border:1px solid rgba(30,64,175,0.12);color:var(--primary)}
-    .btn-ghost:hover{background:rgba(30,64,175,0.04)}
+    .btn-pill{border-radius:999px;padding:.55rem 1rem;font-weight:700;font-family:'Poppins',sans-serif;display:inline-flex;align-items:center;gap:.6rem;transition:transform .12s ease,box-shadow .12s ease,opacity .12s ease;cursor:pointer}
+    .btn-primary-custom{background:linear-gradient(135deg, var(--primary), var(--primary-dark)) !important;color:#fff !important;border:0 !important;box-shadow:0 8px 25px rgba(0, 61, 153, 0.25);font-family:'Poppins',sans-serif !important;font-weight:700 !important;text-decoration:none !important}
+    .btn-primary-custom:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(59,130,246,0.16);background:linear-gradient(135deg, var(--primary-dark), var(--primary)) !important;color:#fff !important}
+    .btn-ghost{background:transparent;border:1px solid rgba(59,130,246,0.12);color:var(--primary)}
+    .btn-ghost:hover{background:rgba(59,130,246,0.04)}
     .btn-danger-custom{background:linear-gradient(90deg,#ef4444,#dc2626);color:#fff;border:0}
     .btn-danger-custom:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(239,68,68,0.14)}
     .card-action{margin-top:auto;display:flex;gap:.5rem}
@@ -345,7 +331,7 @@
       border-radius: 16px;
       padding: 2.5rem;
       box-shadow: var(--card-shadow);
-      border: 1px solid rgba(37,99,235,0.04);
+      border: 1px solid rgba(0,61,153,0.04);
       margin-bottom: 2.5rem;
     }
 
@@ -371,17 +357,17 @@
 
     .info-item {
       padding: 1.5rem;
-      background: linear-gradient(135deg, var(--surface) 0%, rgba(37,99,235,0.02) 100%);
+      background: linear-gradient(135deg, var(--surface) 0%, rgba(0,61,153,0.02) 100%);
       border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(37,99,235,0.08);
-      border: 1px solid rgba(37,99,235,0.12);
+      box-shadow: 0 8px 24px rgba(0,61,153,0.08);
+      border: 1px solid rgba(0,61,153,0.12);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     .info-item:hover {
       transform: translateY(-4px);
-      box-shadow: 0 12px 32px rgba(37,99,235,0.12);
-      border-color: rgba(37,99,235,0.18);
+      box-shadow: 0 12px 32px rgba(0,61,153,0.12);
+      border-color: rgba(0,61,153,0.18);
     }
 
     .info-label {
@@ -452,12 +438,12 @@
       background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       border: 0;
       color: #fff;
-      box-shadow: 0 8px 25px rgba(37, 99, 235, 0.2);
+      box-shadow: 0 8px 25px rgba(0, 61, 153, 0.2);
     }
 
     .quick-actions .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 12px 35px rgba(37, 99, 235, 0.3);
+      box-shadow: 0 12px 35px rgba(0, 61, 153, 0.3);
       background: linear-gradient(135deg, var(--primary-dark), var(--primary));
       color: #fff;
     }
@@ -481,9 +467,9 @@
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-light sticky-top">
     <div class="container">
-         <a class="navbar-brand" href="<?php echo site_url('portfolio'); ?>">
+         <span class="navbar-brand" style="cursor:default;">
            <i class="fas fa-cube me-2"></i><span class="brand-text">CRUD </span>
-         </a>
+         </span>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -513,65 +499,95 @@
       </div>
     </div>
   </nav>
-  <!-- Top Header -->
+  <!-- Top Header (redesigned as Event Management) -->
   <div class="page-header-top" style="background:transparent;border-bottom:1px solid rgba(15,23,42,0.02);">
     <div class="container-main" style="padding-top:0;padding-bottom:0;">
       <div class="page-header">
         <div>
-          <h1><i class="fas fa-cogs me-2"></i>CRUD Management</h1>
-          <p class="subtitle">Welcome, <?php echo isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username']) : 'User'; ?> — manage your data</p>
+          <h1><i class="fas fa-cube me-2"></i>Project Management</h1>
         </div>
-        
+        <div class="header-actions">
+          <button class="btn-pill btn-primary-custom" data-bs-toggle="modal" data-bs-target="#quickCreateModal"><i class="fas fa-plus me-2"></i>Create Project</button>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Main Content -->
   <div class="container-main main-content">
-    <!-- Dashboard Overview -->
-    <div class="dashboard-grid">
-        <div class="dashboard-card">
-        <div class="card-icon">
-          <i class="fas fa-plus-circle"></i>
+    <!-- Search and table section modeled after the provided template -->
+    <div class="table-section">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:1.25rem;flex-wrap:wrap;">
+        <div style="flex:0 0 420px;min-width:180px;">
+          <input type="search" id="projectSearch" class="form-control search-input" placeholder="Search projects by name..." style="width:100%;">
         </div>
-        <div class="card-title">Create</div>
-        <div class="card-text">Add new records to the system with detailed information.</div>
-        <div class="card-action"><button type="button" class="btn-pill btn-primary-custom" data-bs-toggle="modal" data-bs-target="#quickCreateModal"><i class="fas fa-plus-circle"></i> Add New</button></div>
+        
       </div>
 
-        <div class="dashboard-card">
-        <div class="card-icon">
-          <i class="fas fa-list"></i>
+      <div style="margin-top:1rem;">
+        <div style="overflow:auto">
+          <table class="table table-borderless" style="min-width:920px;">
+            <thead>
+              <tr>
+                <th style="width:32%;">Project Titles</th>
+                <th style="width:15%;">Image</th>
+                <th style="width:28%;">URL</th>
+                <th style="width:12%;">Created</th>
+                <th style="width:13%;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php if (!empty($events) && is_array($events)): ?>
+                <?php foreach ($events as $e): ?>
+                  <tr style="border-top:1px solid rgba(15,23,42,0.04);">
+                    <td>
+                      <div style="font-weight:700;color:var(--accent);">
+                        <?php echo htmlspecialchars(isset($e['title']) ? $e['title'] : 'Untitled Project'); ?>
+                      </div>
+                      <div style="color:var(--muted);font-size:0.9rem;margin-top:6px;">
+                        <?php echo htmlspecialchars(isset($e['description']) ? mb_substr($e['description'], 0, 60) : ''); ?>
+                      </div>
+                    </td>
+                    <td>
+                      <?php 
+                        $img = isset($e['image']) ? $e['image'] : '';
+                        $imgName = $img ? basename($img) : '-';
+                      ?>
+                      <span style="color:var(--muted);font-size:0.9rem;"><?php echo htmlspecialchars($imgName); ?></span>
+                    </td>
+                    <td style="color:var(--muted);">
+                      <?php echo htmlspecialchars(isset($e['url']) ? $e['url'] : '-'); ?>
+                    </td>
+                    <td style="color:var(--muted);">
+                      <?php echo htmlspecialchars(isset($e['created_at']) ? date('M d, Y', strtotime($e['created_at'])) : ''); ?>
+                    </td>
+                    <?php
+                      $pid = null;
+                      if (isset($e['id'])) $pid = $e['id'];
+                      elseif (isset($e['project_id'])) $pid = $e['project_id'];
+                      $editUrl = $pid ? site_url('projects/edit/'.$pid.'?embedded=1') : '#';
+                      $deleteUrl = $pid ? site_url('projects/delete/'.$pid) : '#';
+                    ?>
+                    <td>
+                      <div style="display:flex;gap:.5rem;justify-content:flex-end;">
+                        <button class="btn btn-sm btn-outline-primary btn-view" data-id="<?php echo htmlspecialchars($pid); ?>" title="View"><i class="fas fa-eye"></i></button>
+                        <button class="btn btn-sm btn-outline-secondary btn-edit" data-id="<?php echo htmlspecialchars($pid); ?>" data-edit-url="<?php echo htmlspecialchars($editUrl); ?>" title="Edit"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-outline-danger btn-delete" data-id="<?php echo htmlspecialchars($pid); ?>" data-delete-url="<?php echo htmlspecialchars($deleteUrl); ?>" title="Delete"><i class="fas fa-trash"></i></button>
+                      </div>
+                    </td>
+                  </tr>
+                <?php endforeach; ?>
+              <?php else: ?>
+                <tr>
+                  <td colspan="5">
+                    <div class="alert alert-info mb-0">No projects found. Use the <strong>Create Project</strong> button to add one.</div>
+                  </td>
+                </tr>
+              <?php endif; ?>
+            </tbody>
+          </table>
         </div>
-        <div class="card-title">Read</div>
-        <div class="card-text">View all records in a clean and organized table layout.</div>
-        <div class="card-text" style="font-weight:700;color:var(--primary);">Projects: <?php echo isset($projects_count) ? intval($projects_count) : 0; ?></div>
-        <div class="card-action"><button type="button" id="openViewBtn" class="btn-pill btn-primary-custom"><i class="fas fa-list"></i> View Records</button></div>
       </div>
-
-        <div class="dashboard-card">
-        <div class="card-icon">
-          <i class="fas fa-edit"></i>
-        </div>
-        <div class="card-title">Update</div>
-        <div class="card-text">Modify existing records and keep your data up-to-date.</div>
-        <div class="card-action"><button type="button" id="openEditBtn" class="btn-pill btn-primary-custom"><i class="fas fa-edit"></i> Edit Records</button></div>
-      </div>
-
-        <div class="dashboard-card">
-        <div class="card-icon">
-          <i class="fas fa-trash"></i>
-        </div>
-        <div class="card-title">Delete</div>
-        <div class="card-text">Remove records you no longer need with confirmation.</div>
-        <div class="card-action"><button type="button" id="openManageBtn" class="btn-pill btn-primary-custom"><i class="fas fa-trash"></i> Manage</button></div>
-      </div>
-    </div>
-
-    <!-- User information moved into profile dropdown -->
-
-    <!-- Quick Actions -->
-    <div class="quick-actions" style="margin-top: 3rem;">
     </div>
   </div>
 
@@ -587,10 +603,11 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Quick Create Project</h5>
+          <h5 class="modal-title">Create Project</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form method="post" action="<?php echo site_url('projects/create'); ?>">
+        <form method="post" action="<?php echo site_url('projects/create'); ?>" enctype="multipart/form-data">
+          <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
           <input type="hidden" name="return_to" value="crud">
           <div class="modal-body">
               <div class="form-row cols-2">
@@ -625,12 +642,21 @@
                 </div>
 
                 <div>
-                  <label class="form-label">Image URL</label>
-                  <input name="image" class="form-control" placeholder="https://...">
+                  <label class="form-label">Project Image</label>
+                  <input type="file" name="image" class="form-control image-input" accept="image/png,image/jpeg,.png,.jpg,.jpeg">
+                  <div class="form-text">Upload a PNG or JPG image (max 5MB)</div>
+                  <div class="image-preview" style="margin-top:0.75rem;display:none;">
+                    <img src="" alt="Preview" style="max-width:120px;max-height:120px;border-radius:6px;object-fit:cover;">
+                  </div>
                 </div>
                 <div>
                   <label class="form-label">Link URL</label>
                   <input name="url" class="form-control" placeholder="https://...">
+                </div>
+
+                <div style="grid-column:1/ -1;display:flex;align-items:center;gap:0.75rem;margin-top:0.5rem;">
+                  <input type="checkbox" id="featuredCheckbox" name="featured" value="1" class="form-check-input" style="width:1.2rem;height:1.2rem;cursor:pointer;">
+                  <label for="featuredCheckbox" style="margin:0;cursor:pointer;font-weight:600;color:var(--accent);">Mark as featured</label>
                 </div>
               </div>
             </div>
@@ -725,9 +751,179 @@
     </div>
   </div>
 
+  <!-- View Project Details Modal -->
+  <div class="modal fade" id="viewProjectModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-fullscreen-md-down">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="fas fa-info-circle me-2"></i>Project Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div style="display:grid;gap:1.5rem;">
+            <div>
+              <label style="font-size:0.85rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;display:block;">Title</label>
+              <div id="viewTitle" style="font-weight:700;color:var(--accent);font-size:1.2rem;">-</div>
+            </div>
+            <div>
+              <label style="font-size:0.85rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;display:block;">Description</label>
+              <div id="viewDescription" style="color:var(--muted);line-height:1.6;">-</div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+              <div>
+                <label style="font-size:0.85rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;display:block;">URL</label>
+                <div id="viewUrl" style="color:var(--accent);font-weight:600;word-break:break-all;">-</div>
+              </div>
+              <div>
+                <label style="font-size:0.85rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;display:block;">Created</label>
+                <div id="viewCreated" style="color:var(--accent);font-weight:600;">-</div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+              <div>
+                <label style="font-size:0.85rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;display:block;">Status</label>
+                <div id="viewStatus" style="color:var(--accent);font-weight:600;">-</div>
+              </div>
+              <div>
+                <label style="font-size:0.85rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;display:block;">Featured</label>
+                <div id="viewFeatured" style="color:var(--accent);font-weight:600;">-</div>
+              </div>
+            </div>
+            <div>
+              <label style="font-size:0.85rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;display:block;">Image</label>
+              <div id="viewImage" style="color:var(--accent);font-weight:600;word-break:break-all;">-</div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-pill btn-ghost" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script>
-    // AJAX submit for quick-create so we can show iziToast and close the modal without a full redirect
+    // View and Edit project functions
+    var iframeModalEl = document.getElementById('iframeModal');
+    var iframe = document.getElementById('iframeModalFrame');
+    var iframeLoading = document.getElementById('iframeLoading');
+    var iframeTitle = document.getElementById('iframeModalTitle');
+
+    function openIframe(title, url){
+      iframeTitle.textContent = title;
+      if(iframeLoading) iframeLoading.style.display = 'flex';
+      iframe.src = url;
+      var m = new bootstrap.Modal(iframeModalEl);
+      m.show();
+      iframe.addEventListener('load', function(){ if(iframeLoading) iframeLoading.style.display = 'none'; }, { once:true });
+      iframeModalEl.addEventListener('hidden.bs.modal', function(){ iframe.src = ''; if(iframeLoading) iframeLoading.style.display = 'none'; }, { once:true });
+    }
+
+    function handleViewProject(id){
+      if(!id){ Toast.fire({ icon: 'error', title: 'Project ID not available' }); return; }
+      
+      var projectsBase = '<?php echo site_url('projects'); ?>';
+      var url = projectsBase + '/get/' + id;
+      fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+        .then(function(res){ return res.json(); })
+        .then(function(json){
+          if(json && json.project){
+            var p = json.project;
+            document.getElementById('viewTitle').textContent = p.title || '-';
+            document.getElementById('viewDescription').textContent = p.description || '-';
+            document.getElementById('viewUrl').textContent = p.url || '-';
+            document.getElementById('viewCreated').textContent = p.created_at ? p.created_at.split(' ')[0] : '-';
+            document.getElementById('viewStatus').textContent = p.status ? 'Active' : 'Inactive';
+            document.getElementById('viewFeatured').innerHTML = p.featured ? '<span class="badge bg-primary text-white" style="border-radius:8px;"><i class="fas fa-star me-1"></i>Featured</span>' : 'No';
+            document.getElementById('viewImage').textContent = p.image || '-';
+            
+            var modal = new bootstrap.Modal(document.getElementById('viewProjectModal'));
+            modal.show();
+          } else {
+            Toast.fire({ icon: 'error', title: 'Unable to load project details' });
+          }
+        }).catch(function(){
+          Toast.fire({ icon: 'error', title: 'Network error loading project' });
+        });
+    }
+
+    function handleEditProject(url, id){
+      if(!url && !id){
+        Toast.fire({ icon: 'error', title: 'Edit URL not available' });
+        return;
+      }
+      if(!url && id){
+        var projectsBase = '<?php echo site_url('projects'); ?>';
+        url = projectsBase + '/edit/' + id + '?embedded=1';
+      }
+      openIframe('Edit Project', url);
+    }
+
+    function handleDeleteProject(url, id){
+      if(!url && !id){
+        Toast.fire({ icon: 'error', title: 'Delete URL not available' });
+        return;
+      }
+      if(!url && id){
+        var projectsBase = '<?php echo site_url('projects'); ?>';
+        url = projectsBase + '/delete/' + id;
+      }
+
+      Swal.fire({
+        title: 'Delete project?',
+        text: 'This action cannot be undone.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete',
+        cancelButtonText: 'Cancel'
+      }).then(function(result){
+        if(!result.isConfirmed) return;
+        // Build FormData with CSRF token
+        var fd = new FormData();
+        var tokenName = '<?php echo $this->security->get_csrf_token_name(); ?>';
+        var token = getCsrf();
+        if(tokenName && token) fd.append(tokenName, token);
+        
+        fetch(url, { method: 'POST', body: fd, headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+          .then(function(res){
+            console.log('Delete response status:', res.status);
+            return res.text().then(function(text){
+              try {
+                return JSON.parse(text);
+              } catch(e) {
+                console.error('Response not valid JSON:', text);
+                throw new Error('Invalid JSON response: ' + text);
+              }
+            });
+          })
+          .then(function(json){
+            console.log('Delete response:', json);
+            if(json && json.success){
+              var deleteBtn = document.querySelector('[data-id="'+ id +'"].btn-delete');
+              if(deleteBtn){
+                var row = deleteBtn.closest('tr');
+                if(row) row.parentNode.removeChild(row);
+              }
+              Toast.fire({ icon: 'success', title: json.message || 'Deleted' });
+            } else {
+              Toast.fire({ icon: 'error', title: (json && json.message) || 'Delete failed' });
+            }
+          })
+          .catch(function(err){
+            console.error('Delete error:', err);
+            Toast.fire({ icon: 'error', title: 'Error: ' + err.message });
+          });
+      });
+    }
+
+    function getCsrf(){
+      var m = document.querySelector('meta[name="csrf-token"]');
+      return m ? m.getAttribute('content') : null;
+    }
+  </script>
+  <script>
+    // AJAX submit for quick-create so we can show a Toast and close the modal without a full redirect
     (function(){
       var modal = document.getElementById('quickCreateModal');
       if(!modal) return;
@@ -736,47 +932,150 @@
       form.addEventListener('submit', function(ev){
         ev.preventDefault();
         var fd = new FormData(form);
+        console.log('Form submission started', { action: form.action, formData: Array.from(fd.entries()) });
         fetch(form.action, { method: 'POST', body: fd, headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-          .then(function(res){ return res.json(); })
+          .then(function(res){
+            console.log('Fetch response received', { status: res.status, statusText: res.statusText, contentType: res.headers.get('content-type') });
+            return res.text().then(function(text){
+              console.log('Response body (first 500 chars):', text.substring(0, 500));
+              try {
+                return JSON.parse(text);
+              } catch(parseErr) {
+                console.error('JSON parse error:', parseErr);
+                console.error('Raw response:', text);
+                throw new Error('Server returned non-JSON response');
+              }
+            });
+          })
           .then(function(json){
-            try{
-              var inst = bootstrap.Modal.getOrCreateInstance(modal); inst.hide();
-            }catch(e){}
-            if (json && json.success) {
-              iziToast.success({ title: 'Success', message: json.message || 'Created', position: 'topRight', timeout: 3500 });
-              // Optionally reload iframe or parts of the page if needed
-              // refresh project count if present
-              var el = document.querySelector('.card-text strong');
-            } else {
-              iziToast.error({ title: 'Error', message: (json && json.message) || 'Create failed', position: 'topRight', timeout: 5000 });
-            }
-          }).catch(function(){
+            console.log('Parsed JSON response:', json);
             try{ bootstrap.Modal.getOrCreateInstance(modal).hide(); }catch(e){}
-            iziToast.error({ title: 'Error', message: 'Network error', position: 'topRight', timeout: 5000 });
+            if (json && json.success) {
+              Toast.fire({ icon: 'success', title: json.message || 'Created', timer: 3500 });
+
+              // Prepend the newly created project into the events table.
+              try{
+                var tbody = document.querySelector('.table-section table tbody');
+                if(tbody){
+                  // If server returned HTML for the row, use it
+                  if(json.project_html){
+                    // Remove empty-state row if present
+                    var emptyAlert = tbody.querySelector('tr td .alert');
+                    if(emptyAlert) tbody.innerHTML = '';
+                    tbody.insertAdjacentHTML('afterbegin', json.project_html);
+                  } else {
+                    // Build a fallback row from returned project data or from form values
+                    var p = json.project || {};
+                    var title = p.title || fd.get('title') || 'Untitled Project';
+                    var description = p.description || fd.get('description') || '';
+                    if(description && description.length > 60) description = description.substring(0, 60);
+                    var url = p.url || fd.get('url') || '-';
+                    var created_at = p.created_at || new Date().toISOString().split('T')[0];
+                    var status = p.status ? 'Active' : 'Inactive';
+                    var featured = p.featured ? 1 : 0;
+                    var featuredBadge = featured ? '<span class="badge bg-primary text-white" style="border-radius:8px;padding:.45rem .6rem;margin-left:.5rem;"><i class="fas fa-star me-1"></i>Featured</span>' : '';
+
+                    function escapeHtml(s){ return (''+s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]; }); }
+
+                    var row =
+                      '<tr style="border-top:1px solid rgba(15,23,42,0.04);">' +
+                        '<td>' +
+                          '<div style="font-weight:700;color:var(--accent);">'+ escapeHtml(title) +'</div>' +
+                          '<div style="color:var(--muted);font-size:0.9rem;margin-top:6px;">'+ escapeHtml(description) +'</div>' +
+                        '</td>' +
+                        '<td style="color:var(--muted);">'+ escapeHtml(url) +'</td>' +
+                        '<td style="color:var(--muted);">'+ escapeHtml(created_at) +'</td>' +
+                        '<td><span class="badge bg-light text-muted" style="border-radius:8px;padding:.45rem .6rem;">'+ escapeHtml(status) +'</span>' + featuredBadge + '</td>' +
+                        '<td>' +
+                          '<div style="display:flex;gap:.5rem;justify-content:flex-end;">' +
+                            '<button class="btn btn-sm btn-outline-primary btn-view" data-id="'+ escapeHtml(p.id || '') +'" title="View"><i class="fas fa-eye"></i></button>' +
+                            '<button class="btn btn-sm btn-outline-secondary btn-edit" data-id="'+ escapeHtml(p.id || '') +'" title="Edit"><i class="fas fa-edit"></i></button>' +
+                            '<button class="btn btn-sm btn-outline-danger btn-delete" data-id="'+ escapeHtml(p.id || '') +'" title="Delete"><i class="fas fa-trash"></i></button>' +
+                          '</div>' +
+                        '</td>' +
+                      '</tr>';
+
+                    // Remove empty-state row if present
+                    var emptyAlert = tbody.querySelector('tr td .alert');
+                    if(emptyAlert) tbody.innerHTML = '';
+                    tbody.insertAdjacentHTML('afterbegin', row);
+                  }
+
+                  // Update dashboard counts (increment Total Events and Upcoming if applicable)
+                  try{
+                    function updateCount(cardTitle, delta){
+                      var cards = Array.from(document.querySelectorAll('.dashboard-card'));
+                      cards.forEach(function(c){
+                        var t = (c.querySelector('.card-title') || {textContent:''}).textContent.trim();
+                        if(t === cardTitle){
+                          var el = c.querySelector('.card-text');
+                          if(el){
+                            var n = parseInt(el.textContent.replace(/[^0-9]/g,'')) || 0;
+                            el.textContent = n + delta;
+                          }
+                        }
+                      });
+                    }
+                    updateCount('Total Projects', 1);
+                    // If the event is upcoming (simple heuristic: datetime in future), increment Upcoming
+                    try{
+                      var projDate = new Date((p && p.datetime) || fd.get('datetime'));
+                      if(!isNaN(projDate) && projDate > new Date()) updateCount('Upcoming Projects', 1);
+                    }catch(e){}
+                  }catch(e){/* ignore count update errors */}
+                }
+              }catch(e){console.error(e);} 
+            } else {
+              Toast.fire({ icon: 'error', title: (json && json.message) || 'Create failed', timer: 5000 });
+            }
+          }).catch(function(err){
+            console.error('Create request caught error:', err.message, err);
+            try{ bootstrap.Modal.getOrCreateInstance(modal).hide(); }catch(e){}
+            Toast.fire({ icon: 'error', title: 'Network error: ' + (err.message || 'Unknown'), timer: 5000 });
           });
       });
     })();
-  
+    
+    // Auto-preview for image input in quick-create form
+    (function(){
+      var modal = document.getElementById('quickCreateModal');
+      if(!modal) return;
+      var imageInput = modal.querySelector('.image-input');
+      if(!imageInput) return;
+      imageInput.addEventListener('change', function(e){
+        var file = this.files[0];
+        if(file){
+          var reader = new FileReader();
+          reader.onload = function(event){
+            var preview = imageInput.closest('div').querySelector('.image-preview');
+            if(preview){
+              var img = preview.querySelector('img');
+              if(img){
+                img.src = event.target.result;
+                preview.style.display = 'block';
+              }
+            }
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+      // Clear preview when modal closes
+      modal.addEventListener('hidden.bs.modal', function(){
+        var preview = imageInput.closest('div').querySelector('.image-preview');
+        if(preview){
+          preview.style.display = 'none';
+          var img = preview.querySelector('img');
+          if(img) img.src = '';
+        }
+        imageInput.value = '';
+      });
+    })();
   </script>
   <script>
     (function(){
       var viewUrl = '<?php echo site_url('projects'); ?>?embedded=1&mode=read';
       var editUrl = '<?php echo site_url('projects'); ?>?embedded=1&mode=update';
       var manageUrl = '<?php echo site_url('projects'); ?>?embedded=1&mode=delete';
-      var iframeModalEl = document.getElementById('iframeModal');
-      var iframe = document.getElementById('iframeModalFrame');
-      var iframeLoading = document.getElementById('iframeLoading');
-      var iframeTitle = document.getElementById('iframeModalTitle');
-
-      function openIframe(title, url){
-        iframeTitle.textContent = title;
-        if(iframeLoading) iframeLoading.style.display = 'flex';
-        iframe.src = url;
-        var m = new bootstrap.Modal(iframeModalEl);
-        m.show();
-        iframe.addEventListener('load', function(){ if(iframeLoading) iframeLoading.style.display = 'none'; }, { once:true });
-        iframeModalEl.addEventListener('hidden.bs.modal', function(){ iframe.src = ''; if(iframeLoading) iframeLoading.style.display = 'none'; }, { once:true });
-      }
 
       var btnView = document.getElementById('openViewBtn');
       if(btnView) btnView.addEventListener('click', function(){ openIframe('View Projects', viewUrl); });
@@ -789,32 +1088,57 @@
     })();
   
   </script>
-  <script src="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/js/iziToast.min.js"></script>
   <script>
+    // Delegated handlers for View, Edit and Delete buttons in the projects table
+    (function(){
+      var tbody = document.querySelector('.table-section table tbody');
+      if(!tbody) return;
+
+      tbody.addEventListener('click', function(ev){
+        var viewBtn = ev.target.closest && ev.target.closest('.btn-view');
+        if(viewBtn){
+          var id = viewBtn.getAttribute('data-id');
+          handleViewProject(id);
+          return;
+        }
+
+        var editBtn = ev.target.closest && ev.target.closest('.btn-edit');
+        if(editBtn){
+          var url = editBtn.getAttribute('data-edit-url');
+          var id = editBtn.getAttribute('data-id');
+          handleEditProject(url, id);
+          return;
+        }
+
+        var delBtn = ev.target.closest && ev.target.closest('.btn-delete');
+        if(delBtn){
+          var id = delBtn.getAttribute('data-id');
+          var url = delBtn.getAttribute('data-delete-url');
+          handleDeleteProject(url, id);
+          return;
+        }
+      });
+    })();
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    const Toast = Swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3500,
+      timerProgressBar: true,
+      customClass: { container: 'swal2-top-toast' }
+    });
     document.addEventListener('DOMContentLoaded', function(){
       <?php if (!empty($login_success)): ?>
-        iziToast.success({
-          title: 'Welcome',
-          message: <?php echo json_encode($login_success); ?>,
-          position: 'topRight',
-          timeout: 4000
-        });
+        Toast.fire({ icon: 'success', title: <?php echo json_encode($login_success); ?>, timer: 4000 });
       <?php endif; ?>
       <?php if ($this->session->flashdata('success')): ?>
-        iziToast.success({
-          title: 'Success',
-          message: <?php echo json_encode($this->session->flashdata('success')); ?>,
-          position: 'topRight',
-          timeout: 3500
-        });
+        Toast.fire({ icon: 'success', title: <?php echo json_encode($this->session->flashdata('success')); ?>, timer: 3500 });
       <?php endif; ?>
       <?php if ($this->session->flashdata('error')): ?>
-        iziToast.error({
-          title: 'Error',
-          message: <?php echo json_encode($this->session->flashdata('error')); ?>,
-          position: 'topRight',
-          timeout: 5000
-        });
+        Toast.fire({ icon: 'error', title: <?php echo json_encode($this->session->flashdata('error')); ?>, timer: 5000 });
       <?php endif; ?>
       // If a create/update/delete happened and we have a flash, ensure quickCreateModal is closed
       <?php if ($this->session->flashdata('success') || $this->session->flashdata('error')): ?>
@@ -826,6 +1150,23 @@
         tooltipTriggerList.map(function (el) { return new bootstrap.Tooltip(el); });
       } catch (err){}
     });
+  </script>
+  <script>
+    // Search filter for projects table
+    (function(){
+      var input = document.getElementById('projectSearch');
+      if(!input) return;
+      var rows = Array.from(document.querySelectorAll('table tbody tr'));
+      input.addEventListener('input', function(){
+        var q = (this.value || '').trim().toLowerCase();
+        if(!q){ rows.forEach(function(r){ r.style.display = ''; }); return; }
+        rows.forEach(function(row){
+          var text = row.textContent.toLowerCase();
+          if(text.indexOf(q) !== -1) { row.style.display = ''; }
+          else { row.style.display = 'none'; }
+        });
+      });
+    })();
   </script>
   <script>
     // Dashboard search filter for cards

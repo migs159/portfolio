@@ -18,570 +18,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?php echo htmlspecialchars(function_exists('base_url') ? base_url('assets/css/theme.css') : '/assets/css/theme.css'); ?>">
-    <style>
-        * { scroll-behavior: smooth; }
-        
-        html { scroll-behavior: smooth; }
-        body {
-            font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
-            padding-top:70px;
-            background:#ffffff;
-            color:#1e293b;
-            position:relative;
-            overflow-x:hidden;
-        }
-        
-        /* Smooth gradient background */
-        body::before {
-            content:'';
-            position:fixed;
-            inset:0;
-            background:radial-gradient(circle at 20% 50%,rgba(99,102,241,0.1),transparent 50%),
-                        radial-gradient(circle at 80% 80%,rgba(236,72,153,0.08),transparent 50%);
-            pointer-events:none;
-            z-index:-1;
-        }
-
-        /* Modern navbar */
-        .navbar {
-            background:rgba(255,255,255,0.95) !important;
-            backdrop-filter:blur(10px);
-            border-bottom:1px solid rgba(0,0,0,0.05);
-            z-index:1200;
-            transition:all 0.3s ease;
-        }
-        
-        .navbar.scrolled {
-            box-shadow:0 4px 20px rgba(0,0,0,0.08);
-        }
-        
-        .navbar-brand {
-            font-weight:700;
-            font-size:1.3rem;
-            background:linear-gradient(135deg,var(--primary),var(--secondary));
-            -webkit-background-clip:text;
-            -webkit-text-fill-color:transparent;
-            background-clip:text;
-        }
-        
-        .navbar .nav-link {
-            color:#64748b !important;
-            font-weight:500;
-            font-size:0.95rem;
-            position:relative;
-            transition:color 0.3s ease;
-        }
-        
-        .navbar .nav-link::after {
-            content:'';
-            position:absolute;
-            bottom:-4px;
-            left:0;
-            width:0;
-            height:2px;
-            background:var(--primary);
-            transition:width 0.3s ease;
-        }
-        
-        .navbar .nav-link:hover {
-            color:var(--primary) !important;
-        }
-        
-        .navbar .nav-link:hover::after {
-            width:100%;
-        }
-        
-        .contact-btn {
-            border-radius:8px;
-            padding:0.6rem 1.3rem;
-            background:var(--primary);
-            color:#fff !important;
-            border:0;
-            font-weight:600;
-            transition:all 0.3s ease;
-            box-shadow:0 4px 15px rgba(99,102,241,0.3);
-            text-decoration:none !important;
-            display:inline-flex;
-            align-items:center;
-            justify-content:center;
-        }
-        
-        .contact-btn:hover {
-            background:var(--primary-dark);
-            transform:translateY(-2px);
-            box-shadow:0 8px 25px rgba(99,102,241,0.4);
-        }
-
-        /* Hero Section */
-        .hero {
-            position:relative;
-            min-height:90vh;
-            overflow:hidden;
-            z-index:0;
-            background:linear-gradient(135deg,#ffffff 0%,var(--light-bg) 100%);
-        }
-        
-        .hero-inner {
-            display:flex;
-            min-height:90vh;
-            align-items:center;
-            padding:4rem 0;
-        }
-        
-        .hero-left {
-            flex:1;
-            padding:0 3rem;
-            z-index:2;
-            animation:fadeInLeft 0.8s ease-out;
-            order:1;
-        }
-        
-        @keyframes fadeInLeft {
-            from {
-                opacity:0;
-                transform:translateX(-30px);
-            }
-            to {
-                opacity:1;
-                transform:translateX(0);
-            }
-        }
-        
-        .hero-left .greeting {
-            color:var(--muted);
-            font-weight:600;
-            font-size:1rem;
-            text-transform:uppercase;
-            letter-spacing:2px;
-            margin-bottom:1rem;
-        }
-        
-        .hero-left .name {
-            font-family:'Poppins',sans-serif;
-            font-size:3.5rem;
-            line-height:1.1;
-            font-weight:800;
-            color:var(--accent);
-            margin:0;
-            letter-spacing:-2px;
-            background:linear-gradient(135deg,var(--accent),var(--primary));
-            -webkit-background-clip:text;
-            -webkit-text-fill-color:transparent;
-            background-clip:text;
-            margin-bottom:0.5rem;
-        }
-        
-        .hero-left .subtitle {
-            color:var(--muted);
-            font-weight:500;
-            font-size:1.2rem;
-            margin-bottom:2rem;
-            line-height:1.6;
-        }
-        
-        .hero-right {
-            flex:1;
-            position:relative;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            padding:8px; /* smaller padding so image fills more of the frame */
-            animation:fadeInRight 0.8s ease-out;
-            order:2;
-            border-radius:14px;
-            background:linear-gradient(135deg,#ffffff 0%,var(--light-bg) 100%);
-            box-shadow:0 18px 40px rgba(99,102,241,0.06);
-            max-width:380px; /* constrain frame width */
-        }
-
-        @keyframes fadeInRight {
-            from {
-                opacity:0;
-                transform:translateX(30px);
-            }
-            to {
-                opacity:1;
-                transform:translateX(0);
-            }
-        }
-
-        .hero-profile {
-            position:relative;
-            z-index:2;
-            max-width:340px; /* fit better inside the tightened frame */
-            width:100%;
-            height:auto;
-            aspect-ratio:1/1;
-            border-radius:14px;
-            object-fit:cover; /* cover so image fills the available area */
-            box-shadow:0 24px 60px rgba(99,102,241,0.22);
-            border:3px solid rgba(255,255,255,0.9);
-            background:transparent;
-            animation:float 3s ease-in-out infinite;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform:translateY(0px); }
-            50% { transform:translateY(-20px); }
-        }
-        
-        #hero-initial {
-            display:none;
-            position:relative;
-            z-index:2;
-            max-width:380px;
-            width:100%;
-            height:380px;
-            border-radius:20px;
-            align-items:center;
-            justify-content:center;
-            background:linear-gradient(135deg,var(--primary),var(--secondary));
-            color:#fff;
-            font-size:120px;
-            font-weight:700;
-            box-shadow:0 25px 60px rgba(99,102,241,0.25);
-            border:3px solid #fff;
-        }
-        
-        /* Social Links */
-        .socials {
-            margin-top:2.5rem;
-            display:flex;
-            gap:1rem;
-        }
-        
-        .socials a {
-            display:inline-flex;
-            align-items:center;
-            justify-content:center;
-            width:50px;
-            height:50px;
-            border-radius:12px;
-            background:#f1f5f9;
-            color:var(--primary);
-            text-decoration:none;
-            transition:all 0.3s ease;
-            border:2px solid transparent;
-        }
-        
-        .socials a:hover {
-            background:var(--primary);
-            color:#fff;
-            transform:translateY(-5px);
-            box-shadow:0 10px 30px rgba(99,102,241,0.3);
-        }
-
-        /* Sections */
-        section {
-            padding:80px 0;
-            position:relative;
-            z-index:1;
-        }
-        
-        section:nth-child(even) {
-            background:var(--light-bg);
-        }
-        
-        .container { max-width:1200px;margin:0 auto; }
-        
-        .section-header {
-            margin-bottom:4rem;
-            text-align:center;
-        }
-        
-        .section-header h2 {
-            font-family:'Poppins',sans-serif;
-            font-size:2.5rem;
-            font-weight:800;
-            line-height:1.2;
-            color:var(--accent);
-            margin-bottom:1rem;
-            background:linear-gradient(135deg,var(--accent),var(--primary));
-            -webkit-background-clip:text;
-            -webkit-text-fill-color:transparent;
-            background-clip:text;
-        }
-        
-        .section-header p {
-            color:var(--muted);
-            font-size:1.1rem;
-            margin:0;
-        }
-
-        /* Projects Section */
-        .project-card {
-            background:#fff;
-            border:0;
-            border-radius:15px;
-            overflow:hidden;
-            box-shadow:0 4px 20px rgba(0,0,0,0.08);
-            transition:all 0.4s ease;
-            height:100%;
-            display:flex;
-            flex-direction:column;
-            position:relative;
-        }
-        
-        .project-card::after {
-            content:'';
-            position:absolute;
-            top:0;
-            left:0;
-            right:0;
-            height:4px;
-            background:linear-gradient(90deg,var(--primary),var(--secondary));
-            transform:scaleX(0);
-            transform-origin:left;
-            transition:transform 0.4s ease;
-        }
-        
-        .project-card:hover::after {
-            transform:scaleX(1);
-        }
-        
-        .project-card:hover {
-            transform:translateY(-8px);
-            box-shadow:0 20px 50px rgba(99,102,241,0.2);
-        }
-        
-        .project-card .card-img-top {
-            height:140px;
-            max-height:140px;
-            width:100%;
-            display:block;
-            object-fit:cover;
-            transition:transform 0.4s ease;
-            image-rendering:crisp-edges;
-        }
-
-        /* Calculator-specific image: show the full banner without cropping */
-        .project-card .card-img-top.calculator-img {
-            height:140px;
-            max-height:140px;
-            object-fit:contain;
-            background:#fff;
-            padding:6px 8px;
-        }
-        
-        .project-card:hover .card-img-top {
-            transform:scale(1.05);
-        }
-        
-        .project-card .card-body {
-            padding:1.75rem;
-            flex-grow:1;
-            display:flex;
-            flex-direction:column;
-        }
-        
-        .project-card .card-title {
-            font-family:'Poppins',sans-serif;
-            font-weight:700;
-            color:var(--accent);
-            margin-bottom:0.75rem;
-            font-size:1.25rem;
-        }
-        
-        .project-card .card-text {
-            color:var(--muted);
-            font-size:0.95rem;
-            line-height:1.6;
-            flex-grow:1;
-            margin-bottom:1rem;
-        }
-        
-        .project-tags {
-            display:flex;
-            flex-wrap:wrap;
-            gap:0.5rem;
-            margin-top:auto;
-        }
-        
-        .project-tags .tag {
-            display:inline-block;
-            padding:0.4rem 0.8rem;
-            background:linear-gradient(135deg,rgba(99,102,241,0.1),rgba(236,72,153,0.1));
-            color:var(--primary);
-            border-radius:6px;
-            font-size:0.8rem;
-            font-weight:600;
-            border:1px solid rgba(99,102,241,0.2);
-        }
-
-        /* Skills Section */
-        .skills-grid {
-            display:grid;
-            grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-            gap:2rem;
-            margin-top:3rem;
-        }
-        
-        .skill-item {
-            padding:2rem;
-            background:#fff;
-            border-radius:12px;
-            text-align:center;
-            box-shadow:0 4px 15px rgba(0,0,0,0.05);
-            transition:all 0.3s ease;
-            border:1px solid #e2e8f0;
-        }
-        
-        .skill-item:hover {
-            transform:translateY(-5px);
-            box-shadow:0 12px 35px rgba(99,102,241,0.15);
-            border-color:var(--primary);
-        }
-        
-        .skill-item i {
-            font-size:2.5rem;
-            color:var(--primary);
-            margin-bottom:1rem;
-        }
-        
-        .skill-item h3 {
-            font-weight:700;
-            color:var(--accent);
-            margin-bottom:0.5rem;
-        }
-        
-        .skill-item p {
-            color:var(--muted);
-            font-size:0.9rem;
-            margin:0;
-        }
-
-        /* About Section */
-        .about-content {
-            background:#fff;
-            padding:3rem;
-            border-radius:15px;
-            box-shadow:0 4px 20px rgba(0,0,0,0.08);
-            line-height:1.8;
-            color:var(--muted);
-            font-size:1.05rem;
-        }
-
-        /* Contact Section */
-        .contact-card {
-            background:#fff;
-            border:0;
-            border-radius:15px;
-            box-shadow:0 4px 20px rgba(0,0,0,0.08);
-            transition:all 0.3s ease;
-            overflow:hidden;
-            position:relative;
-        }
-        
-        .contact-card::before {
-            content:'';
-            position:absolute;
-            top:0;
-            left:0;
-            right:0;
-            height:4px;
-            background:linear-gradient(90deg,var(--primary),var(--secondary));
-        }
-        
-        .contact-card .card-body {
-            padding:2.5rem;
-            position:relative;
-        }
-        
-        .contact-item {
-            margin-bottom:2rem;
-        }
-        
-        .contact-item:last-child {
-            margin-bottom:0;
-        }
-        
-        .contact-item strong {
-            color:var(--accent);
-            display:block;
-            margin-bottom:0.5rem;
-            font-weight:700;
-        }
-        
-        .contact-item a {
-            color:var(--primary);
-            text-decoration:none;
-            font-weight:500;
-            transition:color 0.3s ease;
-        }
-        
-        .contact-item a:hover {
-            color:var(--secondary);
-        }
-
-        /* Footer */
-        footer {
-            background:var(--footer-bg);
-            color:var(--footer-text);
-            padding:3rem 0;
-            text-align:center;
-            margin-top:4rem;
-        }
-        
-        footer p {
-            margin:0;
-            opacity:0.8;
-        }
-
-        /* Responsive */
-        @media (max-width:768px) {
-            .hero-inner {
-                flex-direction:column;
-                padding:2rem 0;
-            }
-            
-            .hero-left {
-                padding:0 1.5rem;
-            }
-            
-            .hero-right {
-                padding:0 1.5rem;
-                margin-top:2rem;
-            }
-            
-            .hero-left .name {
-                font-size:2.2rem;
-            }
-            
-            .hero-profile, #hero-initial {
-                max-width:280px;
-                width:100%;
-                height:280px;
-            }
-            
-            .section-header h2 {
-                font-size:1.8rem;
-            }
-            
-            .skills-grid {
-                grid-template-columns:1fr;
-            }
-            
-            section {
-                padding:4rem 0;
-            }
-        }
-
-        /* Utility animations */
-        .fade-in {
-            animation:fadeInUp 0.6s ease-out forwards;
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity:0;
-                transform:translateY(30px);
-            }
-            to {
-                opacity:1;
-                transform:translateY(0);
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="<?php echo htmlspecialchars(function_exists('base_url') ? base_url('assets/css/portfolio-custom.css') : '/assets/css/portfolio-custom.css'); ?>">
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light fixed-top">
@@ -592,8 +29,9 @@
         </button>
         <div class="collapse navbar-collapse" id="nav">
             <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="http://localhost/portfolio/index.php/portfolio">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="#projects">Projects</a></li>
-                <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                <li class="nav-item"><a class="nav-link" href="#about">About Me</a></li>
                 <li class="nav-item"><a class="nav-link" href="#skills">Skills</a></li>
                 <?php
                     $ci = &get_instance();
@@ -612,11 +50,11 @@
 
 <header class="hero">
     <div class="container">
+        <?php $initial = isset($site_title) ? strtoupper(substr(trim($site_title),0,1)) : 'M'; ?>
+        <div id="hero-initial" aria-hidden="true"><?php echo htmlspecialchars($initial); ?></div>
         <div class="hero-inner">
             <div class="hero-right">
-                <?php $initial = isset($site_title) ? strtoupper(substr(trim($site_title),0,1)) : 'M'; ?>
                     <?php
-                        $initial = isset($site_title) ? strtoupper(substr(trim($site_title),0,1)) : 'M';
                         // Prefer PNG (transparent) but check disk in case of name mismatch
                         $profile_rel = 'assets/img/profile.png';
                         $profile_file = defined('FCPATH') ? rtrim(FCPATH, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$profile_rel : NULL;
@@ -624,19 +62,24 @@
                         $profile_url = $profile_exists && function_exists('base_url') ? base_url($profile_rel) : (function_exists('base_url') ? base_url('assets/img/profile.png') : '/assets/img/profile.png');
                     ?>
                     <img src="<?php echo htmlspecialchars($profile_url); ?>" alt="Miguel Andrei Portrait" class="hero-profile" id="hero-profile-img" onerror="console.warn('Profile image failed to load:', this.src);this.style.display='none';document.getElementById('hero-initial').style.display='flex'">
-                    <div id="hero-initial" aria-hidden="true"><?php echo htmlspecialchars($initial); ?></div>
                     <?php if (!$profile_exists): ?>
-                        <div style="color:#d9534f;margin-top:0.5rem;font-size:0.9rem;">Debug: profile image file not found on server at <strong><?php echo htmlspecialchars($profile_file ?: 'unknown'); ?></strong></div>
+                        <div class="profile-debug">Debug: profile image file not found on server at <strong><?php echo htmlspecialchars($profile_file ?: 'unknown'); ?></strong></div>
                     <?php endif; ?>
             </div>
             <div class="hero-left">
                 <div class="greeting">Welcome to my portfolio</div>
-                <h1 class="name">Miguel Andrei del Rosario</h1>
-                <p class="subtitle">Information Technology Student</p>
+                <h1 class="name" aria-label="Miguel Andrei del Rosario">
+                    <span class="typed" data-text="Miguel Andrei del Rosario"></span>
+                    <span class="typing-cursor" aria-hidden="true"></span>
+                </h1>
+                <p class="subtitle">A Web Developer Trainee</p>
                 
                 <div class="socials">
                     <a href="https://github.com/migs159" target="_blank" rel="noopener noreferrer" title="GitHub">
                         <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/miguel-andrei-del-rosario-a291693b1/" target="_blank" rel="noopener noreferrer" title="LinkedIn">
+                        <i class="fab fa-linkedin"></i>
                     </a>
                     <a href="mailto:miguelandrei@sdca.edu.ph" title="Email">
                         <i class="fas fa-envelope"></i>
@@ -652,59 +95,111 @@
     <section id="projects">
         <div class="container">
             <div class="section-header">
-                <h2>Featured Projects</h2>
+                <h2>Projects</h2>
                 <p>Explore some of my recent work and projects</p>
             </div>
 
             <div class="row g-4">
-                <!-- Static featured project for AConnect -->
-                <div class="col-12 col-md-6 col-lg-4">
-                    <div class="card project-card h-100">
-                        <?php
-                            $calc_rel = 'assets/img/calculator.png';
-                            $calc_file = defined('FCPATH') ? rtrim(FCPATH, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $calc_rel : null;
-                            $calc_exists = $calc_file ? file_exists($calc_file) : false;
-                            if ($calc_exists && function_exists('base_url')) {
-                                $calc_img_url = base_url($calc_rel);
-                            } elseif (function_exists('base_url')) {
-                                $calc_img_url = base_url('assets/img/aconnect.png');
+                <!-- Featured projects from database -->
+                <?php 
+                    $featured_projects = [];
+                    $regular_projects = [];
+                    $has_aconnect = false;
+                    $has_crud = false;
+                    
+                    if (!empty($projects) && is_array($projects)) {
+                        foreach ($projects as $p) {
+                            // Check if project is featured - must be explicitly 1 or true
+                            $is_featured = (isset($p['featured']) && ($p['featured'] == 1 || $p['featured'] === true )) ? true : false;
+                            
+                            if ($is_featured) {
+                                $featured_projects[] = $p;
                             } else {
-                                $calc_img_url = 'https://via.placeholder.com/800x450?text=Calculator';
+                                $regular_projects[] = $p;
                             }
-                        ?>
-                        <a href="http://localhost/calculator/index.php/calculator" target="_blank" rel="noopener" class="stretched-link" style="z-index:10">
-                            <img src="<?php echo htmlspecialchars($calc_img_url); ?>" class="card-img-top project-img calculator-img" alt="Calculator">
+                        }
+                    }
+                    
+                    // Display featured projects from database
+                    foreach ($featured_projects as $fp):
+                        $ftitle = isset($fp['title']) ? $fp['title'] : 'Featured Project';
+                        $fdesc = isset($fp['description']) ? $fp['description'] : '';
+                        $fimg = isset($fp['image']) && $fp['image'] ? $fp['image'] : 'https://via.placeholder.com/1200x450?text=Featured';
+                        // Apply base_url() to relative paths for uploaded images
+                        if ($fimg && strpos($fimg, 'http') !== 0 && strpos($fimg, '//') !== 0) {
+                            $fimg = base_url($fimg);
+                        }
+                        $furl = isset($fp['url']) ? $fp['url'] : '#';
+                        
+                        // Decode type field
+                        $ftypes = [];
+                        if (isset($fp['type']) && $fp['type']) {
+                            $raw = trim((string) $fp['type']);
+                            $decoded = json_decode($raw, true);
+                            if (is_array($decoded)) {
+                                $ftypes = $decoded;
+                            } elseif ($raw !== '') {
+                                $ftypes = array_filter(array_map('trim', explode(',', $raw)));
+                            }
+                        }
+                        
+                        $ftypeLabels = [
+                            'php' => 'PHP', 'javascript' => 'JS', 'html_css' => 'HTML/CSS',
+                            'nodejs' => 'Node', 'react' => 'React', 'vue' => 'Vue',
+                            'angular' => 'Angular', 'uiux' => 'UI', 'cli' => 'CLI',
+                            'devops' => 'DevOps', 'other' => 'Other'
+                        ];
+                ?>
+                <div class="col-12">
+                    <div class="card project-card featured h-100">
+                        <div class="badge-featured" aria-hidden="true">Featured</div>
+                        <a href="<?php echo htmlspecialchars($furl); ?>" target="_blank" rel="noopener" class="stretched-link link-overlay">
+                            <img src="<?php echo htmlspecialchars($fimg); ?>" class="card-img-top project-img featured-img" alt="<?php echo htmlspecialchars($ftitle); ?>">
                         </a>
                         <div class="card-body">
-                            <h5 class="card-title">Calculator</h5>
-                            <p class="card-text">Calculator — CSS-only demo / featured project.</p>
+                            <h5 class="card-title"><?php echo htmlspecialchars($ftitle); ?></h5>
+                            <p class="card-text"><?php echo htmlspecialchars($fdesc); ?></p>
                             <div class="project-tags">
-                                <span class="tag">CSS</span>
+                                <?php
+                                    foreach ($ftypes as $ft) {
+                                        $key = trim((string) $ft);
+                                        if ($key === '') continue;
+                                        $label = isset($ftypeLabels[$key]) ? $ftypeLabels[$key] : $key;
+                                        echo '<span class="tag">' . htmlspecialchars($label) . '</span>';
+                                    }
+                                ?>
                             </div>
                         </div>
                     </div>
                 </div>
-                <?php if (!empty($projects) && is_array($projects)): ?>
-                    <?php foreach ($projects as $p): 
+                <?php endforeach; ?>
+                
+                <!-- Regular projects -->
+                <?php if (!empty($regular_projects) && is_array($regular_projects)): ?>
+                    <?php
+                        $crud_project = null;
+                    ?>
+                    <?php foreach ($regular_projects as $p): 
                         $title = isset($p['title']) ? $p['title'] : 'Untitled';
                         $desc  = isset($p['description']) ? $p['description'] : '';
                         $img   = isset($p['image']) && $p['image'] ? $p['image'] : 'https://via.placeholder.com/800x450?text=Project';
+                        // Apply base_url() to relative paths for uploaded images
+                        if ($img && strpos($img, 'http') !== 0 && strpos($img, '//') !== 0) {
+                            $img = base_url($img);
+                        }
                         $url   = isset($p['url']) ? $p['url'] : '#';
-                        // Compute image basename and match AConnect by title, image name, or GitHub-hosted repo link
+                        // Compute image basename
                         $img_basename_check = '';
                         $tmp = basename(parse_url($img, PHP_URL_PATH) ?: $img);
                         if ($tmp) $img_basename_check = strtolower($tmp);
-                        $lower_title = isset($title) ? strtolower($title) : '';
-                        $lower_url = isset($p['url']) ? strtolower($p['url']) : '';
-                        if (strpos($lower_title, 'aconnect') !== false || strpos($img_basename_check, 'aconnect') !== false || (strpos($lower_url, 'github.com') !== false && strpos($lower_title, 'aconnect') !== false)) {
-                            $url = 'http://localhost/Aconnect_ci3/login';
-                            $p['url'] = $url;
-                        }
                         $tags  = isset($p['tags']) && is_array($p['tags']) ? $p['tags'] : [];
+
+                        if (stripos($title, 'crud') !== false) { $crud_project = $p; continue; }
+
                     ?>
                     <div class="col-12 col-md-6 col-lg-4">
                         <div class="card project-card h-100">
-                                <a href="<?php echo htmlspecialchars($url); ?>" target="_blank" rel="noopener" class="stretched-link" style="z-index:10">
+                                <a href="<?php echo htmlspecialchars($url); ?>" target="_blank" rel="noopener" class="stretched-link link-overlay">
                                 <?php $img_basename = basename(parse_url($img, PHP_URL_PATH) ?: $img); ?>
                                 <img src="<?php echo htmlspecialchars($img); ?>" class="card-img-top project-img" alt="<?php echo htmlspecialchars($title); ?>" data-basename="<?php echo htmlspecialchars($img_basename); ?>">
                             </a>
@@ -712,7 +207,7 @@
                                 <h5 class="card-title"><?php echo htmlspecialchars($title); ?></h5>
                                 <p class="card-text"><?php echo htmlspecialchars($desc); ?></p>
                                 <?php
-                                    // Normalize types (may be array, CSV string, or JSON-encoded array)
+                                    // Normalize types (may be array, CSV string, JSON array, or from database)
                                     $types = [];
                                     // Accept multiple possible fields that might contain type info
                                     $typeSource = null;
@@ -724,7 +219,7 @@
                                             $types = $typeSource;
                                         } else {
                                             $raw = trim((string) $typeSource);
-                                            // Try JSON decode first (handles CRUD that saved JSON)
+                                            // Try JSON decode first (handles database JSON field or form submission)
                                             $decoded = null;
                                             if ($raw !== '') {
                                                 $json = json_decode($raw, true);
@@ -784,6 +279,66 @@
                         </div>
                     </div>
                     <?php endforeach; ?>
+                    <?php
+                        // After rendering other projects, output the CRUD card if it was present
+                        if ($crud_project !== null) {
+                            $cp = $crud_project;
+                            $ctitle = isset($cp['title']) ? $cp['title'] : 'CRUD';
+                            $cdesc  = isset($cp['description']) ? $cp['description'] : '';
+                            $cimg   = isset($cp['image']) && $cp['image'] ? $cp['image'] : 'https://via.placeholder.com/800x450?text=CRUD';
+                            // Apply base_url() to relative paths for uploaded images
+                            if ($cimg && strpos($cimg, 'http') !== 0 && strpos($cimg, '//') !== 0) {
+                                $cimg = base_url($cimg);
+                            }
+                            $curl   = isset($cp['url']) ? $cp['url'] : '#';
+                    ?>
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="card project-card h-100">
+                            <a href="<?php echo htmlspecialchars($curl); ?>" target="_blank" rel="noopener" class="stretched-link link-overlay">
+                                <img src="<?php echo htmlspecialchars($cimg); ?>" class="card-img-top project-img" alt="<?php echo htmlspecialchars($ctitle); ?>">
+                            </a>
+                            <div class="card-body">
+                                <h5 class="card-title"><?php echo htmlspecialchars($ctitle); ?></h5>
+                                <p class="card-text"><?php echo htmlspecialchars($cdesc); ?></p>
+                                <div class="project-tags">
+                                    <?php
+                                        // Decode type field for CRUD if available
+                                        $ctypes = [];
+                                        if (isset($cp['type']) && $cp['type']) {
+                                            $craw = trim((string) $cp['type']);
+                                            $cdecoded = json_decode($craw, true);
+                                            if (is_array($cdecoded)) {
+                                                $ctypes = $cdecoded;
+                                            } elseif ($craw !== '') {
+                                                $ctypes = array_filter(array_map('trim', explode(',', $craw)));
+                                            }
+                                        }
+                                        
+                                        $ctypeLabels = [
+                                            'php' => 'PHP', 'javascript' => 'JS', 'html_css' => 'HTML/CSS',
+                                            'nodejs' => 'Node', 'react' => 'React', 'vue' => 'Vue',
+                                            'angular' => 'Angular', 'uiux' => 'UI', 'cli' => 'CLI',
+                                            'devops' => 'DevOps', 'other' => 'Other'
+                                        ];
+                                        
+                                        if (!empty($ctypes)) {
+                                            foreach ($ctypes as $ct) {
+                                                $ckey = trim((string) $ct);
+                                                if ($ckey === '') continue;
+                                                $clabel = isset($ctypeLabels[$ckey]) ? $ctypeLabels[$ckey] : $ckey;
+                                                echo '<span class="tag">' . htmlspecialchars($clabel) . '</span>';
+                                            }
+                                        } else {
+                                            // Fallback to hardcoded if no type field
+                                            echo '<span class="tag">JS</span>';
+                                            echo '<span class="tag">UI</span>';
+                                        }
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <?php } ?>
                 <?php else: ?>
                     <div class="col-12">
                         <div class="alert alert-info mb-0">
@@ -802,11 +357,64 @@
                 <p>Get to know me better</p>
             </div>
             <div class="row">
-                <div class="col-lg-8 mx-auto">
+                <div class="col-lg-8">
                     <div class="about-content">
                         <p>I'm a motivated Information Technology student passionate about creating innovative web solutions. Currently working on completing my On-the-Job Training (OJT) to gain hands-on experience in a real-world tech environment.</p>
                         <p>I specialize in front-end development and have a solid foundation in web technologies. I'm dedicated to continuous learning and always excited to tackle new challenges and contribute meaningfully to any organization.</p>
                         <p>When I'm not coding, you can find me exploring new technologies, contributing to open-source projects, or working on personal projects to expand my skill set.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="education">
+        <div class="container">
+            <div class="section-header">
+                <h2>Education</h2>
+                <p>Academic background and qualifications</p>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="education-card">
+                        <div class="edu-timeline">
+                            <div class="edu-item">
+                                <div class="edu-initial" aria-hidden="true">T</div>
+                                <div class="edu-year">2008 &ndash; 2014</div>
+                                <div class="edu-body">
+                                    <div class="edu-school">Talon Elementary School</div>
+                                    <div class="edu-meta">Graduated 2014</div>
+                                </div>
+                            </div>
+
+                            <div class="edu-item">
+                                <div class="edu-initial" aria-hidden="true">C</div>
+                                <div class="edu-year">2015 &ndash; 2019</div>
+                                <div class="edu-body">
+                                    <div class="edu-school">City of Bacoor National High School &mdash; Springville Campus</div>
+                                    <div class="edu-meta">Graduated 2019</div>
+                                </div>
+                            </div>
+
+                            <div class="edu-item">
+                                <div class="edu-initial" aria-hidden="true">L</div>
+                                <div class="edu-year">2020 &ndash; 2021</div>
+                                <div class="edu-body">
+                                    <div class="edu-school">Las Piñas City National Senior High School &mdash; Doña Josefa Campus</div>
+                                    <div class="edu-meta">ICT Strand  &mdash; Graduated 2021</div>
+                                </div>
+                            </div>
+
+                            <div class="edu-item">
+                                <div class="edu-initial" aria-hidden="true">S</div>
+                                <div class="edu-year">2023 &ndash; 2026</div>
+                                <div class="edu-body">
+                                    <div class="edu-school">St. Dominic College of Asia</div>
+                                    <div class="edu-meta">B.S. Information Technology &mdash; Expected Graduation 2026</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -819,38 +427,75 @@
                 <h2>Technical Skills</h2>
                 <p>Technologies and tools I work with</p>
             </div>
-            <div class="skills-grid">
-                <div class="skill-item">
-                    <i class="fab fa-github"></i>
-                    <h3>Version Control</h3>
-                    <p>Git & GitHub for collaborative development</p>
+
+            
+
+            <!-- Horizontal skill rows (existing layout) -->
+            <div class="skills-grid rows">
+                    <div class="skill-row">
+                        <div class="skill-head">
+                                <div class="skill-label">HTML5 / CSS3</div>
+                                <div class="skill-value" data-percent="90"></div>
+                            </div>
+                        <div class="skill-bar">
+                            <div class="skill-bar-track">
+                                <div class="skill-bar-fill" data-percent="90"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="skill-row">
+                        <div class="skill-head">
+                            <div class="skill-label">JavaScript</div>
+                            <div class="skill-value" data-percent="80"></div>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-bar-track">
+                                <div class="skill-bar-fill" data-percent="80"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+
+                    <div class="skill-row">
+                        <div class="skill-head">
+                            <div class="skill-label">GitHub</div>
+                            <div class="skill-value" data-percent="92"></div>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-bar-track">
+                                <div class="skill-bar-fill" data-percent="92"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="skill-row">
+                        <div class="skill-head">
+                            <div class="skill-label">CodeIgniter</div>
+                            <div class="skill-value" data-percent="70"></div>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-bar-track">
+                                <div class="skill-bar-fill" data-percent="70"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="skill-row">
+                        <div class="skill-head">
+                            <div class="skill-label">PHP</div>
+                            <div class="skill-value" data-percent="70"></div>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-bar-track">
+                                <div class="skill-bar-fill" data-percent="70"></div>
+                            </div>
+                        </div>
+                    </div>
+
+
                 </div>
-                <div class="skill-item">
-                    <i class="fab fa-html5"></i>
-                    <h3>HTML & CSS</h3>
-                    <p>Modern semantic markup and responsive design</p>
-                </div>
-                <div class="skill-item">
-                    <i class="fab fa-js"></i>
-                    <h3>JavaScript</h3>
-                    <p>Dynamic web interactions and frontend logic</p>
-                </div>
-                <div class="skill-item">
-                    <i class="fab fa-php"></i>
-                    <h3>PHP</h3>
-                    <p>Server-side development and backend logic</p>
-                </div>
-                <div class="skill-item">
-                    <i class="fas fa-server"></i>
-                    <h3>CodeIgniter</h3>
-                    <p>MVC framework for robust web applications</p>
-                </div>
-                <div class="skill-item">
-                    <i class="fas fa-tools"></i>
-                    <h3>Technical Support</h3>
-                    <p>Computer troubleshooting and system administration</p>
-                </div>
-            </div>
         </div>
     </section>
 
@@ -884,13 +529,19 @@
                                 <div class="col-md-6">
                                     <div class="contact-item">
                                         <strong><i class="fas fa-mobile-alt me-2"></i>Phone</strong>
-                                        <p>09096059630</p>
+                                        <p>639096059630</p>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="contact-item">
                                         <strong><i class="fab fa-github me-2"></i>GitHub</strong>
                                         <a href="https://github.com/migs159" target="_blank" rel="noopener noreferrer">github.com/migs159</a>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="contact-item">
+                                        <strong><i class="fab fa-linkedin me-2"></i>LinkedIn</strong>
+                                        <a href="https://www.linkedin.com/in/miguel-andrei-del-rosario-a291693b1/" target="_blank" rel="noopener noreferrer">linkedin.com/in/miguel-andrei-del-rosario-a291693b1</a>
                                     </div>
                                 </div>
                             </div>
@@ -905,8 +556,8 @@
 <footer>
     <div class="container">
         <p>&copy; <?php echo date('Y'); ?> <?php echo isset($site_title) ? htmlspecialchars($site_title) : 'Miguel Andrei del Rosario'; ?>. All rights reserved.</p>
-        <div class="mt-2" style="opacity:0.6;font-size:0.9rem">
-            <p>Crafted with <i class="fas fa-heart" style="color:#ec4899"></i> for excellence in web development</p>
+        <div class="mt-2 footer-credit">
+            <p>Crafted with <i class="fas fa-heart heart-icon"></i> for excellence in web development</p>
         </div>
     </div>
 </footer>
@@ -914,6 +565,31 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function(){
+    // helper: animate numeric count from 0 to target
+    // animateCount(el, target, duration, fromOverride, onComplete)
+    // - el: element to update (text content will be set to '<n>%')
+    // - target: final percent number
+    // - duration: ms (optional)
+    // - fromOverride: numeric start value (optional)
+    // - onComplete: function called after finishing (optional)
+    function animateCount(el, target, duration, fromOverride, onComplete){
+        if (!el) return;
+        target = Math.max(0, Math.min(100, parseInt(target,10)||0));
+        duration = duration || 1400;
+        const start = performance.now();
+        const raw = (el.textContent||'').replace('%','').trim();
+        let from = Number.isFinite(fromOverride) ? fromOverride : parseInt(raw, 10);
+        if (!Number.isFinite(from) || isNaN(from)) from = 0;
+        function easeOutCubic(t){ return 1 - Math.pow(1-t,3); }
+        function frame(now){
+            const t = Math.min(1, (now - start)/duration);
+            const v = Math.round(from + (target - from)*easeOutCubic(t));
+            el.textContent = v + '%';
+            if (t < 1) requestAnimationFrame(frame);
+            else if (typeof onComplete === 'function') onComplete();
+        }
+        requestAnimationFrame(frame);
+    }
     var imgs = document.querySelectorAll('.project-img');
     imgs.forEach(function(img){
         img.addEventListener('error', function handler(){
@@ -1005,14 +681,114 @@ document.addEventListener('DOMContentLoaded', function(){
         entries.forEach(entry => {
             if (entry.isIntersecting){
                 entry.target.classList.add('fade-in');
+                // animate any meter/bar fills inside this section
+                try {
+                    // old meter support
+                    const oldFill = entry.target.querySelector('.skill-meter-fill');
+                    if (oldFill) {
+                        const pct = parseInt(oldFill.getAttribute('data-percent') || '0', 10) || 0;
+                        setTimeout(() => { oldFill.style.width = pct + '%'; }, 60);
+                    }
+
+                    // new bar support: do not auto-fill bars on reveal — bars appear only on hover
+                } catch (e) {}
                 observer.unobserve(entry.target);
             }
         });
     }, observerOptions);
 
-    document.querySelectorAll('.project-card, .skill-item, .about-content').forEach(el => {
+    document.querySelectorAll('.project-card, .skill-row, .about-content').forEach(el => {
         observer.observe(el);
     });
+
+    // Hover interactions: ensure new bars animate on hover and show value visually
+    try {
+        // Populate visible percentage numbers from data-percent so values are shown by default
+        document.querySelectorAll('.skill-value').forEach(function(v){
+            try {
+                var dp = v.getAttribute('data-percent');
+                if (dp !== null && dp !== undefined && dp !== '') v.textContent = (parseInt(dp,10)||0) + '%';
+            } catch(e){}
+        });
+        document.querySelectorAll('.skill-row').forEach(row => {
+            const fill = row.querySelector('.skill-bar-fill');
+            const valueEl = row.querySelector('.skill-value');
+            const pct = fill ? parseInt(fill.getAttribute('data-percent') || '0', 10) : 0;
+
+            row.addEventListener('mouseenter', () => {
+                if (fill) {
+                    // make fill visible, then set width shortly after to ensure transition
+                    fill.style.opacity = '1';
+                    setTimeout(() => { fill.style.width = pct + '%'; }, 20);
+                }
+                    if (valueEl) {
+                        // ensure label stays visible (we now show numbers by default)
+                        valueEl.style.opacity = '1';
+                        valueEl.style.transform = 'translateY(0)';
+                        // create a transient animated span so original number remains visible
+                        try {
+                            if (!row._animSpan) {
+                                var anim = document.createElement('span');
+                                anim.className = 'skill-value-anim';
+                                anim.textContent = '';
+                                row._animSpan = anim;
+                                row.querySelector('.skill-head').appendChild(anim);
+                                var target = parseInt(valueEl.getAttribute('data-percent')||pct,10) || 0;
+                                // animate from 0 to target and then remove transient and ensure original shows target
+                                animateCount(anim, target, 1400, 0, function(){
+                                    try { if (row._animSpan) { row._animSpan.remove(); row._animSpan = null; } } catch(e){}
+                                    try { valueEl.textContent = target + '%'; } catch(e){}
+                                });
+                            }
+                        } catch(e){}
+                    }
+            });
+
+                row.addEventListener('mouseleave', () => {
+                    if (fill) {
+                        // collapse and hide the fill
+                        fill.style.width = '0%';
+                        fill.style.opacity = '0';
+                    }
+                    if (valueEl) {
+                            valueEl.style.opacity = '';
+                            valueEl.style.transform = '';
+                            // cleanup transient animator if present
+                            try { if (row._animSpan) { row._animSpan.remove(); row._animSpan = null; } } catch(e){}
+                        }
+                });
+
+            row.addEventListener('mouseleave', () => {
+                if (valueEl) {
+                    valueEl.style.opacity = '';
+                    valueEl.style.transform = '';
+                }
+            });
+        });
+    } catch (err) {}
+});
+</script>
+<script>
+// Typing animation for hero name
+document.addEventListener('DOMContentLoaded', function(){
+    try {
+        var typedEl = document.querySelector('.name .typed');
+        if (!typedEl) return;
+        var text = typedEl.getAttribute('data-text') || typedEl.textContent || '';
+        // ensure accessible name remains via aria-label on the h1
+        typedEl.textContent = '';
+        var idx = 0;
+        var speed = 80; // ms per character
+        function step(){
+            if (idx <= text.length){
+                typedEl.textContent = text.slice(0, idx);
+                idx++;
+                setTimeout(step, speed);
+            }
+        }
+        // small delay so other hero animations run first
+        setTimeout(step, 220);
+    } catch (e) { console.warn('Typing animation error', e); }
 });
 </script>
 </body>

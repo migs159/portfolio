@@ -1,29 +1,100 @@
 :root{
-  --primary:#2563eb;
-  --primary-dark:#1e40af;
-  --secondary:#06b6d4;
-  --accent:#111827;
+  --primary:#003d99;
+  --secondary:#002550;
+  --accent:#003d99;
   --muted:#6b7280;
-  --light-bg:#f8fafc;
+  --light-bg:#f0f4ff;
   --surface:#ffffff;
-  --glass: rgba(37,99,235,0.08);
-  --card-shadow: 0 10px 30px rgba(2,6,23,0.06);
-  --radius: 12px;
-  --footer-bg: #0b1220; /* dark navy from provided image */
+  --footer-bg: #6b7280;
   --footer-text: #ffffff;
 }
 
-/* small helpers to keep color usage consistent */
+/* Base body and page styling */
+body {
+    font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    background: #ffffff;
+    color: var(--accent);
+    position: relative;
+    overflow-x: hidden;
+    padding-top: 70px;
+    margin: 0;
+}
+
+/* Smooth gradient background */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at 20% 50%, rgba(0, 61, 153, 0.08), transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 61, 153, 0.05), transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Modern navbar */
+.navbar {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    z-index: 1200;
+    transition: all 0.3s ease;
+}
+
+.navbar.scrolled {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: #003d99;
+}
+
+.navbar .nav-link {
+    color: #64748b !important;
+    font-weight: 500;
+    font-size: 0.95rem;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.navbar .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary);
+    transition: width 0.3s ease;
+}
+
+.navbar .nav-link:hover {
+    color: var(--primary) !important;
+}
+
+.navbar .nav-link:hover::after {
+    width: 100%;
+}
+
+/* Footer */
+footer {
+    background: var(--footer-bg) !important;
+    color: var(--footer-text) !important;
+    padding: 2rem 0;
+    text-align: center;
+    margin-top: 4rem;
+    border-top: 1px solid rgba(59, 130, 246, 0.1);
+}
+
+footer p {
+    margin: 0;
+    opacity: 0.8;
+}
+
+/* Utility classes */
 .text-primary { color: var(--primary) !important; }
 .bg-primary { background: var(--primary) !important; }
 .bg-surface { background: var(--surface) !important; }
-
-/* Make gradient utilities consistent */
 .gradient-primary { background: linear-gradient(135deg, var(--primary), var(--secondary)); }
-.gradient-primary-dark { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); }
 
-/* Footer helper */
-.footer { background: var(--footer-bg); color: var(--footer-text); }
-
-/* Force footer color to avoid overrides from other styles */
-footer { background: var(--footer-bg) !important; color: var(--footer-text) !important; }
