@@ -53,7 +53,6 @@
         <?php $initial = isset($site_title) ? strtoupper(substr(trim($site_title),0,1)) : 'M'; ?>
         <div id="hero-initial" aria-hidden="true"><?php echo htmlspecialchars($initial); ?></div>
         <div class="hero-inner">
-            <div class="hero-right">
                     <?php
                         // Prefer PNG (transparent) but check disk in case of name mismatch
                         $profile_rel = 'assets/img/profile.png';
@@ -65,7 +64,6 @@
                     <?php if (!$profile_exists): ?>
                         <div class="profile-debug">Debug: profile image file not found on server at <strong><?php echo htmlspecialchars($profile_file ?: 'unknown'); ?></strong></div>
                     <?php endif; ?>
-            </div>
             <div class="hero-left">
                 <div class="greeting">Welcome to my portfolio</div>
                 <h1 class="name" aria-label="Miguel Andrei del Rosario">
@@ -432,7 +430,7 @@
     <section id="skills">
         <div class="container">
             <div class="section-header">
-                <h2>Technical Skills</h2>
+                <h2>My Skills</h2>
                 <p>Technologies and tools I work with</p>
             </div>
 
@@ -498,6 +496,18 @@
                         <div class="skill-bar">
                             <div class="skill-bar-track">
                                 <div class="skill-bar-fill" data-percent="70"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="skill-row">
+                        <div class="skill-head">
+                            <div class="skill-label">MySQL</div>
+                            <div class="skill-value" data-percent="60"></div>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-bar-track">
+                                <div class="skill-bar-fill" data-percent="60"></div>
                             </div>
                         </div>
                     </div>
@@ -725,9 +735,9 @@ document.addEventListener('DOMContentLoaded', function(){
 
             row.addEventListener('mouseenter', () => {
                 if (fill) {
-                    // make fill visible, then set width shortly after to ensure transition
-                    fill.style.opacity = '1';
-                    setTimeout(() => { fill.style.width = pct + '%'; }, 20);
+                    // Set CSS custom property for animation
+                    fill.style.setProperty('--skill-percent', pct + '%');
+                    fill.classList.add('animate-fill');
                 }
                     if (valueEl) {
                         // ensure label stays visible (we now show numbers by default)
@@ -754,9 +764,8 @@ document.addEventListener('DOMContentLoaded', function(){
 
                 row.addEventListener('mouseleave', () => {
                     if (fill) {
-                        // collapse and hide the fill
-                        fill.style.width = '0%';
-                        fill.style.opacity = '0';
+                        // Remove animation class to reset
+                        fill.classList.remove('animate-fill');
                     }
                     if (valueEl) {
                             valueEl.style.opacity = '';
@@ -766,12 +775,6 @@ document.addEventListener('DOMContentLoaded', function(){
                         }
                 });
 
-            row.addEventListener('mouseleave', () => {
-                if (valueEl) {
-                    valueEl.style.opacity = '';
-                    valueEl.style.transform = '';
-                }
-            });
         });
     } catch (err) {}
 });

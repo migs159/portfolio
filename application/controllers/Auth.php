@@ -37,7 +37,7 @@ class Auth extends CI_Controller {
                 $this->session->set_flashdata('login_success', 'Signed in successfully.');
                 redirect('crud');
             }
-            $data['error'] = 'Invalid credentials';
+            $data['error'] = 'The username or password you\'ve entered is incorrect';
         }
         $this->load->view('login', $data);
     }

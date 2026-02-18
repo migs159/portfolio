@@ -290,13 +290,13 @@
             if (data && typeof data === 'object' && data.success && data.id) {
               var card = document.querySelector('.proj-card[data-id="'+data.id+'"]');
               if(card) card.remove();
-              Toast.fire({ icon: 'success', title: data.message || 'Project deleted', timer: 3500 });
+              Swal.fire({ icon: 'success', title: 'Project Deleted', text: data.message || 'Your project has been deleted', confirmButtonColor: '#003d99', timer: 2500 });
             } else {
               // fallback: reload the iframe to reflect changes
-              Toast.fire({ icon: 'success', title: 'Project removed, refreshing', timer: 2200 });
+              Swal.fire({ icon: 'success', title: 'Project Removed', text: 'Refreshing...', confirmButtonColor: '#003d99', timer: 1500 });
               setTimeout(function(){ location.reload(); }, 600);
             }
-          }).catch(function(){ Toast.fire({ icon: 'error', title: 'Delete failed' }); });
+          }).catch(function(){ Swal.fire({ icon: 'error', title: 'Delete Failed', text: 'Unable to delete project', confirmButtonColor: '#003d99' }); });
       });
 
       // Handle edit form via AJAX so the edit modal closes and the card updates without reload
@@ -342,11 +342,11 @@
                     }
                   }
                 }
-                Toast.fire({ icon: 'success', title: json.message || 'Project updated', timer: 3500 });
+                Swal.fire({ icon: 'success', title: 'Project Updated', text: json.message || 'Your project has been updated successfully', confirmButtonColor: '#003d99', timer: 2500 });
               } else {
-                Toast.fire({ icon: 'error', title: (json && json.message) || 'Update failed' });
+                Swal.fire({ icon: 'error', title: 'Update Failed', text: (json && json.message) || 'Unable to update project', confirmButtonColor: '#003d99' });
               }
-            }).catch(function(){ Toast.fire({ icon: 'error', title: 'Update failed' }); });
+            }).catch(function(){ Swal.fire({ icon: 'error', title: 'Update Error', text: 'Failed to connect', confirmButtonColor: '#003d99' }); });
         });
       })();
     });
@@ -365,10 +365,10 @@
     document.addEventListener('DOMContentLoaded', function(){
       try {
         if (flash_success) {
-          Toast.fire({ icon: 'success', title: flash_success, timer: 3500 });
+          Swal.fire({ icon: 'success', title: 'Success', text: flash_success, confirmButtonColor: '#003d99', timer: 2500 });
         }
         if (flash_error) {
-          Toast.fire({ icon: 'error', title: flash_error, timer: 5000 });
+          Swal.fire({ icon: 'error', title: 'Error', text: flash_error, confirmButtonColor: '#003d99' });
         }
       } catch (err) {}
     });

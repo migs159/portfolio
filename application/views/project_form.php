@@ -56,6 +56,8 @@
               'react' => 'React',
               'vue' => 'Vue',
               'angular' => 'Angular',
+              'sql' => 'SQL',
+              'mysql' => 'MySQL',
               'uiux' => 'UI',
               'cli' => 'CLI',
               'devops' => 'DevOps',
@@ -103,10 +105,10 @@
         var flash_success = <?php echo json_encode($this->session->flashdata('success')); ?>;
         var flash_error = <?php echo json_encode($this->session->flashdata('error')); ?>;
         if (flash_success) {
-          Toast.fire({ icon: 'success', title: flash_success, timer: 3500 });
+          Swal.fire({ icon: 'success', title: 'Success', text: flash_success, confirmButtonColor: '#003d99', timer: 2500 });
         }
         if (flash_error) {
-          Toast.fire({ icon: 'error', title: flash_error, timer: 5000 });
+          Swal.fire({ icon: 'error', title: 'Error', text: flash_error, confirmButtonColor: '#003d99' });
         }
       }catch(e){}
 

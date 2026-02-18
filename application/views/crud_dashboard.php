@@ -84,6 +84,7 @@
                 <th>Image</th>
                 <th>URL</th>
                 <th>Created</th>
+                <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -111,6 +112,13 @@
                     </td>
                     <td class="table-cell-muted">
                       <?php echo htmlspecialchars(isset($e['created_at']) ? date('M d, Y', strtotime($e['created_at'])) : ''); ?>
+                    </td>
+                    <td>
+                      <?php if (isset($e['featured']) && $e['featured']): ?>
+                        <span class="badge bg-primary text-white badge-featured"><i class="fas fa-star me-1"></i>Featured</span>
+                      <?php else: ?>
+                        <span class="badge bg-light text-muted badge-status">Active</span>
+                      <?php endif; ?>
                     </td>
                     <?php
                       $pid = null;
@@ -179,6 +187,8 @@
                     <option value="react">React</option>
                     <option value="vue">Vue.js</option>
                     <option value="angular">Angular</option>
+                    <option value="sql">SQL</option>
+                    <option value="mysql">MySQL</option>
                     <option value="uiux">UI/UX</option>
                     <option value="cli">CLI / Tools</option>
                     <option value="devops">DevOps</option>
@@ -206,7 +216,8 @@
                 </div>
 
                 <div class="featured-checkbox-wrapper-full">
-                  <input type="checkbox" id="featuredCheckbox" name="featured" value="1" class="form-check-input featured-checkbox-input">
+                  <input type="hidden" name="featured" value="0" id="featuredHidden">
+                  <input type="checkbox" id="featuredCheckbox" class="form-check-input featured-checkbox-input">
                   <label for="featuredCheckbox" class="featured-checkbox-label-text">Mark as featured</label>
                 </div>
               </div>
@@ -372,7 +383,7 @@
     }
 
     function handleViewProject(id){
-      if(!id){ Toast.fire({ icon: 'error', title: 'Project ID not available' }); return; }
+      if(!id){ Swal.fire({ icon: 'error', title: 'Error', text: 'Project ID not available', confirmButtonColor: '#003d99' }); return; }
       
       var projectsBase = '<?php echo site_url('projects'); ?>';
       var url = projectsBase + '/get/' + id;
@@ -392,16 +403,16 @@
             var modal = new bootstrap.Modal(document.getElementById('viewProjectModal'));
             modal.show();
           } else {
-            Toast.fire({ icon: 'error', title: 'Unable to load project details' });
+            Swal.fire({ icon: 'error', title: 'Error', text: 'Unable to load project details', confirmButtonColor: '#003d99' });
           }
         }).catch(function(){
-          Toast.fire({ icon: 'error', title: 'Network error loading project' });
+          Swal.fire({ icon: 'error', title: 'Error', text: 'Network error loading project', confirmButtonColor: '#003d99' });
         });
     }
 
     function handleEditProject(url, id){
       if(!url && !id){
-        Toast.fire({ icon: 'error', title: 'Edit URL not available' });
+        Swal.fire({ icon: 'error', title: 'Error', text: 'Edit URL not available', confirmButtonColor: '#003d99' });
         return;
       }
       if(!url && id){
@@ -413,7 +424,7 @@
 
     function handleDeleteProject(url, id){
       if(!url && !id){
-        Toast.fire({ icon: 'error', title: 'Delete URL not available' });
+        Swal.fire({ icon: 'error', title: 'Error', text: 'Delete URL not available', confirmButtonColor: '#003d99' });
         return;
       }
       if(!url && id){
@@ -456,14 +467,14 @@
                 var row = deleteBtn.closest('tr');
                 if(row) row.parentNode.removeChild(row);
               }
-              Toast.fire({ icon: 'success', title: json.message || 'Deleted' });
+              Swal.fire({ icon: 'success', title: 'Success', text: json.message || 'Deleted', confirmButtonColor: '#003d99', timer: 2000 });
             } else {
-              Toast.fire({ icon: 'error', title: (json && json.message) || 'Delete failed' });
+              Swal.fire({ icon: 'error', title: 'Error', text: (json && json.message) || 'Delete failed', confirmButtonColor: '#003d99' });
             }
           })
           .catch(function(err){
             console.error('Delete error:', err);
-            Toast.fire({ icon: 'error', title: 'Error: ' + err.message });
+            Swal.fire({ icon: 'error', title: 'Delete Error', text: 'Failed to delete: ' + (err.message || 'Unknown error'), confirmButtonColor: '#003d99' });
           });
       });
     }
@@ -474,6 +485,20 @@
     }
   </script>
   <script>
+    // Handle featured checkbox - update hidden field when checkbox value changes
+    (function(){
+      var modal = document.getElementById('quickCreateModal');
+      if(!modal) return;
+      var featuredCheckbox = modal.querySelector('#featuredCheckbox');
+      var featuredHidden = modal.querySelector('#featuredHidden');
+      if(featuredCheckbox && featuredHidden){
+        featuredCheckbox.addEventListener('change', function(){
+          featuredHidden.value = this.checked ? '1' : '0';
+          console.log('Featured checkbox changed:', this.checked, 'Hidden value:', featuredHidden.value);
+        });
+      }
+    })();
+
     // AJAX submit for quick-create so we can show a Toast and close the modal without a full redirect
     (function(){
       var modal = document.getElementById('quickCreateModal');
@@ -502,7 +527,16 @@
             console.log('Parsed JSON response:', json);
             try{ bootstrap.Modal.getOrCreateInstance(modal).hide(); }catch(e){}
             if (json && json.success) {
-              Toast.fire({ icon: 'success', title: json.message || 'Created', timer: 3500 });
+              Swal.fire({
+                icon: 'success',
+                title: 'Project Created',
+                text: json.message || 'Your project has been created successfully',
+                confirmButtonColor: '#003d99',
+                timer: 2500,
+                didClose: function(){
+                  location.reload();
+                }
+              });
 
               // Prepend the newly created project into the events table.
               try{
@@ -534,6 +568,7 @@
                           '<div class="project-title-cell">'+ escapeHtml(title) +'</div>' +
                           '<div class="project-desc-cell">'+ escapeHtml(description) +'</div>' +
                         '</td>' +
+                        '<td class="table-cell-muted">-</td>' +
                         '<td class="table-cell-muted">'+ escapeHtml(url) +'</td>' +
                         '<td class="table-cell-muted">'+ escapeHtml(created_at) +'</td>' +
                         '<td><span class="badge bg-light text-muted badge-status">'+ escapeHtml(status) +'</span>' + featuredBadge + '</td>' +
@@ -577,12 +612,12 @@
                 }
               }catch(e){console.error(e);} 
             } else {
-              Toast.fire({ icon: 'error', title: (json && json.message) || 'Create failed', timer: 5000 });
+              Swal.fire({ icon: 'error', title: 'Project Creation Failed', text: (json && json.message) || 'Unable to create project. Please try again.', confirmButtonColor: '#003d99' });
             }
           }).catch(function(err){
             console.error('Create request caught error:', err.message, err);
             try{ bootstrap.Modal.getOrCreateInstance(modal).hide(); }catch(e){}
-            Toast.fire({ icon: 'error', title: 'Network error: ' + (err.message || 'Unknown'), timer: 5000 });
+            Swal.fire({ icon: 'error', title: 'Network Error', text: 'Failed to connect: ' + (err.message || 'Unknown error'), confirmButtonColor: '#003d99' });
           });
       });
     })();
@@ -673,23 +708,32 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
-    const Toast = Swal.mixin({
-      toast: true,
-      position: 'top-end',
-      showConfirmButton: false,
-      timer: 3500,
-      timerProgressBar: true,
-      customClass: { container: 'swal2-top-toast' }
-    });
     document.addEventListener('DOMContentLoaded', function(){
       <?php if (!empty($login_success)): ?>
-        Toast.fire({ icon: 'success', title: <?php echo json_encode($login_success); ?>, timer: 4000 });
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: <?php echo json_encode($login_success); ?>,
+          confirmButtonColor: '#003d99',
+          timer: 3000
+        });
       <?php endif; ?>
       <?php if ($this->session->flashdata('success')): ?>
-        Toast.fire({ icon: 'success', title: <?php echo json_encode($this->session->flashdata('success')); ?>, timer: 3500 });
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: <?php echo json_encode($this->session->flashdata('success')); ?>,
+          confirmButtonColor: '#003d99',
+          timer: 3000
+        });
       <?php endif; ?>
       <?php if ($this->session->flashdata('error')): ?>
-        Toast.fire({ icon: 'error', title: <?php echo json_encode($this->session->flashdata('error')); ?>, timer: 5000 });
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: <?php echo json_encode($this->session->flashdata('error')); ?>,
+          confirmButtonColor: '#003d99'
+        });
       <?php endif; ?>
       // If a create/update/delete happened and we have a flash, ensure quickCreateModal is closed
       <?php if ($this->session->flashdata('success') || $this->session->flashdata('error')): ?>
