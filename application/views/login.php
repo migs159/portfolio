@@ -11,12 +11,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="<?php echo htmlspecialchars(function_exists('base_url') ? base_url('assets/css/theme.css') : '/assets/css/theme.css'); ?>">
   <link rel="stylesheet" href="<?php echo htmlspecialchars(function_exists('base_url') ? base_url('assets/css/auth-custom.css') : '/assets/css/auth-custom.css'); ?>">
-  <style>
-    * { scroll-behavior: smooth; }
-    html { scroll-behavior: smooth; }
-    /* Ensure SweetAlert2 toasts appear above page chrome */
-    .swal2-container.swal2-top-toast { z-index: 3200 !important; }
-  </style>
 </head>
 <body>
   <div class="login-container">

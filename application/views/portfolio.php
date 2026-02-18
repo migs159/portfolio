@@ -134,12 +134,16 @@
                         // Decode type field
                         $ftypes = [];
                         if (isset($fp['type']) && $fp['type']) {
-                            $raw = trim((string) $fp['type']);
-                            $decoded = json_decode($raw, true);
-                            if (is_array($decoded)) {
-                                $ftypes = $decoded;
-                            } elseif ($raw !== '') {
-                                $ftypes = array_filter(array_map('trim', explode(',', $raw)));
+                            if (is_array($fp['type'])) {
+                                $ftypes = $fp['type'];
+                            } else {
+                                $raw = trim((string) $fp['type']);
+                                $decoded = json_decode($raw, true);
+                                if (is_array($decoded)) {
+                                    $ftypes = $decoded;
+                                } elseif ($raw !== '') {
+                                    $ftypes = array_filter(array_map('trim', explode(',', $raw)));
+                                }
                             }
                         }
                         
@@ -305,12 +309,16 @@
                                         // Decode type field for CRUD if available
                                         $ctypes = [];
                                         if (isset($cp['type']) && $cp['type']) {
-                                            $craw = trim((string) $cp['type']);
-                                            $cdecoded = json_decode($craw, true);
-                                            if (is_array($cdecoded)) {
-                                                $ctypes = $cdecoded;
-                                            } elseif ($craw !== '') {
-                                                $ctypes = array_filter(array_map('trim', explode(',', $craw)));
+                                            if (is_array($cp['type'])) {
+                                                $ctypes = $cp['type'];
+                                            } else {
+                                                $craw = trim((string) $cp['type']);
+                                                $cdecoded = json_decode($craw, true);
+                                                if (is_array($cdecoded)) {
+                                                    $ctypes = $cdecoded;
+                                                } elseif ($craw !== '') {
+                                                    $ctypes = array_filter(array_map('trim', explode(',', $craw)));
+                                                }
                                             }
                                         }
                                         

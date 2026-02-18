@@ -38,12 +38,34 @@ class Project_model extends CI_Model {
     public function get_all()
     {
         // Sort by featured DESC (featured first), then by created_at DESC (newest first)
-        return $this->db->where('deleted_at', NULL)->order_by('featured', 'DESC')->order_by('created_at', 'DESC')->get($this->table)->result_array();
+        $projects = $this->db->where('deleted_at', NULL)->order_by('featured', 'DESC')->order_by('created_at', 'DESC')->get($this->table)->result_array();
+        
+        // Decode the type JSON field for each project
+        foreach ($projects as &$project) {
+            if (isset($project['type']) && !empty($project['type'])) {
+                $decoded = json_decode($project['type'], true);
+                $project['type'] = is_array($decoded) ? $decoded : [];
+            } else {
+                $project['type'] = [];
+            }
+        }
+        
+        return $projects;
     }
 
     public function get($id)
     {
-        return $this->db->where('id', $id)->where('deleted_at', NULL)->get($this->table)->row_array();
+        $project = $this->db->where('id', $id)->where('deleted_at', NULL)->get($this->table)->row_array();
+        
+        // Decode the type JSON field back to an array for use in forms
+        if ($project && isset($project['type']) && !empty($project['type'])) {
+            $decoded = json_decode($project['type'], true);
+            $project['type'] = is_array($decoded) ? $decoded : [];
+        } else {
+            $project['type'] = [];
+        }
+        
+        return $project;
     }
 
     public function create($payload)

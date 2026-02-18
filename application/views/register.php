@@ -10,9 +10,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="<?php echo htmlspecialchars(function_exists('base_url') ? base_url('assets/css/theme.css') : '/assets/css/theme.css'); ?>">
   <link rel="stylesheet" href="<?php echo htmlspecialchars(function_exists('base_url') ? base_url('assets/css/auth-custom.css') : '/assets/css/auth-custom.css'); ?>">
-  <style>
-    * { scroll-behavior: smooth; }
-  </style>
 </head>
 <body>
   <div class="card">
@@ -52,7 +49,7 @@
           <input name="confirm" type="password" class="form-control" required>
         </div>
         <div class="d-flex justify-content-between align-items-center">
-          <button class="btn-register">Register</button>
+          <button type="submit" class="btn-register">Register</button>
           <a href="<?php echo site_url('auth/login'); ?>" class="auth-back-link"><i class="fas fa-arrow-left"></i> Back to Login</a>
         </div>
       </form>

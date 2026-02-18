@@ -1,0 +1,355 @@
+:root {
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --accent: #1e40af;
+    --muted: #6b7280;
+    --key: #f1f5f9;
+    --soft: #eef2ff;
+    --shadow: rgba(14, 30, 70, 0.08);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: Inter, Segoe UI, Arial, Helvetica, sans-serif;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    color: #0f172a;
+}
+
+.wrap {
+    min-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 36px;
+}
+
+.app {
+    display: flex;
+    gap: 24px;
+    align-items: stretch;
+}
+
+.card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 22px;
+    width: 380px;
+    box-shadow: 0 18px 40px var(--shadow);
+    border: 1px solid rgba(30, 64, 175, 0.04);
+}
+
+.screen {
+    background: linear-gradient(135deg, #003d99 0%, #002550 100%);
+    border-radius: 12px;
+    padding: 14px 18px;
+    min-height: 96px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.expr {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    min-height: 18px;
+}
+
+.result {
+    font-size: 32px;
+    font-weight: 700;
+    color: #ffffff;
+    line-height: 1;
+}
+
+.keys {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.key {
+    background: var(--key);
+    border-radius: 10px;
+    padding: 14px 10px;
+    text-align: center;
+    font-size: 18px;
+    color: #0f172a;
+    border: 1px solid rgba(15, 23, 42, 0.04);
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
+}
+
+.key:active {
+    transform: translateY(1px);
+}
+
+.key:focus {
+    outline: 3px solid rgba(30, 64, 175, 0.08);
+    outline-offset: 2px;
+}
+
+.key.key--active {
+    transform: translateY(1px);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+}
+
+.key.op {
+    background: #eff6ff;
+    color: var(--accent);
+    font-weight: 600;
+    border: 1px solid rgba(30, 64, 175, 0.08);
+}
+
+.key.clear {
+    background: #fff1f2;
+    color: #9b1c1c;
+    border: 1px solid rgba(155, 28, 28, 0.06);
+}
+
+.key.equals {
+    grid-column: span 2;
+    background: var(--accent);
+    color: #ffffff;
+    font-weight: 700;
+    box-shadow: 0 8px 20px rgba(30, 64, 175, 0.18);
+}
+
+.history {
+    width: 260px;
+    background: var(--card);
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 10px 30px var(--shadow);
+    border: 1px solid rgba(15, 23, 42, 0.04);
+}
+
+.history h4 {
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.hist-list {
+    overflow: hidden;
+    max-height: 320px;
+    padding: 6px 0;
+    margin: 0;
+}
+
+.hist-item {
+    padding: 10px;
+    border-radius: 8px;
+    background: #fbfdff;
+    font-size: 13px;
+    color: #0b1220;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    align-items: center;
+    border: 1px solid rgba(30, 64, 175, 0.03);
+}
+
+.hist-item small {
+    color: var(--muted);
+}
+
+h3#calcTitle {
+    margin: 0 0 6px 0;
+    color: #003d99;
+    font-weight: 800;
+    font-size: 20px;
+}
+
+.title-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+    display: inline-block;
+}
+
+.title-text {
+    color: #003d99;
+    font-weight: 800;
+}
+
+.portfolio-btn-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 24px;
+}
+
+.portfolio-link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: var(--accent);
+    color: #ffffff;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 20px rgba(30, 64, 175, 0.18);
+    border: 2px solid var(--accent);
+}
+
+.portfolio-link-btn:hover {
+    background: #0b2e8f;
+    border-color: #0b2e8f;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(30, 64, 175, 0.25);
+}
+
+.portfolio-link-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 6px 16px rgba(30, 64, 175, 0.15);
+}
+
+@media (max-width: 840px) {
+    .app {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .history {
+        width: 100%;
+    }
+
+    .card {
+        width: 100%;
+        max-width: 480px;
+    }
+}
+
+/* ============================================================================
+   Header Styles
+   ============================================================================ */
+
+.calc-header-container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 0;
+    margin-bottom: 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
+}
+
+.calc-header-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 32px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.calc-header-logo {
+    margin: 0;
+    color: #003d99;
+    font-size: 24px;
+    font-weight: 800;
+    font-family: Inter, Segoe UI, Arial, Helvetica, sans-serif;
+    letter-spacing: -0.5px;
+}
+
+.calc-header-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #64748b;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 10px 18px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-family: Inter, Segoe UI, Arial, Helvetica, sans-serif;
+}
+
+.calc-header-link:hover {
+    color: #003d99;
+    background: rgba(0, 61, 153, 0.05);
+    transform: translateX(-2px);
+}
+
+.calc-header-link:active {
+    transform: translateX(0);
+}
+
+/* ============================================================================
+   Footer Styles
+   ============================================================================ */
+
+.calc-footer-container {
+    background-color: #6b7280;
+    color: #ffffff;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 32px 16px;
+    margin-top: 48px;
+    text-align: center;
+}
+
+.calc-footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.calc-footer-text {
+    margin: 0;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 400;
+    font-family: Inter, Segoe UI, Arial, Helvetica, sans-serif;
+}
+
+/* ============================================================================
+   Responsive Header & Footer
+   ============================================================================ */
+
+@media (max-width: 576px) {
+    .calc-header-nav {
+        padding: 12px 16px;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .calc-header-logo {
+        font-size: 20px;
+    }
+
+    .calc-header-link {
+        font-size: 14px;
+        padding: 8px 14px;
+    }
+
+    .calc-footer-container {
+        padding: 24px 12px;
+        margin-top: 32px;
+    }
+
+    .calc-footer-text {
+        font-size: 12px;
+    }
+}
