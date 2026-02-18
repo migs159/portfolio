@@ -89,53 +89,7 @@
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script>
-    const Toast = Swal.mixin({
-      toast: true,
-      position: 'top-end',
-      showConfirmButton: false,
-      timer: 3500,
-      timerProgressBar: true,
-      customClass: { container: 'swal2-top-toast' }
-    });
-    document.addEventListener('DOMContentLoaded', function(){
-      try{
-        var flash_success = <?php echo json_encode($this->session->flashdata('success')); ?>;
-        var flash_error = <?php echo json_encode($this->session->flashdata('error')); ?>;
-        if (flash_success) {
-          Swal.fire({ icon: 'success', title: 'Success', text: flash_success, confirmButtonColor: '#003d99', timer: 2500 });
-        }
-        if (flash_error) {
-          Swal.fire({ icon: 'error', title: 'Error', text: flash_error, confirmButtonColor: '#003d99' });
-        }
-      }catch(e){}
-
-      // Auto-preview for image input
-      var imageInput = document.querySelector('.image-input');
-      if (imageInput) {
-        imageInput.addEventListener('change', function(e) {
-          var file = this.files[0];
-          if (file) {
-            var reader = new FileReader();
-            reader.onload = function(event) {
-              var preview = imageInput.closest('.mb-3').querySelector('.image-preview');
-              if (preview) {
-                var img = preview.querySelector('img');
-                if (img) {
-                  img.src = event.target.result;
-                  preview.style.display = 'block';
-                  var label = preview.querySelector('small');
-                  if (label) label.textContent = 'Selected image:';
-                }
-              }
-            };
-            reader.readAsDataURL(file);
-          }
-        });
-      }
-    });
-  </script>
+  <script src="<?php echo htmlspecialchars(function_exists('base_url') ? base_url('assets/js/project_form.js') : '/assets/js/project_form.js'); ?>" data-flash-success="<?php echo htmlspecialchars($this->session->flashdata('success') ?? '', ENT_QUOTES, 'UTF-8'); ?>" data-flash-error="<?php echo htmlspecialchars($this->session->flashdata('error') ?? '', ENT_QUOTES, 'UTF-8'); ?>"></script>
 </body>
 </html>

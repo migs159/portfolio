@@ -45,17 +45,9 @@
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script>
-    const Toast = Swal.mixin({
-      toast: true,
-      position: 'top-end',
-      showConfirmButton: false,
-      timer: 3500,
-      timerProgressBar: true
-    });
-  </script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
   <script>
+    // Handle login error/success alerts
     document.addEventListener('DOMContentLoaded', function(){
       <?php if (!empty($error)): ?>
         Swal.fire({
@@ -77,5 +69,6 @@
       <?php endif; ?>
     });
   </script>
+  <script src="<?php echo htmlspecialchars(function_exists('base_url') ? base_url('assets/js/login.js') : '/assets/js/login.js'); ?>"></script>
 </body>
 </html>
