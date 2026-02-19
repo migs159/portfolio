@@ -16,8 +16,20 @@ html, body {
     height: 100%;
     margin: 0;
     font-family: Inter, Segoe UI, Arial, Helvetica, sans-serif;
-    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    background: #fafbfc;
     color: #0f172a;
+    position: relative;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at 20% 50%, rgba(0, 61, 153, 0.04), transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 61, 153, 0.02), transparent 50%);
+    pointer-events: none;
+    z-index: -1;
 }
 
 .wrap {
@@ -25,28 +37,29 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 36px;
+    padding: clamp(1rem, 5vw, 36px);
 }
 
 .app {
     display: flex;
-    gap: 24px;
+    gap: clamp(1rem, 3vw, 24px);
     align-items: stretch;
 }
 
 .card {
     background: var(--card);
     border-radius: 16px;
-    padding: 22px;
+    padding: clamp(1rem, 3vw, 22px);
     width: 380px;
-    box-shadow: 0 18px 40px var(--shadow);
-    border: 1px solid rgba(30, 64, 175, 0.04);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(30, 64, 175, 0.06);
+    transition: all 0.4s ease;
 }
 
 .screen {
     background: linear-gradient(135deg, #003d99 0%, #002550 100%);
     border-radius: 12px;
-    padding: 14px 18px;
+    padding: clamp(0.75rem, 2vw, 14px) clamp(1rem, 2vw, 18px);
     min-height: 96px;
     display: flex;
     flex-direction: column;
@@ -70,34 +83,36 @@ html, body {
 .keys {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-top: 16px;
+    gap: clamp(0.75rem, 2vw, 12px);
+    margin-top: clamp(1rem, 2vw, 16px);
 }
 
 .key {
     background: var(--key);
     border-radius: 10px;
-    padding: 14px 10px;
+    padding: clamp(0.75rem, 2vw, 14px) clamp(0.5rem, 1.5vw, 10px);
     text-align: center;
     font-size: 18px;
     color: #0f172a;
-    border: 1px solid rgba(15, 23, 42, 0.04);
+    border: 1px solid rgba(15, 23, 42, 0.06);
     cursor: pointer;
-    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+    transition: all 0.3s ease;
 }
 
 .key:active {
     transform: translateY(1px);
+    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.08);
 }
 
 .key:focus {
-    outline: 3px solid rgba(30, 64, 175, 0.08);
+    outline: 2px solid rgba(30, 64, 175, 0.1);
     outline-offset: 2px;
 }
 
 .key.key--active {
     transform: translateY(1px);
-    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
 }
 
 .key.op {
@@ -125,12 +140,13 @@ html, body {
     width: 260px;
     background: var(--card);
     border-radius: 12px;
-    padding: 14px;
+    padding: clamp(0.75rem, 2vw, 14px);
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    box-shadow: 0 10px 30px var(--shadow);
-    border: 1px solid rgba(15, 23, 42, 0.04);
+    gap: clamp(0.5rem, 1vw, 10px);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    transition: all 0.4s ease;
 }
 
 .history h4 {
@@ -157,7 +173,8 @@ html, body {
     justify-content: space-between;
     gap: 8px;
     align-items: center;
-    border: 1px solid rgba(30, 64, 175, 0.03);
+    border: 1px solid rgba(30, 64, 175, 0.05);
+    transition: all 0.2s ease;
 }
 
 .hist-item small {
@@ -174,7 +191,7 @@ h3#calcTitle {
 .title-row {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: clamp(0.75rem, 2vw, 12px);
 }
 
 .logo {
@@ -192,22 +209,22 @@ h3#calcTitle {
 .portfolio-btn-container {
     display: flex;
     justify-content: center;
-    margin-top: 24px;
+    margin-top: clamp(1.5rem, 3vw, 24px);
 }
 
 .portfolio-link-btn {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 12px 24px;
+    padding: clamp(0.75rem, 2vw, 12px) clamp(1.25rem, 3vw, 24px);
     background: var(--accent);
     color: #ffffff;
     border-radius: 10px;
     text-decoration: none;
     font-weight: 600;
     font-size: 15px;
-    transition: all 0.3s ease;
-    box-shadow: 0 8px 20px rgba(30, 64, 175, 0.18);
+    transition: all 0.4s ease;
+    box-shadow: 0 4px 12px rgba(30, 64, 175, 0.2);
     border: 2px solid var(--accent);
 }
 
@@ -215,7 +232,7 @@ h3#calcTitle {
     background: #0b2e8f;
     border-color: #0b2e8f;
     transform: translateY(-2px);
-    box-shadow: 0 12px 28px rgba(30, 64, 175, 0.25);
+    box-shadow: 0 8px 20px rgba(30, 64, 175, 0.25);
 }
 
 .portfolio-link-btn:active {
@@ -244,23 +261,23 @@ h3#calcTitle {
    ============================================================================ */
 
 .calc-header-container {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    background: rgba(250, 251, 252, 0.98);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
     padding: 0;
     margin-bottom: 2rem;
     position: sticky;
     top: 0;
     z-index: 100;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
 }
 
 .calc-header-nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem 32px;
+    padding: clamp(0.35rem, 1vw, 0.5rem) clamp(1rem, 3vw, 2rem);
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -284,7 +301,7 @@ h3#calcTitle {
     font-size: 15px;
     padding: 10px 18px;
     border-radius: 8px;
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
     font-family: Inter, Segoe UI, Arial, Helvetica, sans-serif;
 }
 
@@ -303,11 +320,11 @@ h3#calcTitle {
    ============================================================================ */
 
 .calc-footer-container {
-    background-color: #6b7280;
+    background-color: #2d3748;
     color: #ffffff;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 32px 16px;
-    margin-top: 48px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding: clamp(1.5rem, 4vw, 32px) clamp(1rem, 3vw, 16px);
+    margin-top: clamp(2.5rem, 6vw, 48px);
     text-align: center;
 }
 

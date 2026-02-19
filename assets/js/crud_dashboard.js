@@ -17,11 +17,26 @@ function openIframe(title, url){
 function handleViewProject(id){
   if(!id){ Swal.fire({ icon: 'error', title: 'Error', text: 'Project ID not available', confirmButtonColor: '#003d99' }); return; }
   
-  var projectsBase = document.querySelector('meta[name="projects-base-url"]')?.getAttribute('content') || '/projects';
-  var url = projectsBase + '/get/' + id;
-  fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-    .then(function(res){ return res.json(); })
+  var url = 'projects/get/' + id;
+  
+  if(iframeLoading) iframeLoading.style.display = 'flex';
+  
+  fetch(url, { 
+    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+    credentials: 'same-origin'
+  })
+    .then(function(res){ 
+      switch(res.status) {
+        case 200: return res.json();
+        case 401: throw new Error('You are not authenticated. Please log in again.');
+        case 404: throw new Error('Project not found');
+        case 400: throw new Error('Invalid request');
+        default: throw new Error('Server error (HTTP ' + res.status + ')');
+      }
+    })
     .then(function(json){
+      if(iframeLoading) iframeLoading.style.display = 'none';
+      
       if(json && json.project){
         var p = json.project;
         document.getElementById('viewTitle').textContent = p.title || '-';
@@ -34,10 +49,12 @@ function handleViewProject(id){
         var modal = new bootstrap.Modal(document.getElementById('viewProjectModal'));
         modal.show();
       } else {
-        Swal.fire({ icon: 'error', title: 'Error', text: 'Unable to load project details', confirmButtonColor: '#003d99' });
+        Swal.fire({ icon: 'error', title: 'Error', text: json?.message || 'Unable to load project details', confirmButtonColor: '#003d99' });
       }
-    }).catch(function(){
-      Swal.fire({ icon: 'error', title: 'Error', text: 'Network error loading project', confirmButtonColor: '#003d99' });
+    }).catch(function(err){
+      if(iframeLoading) iframeLoading.style.display = 'none';
+      var msg = err && typeof err.message === 'string' ? err.message : 'Unknown error';
+      Swal.fire({ icon: 'error', title: 'Error', text: msg, confirmButtonColor: '#003d99' });
     });
 }
 

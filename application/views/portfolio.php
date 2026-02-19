@@ -12,7 +12,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
     <title><?php echo isset($site_title) ? htmlspecialchars($site_title) : 'Portfolio'; ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -29,7 +29,7 @@
         </button>
         <div class="collapse navbar-collapse" id="nav">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="http://localhost/portfolio/index.php/portfolio">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="<?php echo htmlspecialchars(function_exists('site_url') ? site_url('portfolio') : '/portfolio'); ?>">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="#projects">Projects</a></li>
                 <li class="nav-item"><a class="nav-link" href="#about">About Me</a></li>
                 <li class="nav-item"><a class="nav-link" href="#skills">Skills</a></li>
@@ -441,12 +441,12 @@
             <div class="skills-grid rows">
                     <div class="skill-row">
                         <div class="skill-head">
-                                <div class="skill-label">HTML5 / CSS3</div>
-                                <div class="skill-value" data-percent="90"></div>
-                            </div>
+                            <div class="skill-label">HTML5 / CSS3</div>
+                            <div class="skill-value">95%</div>
+                        </div>
                         <div class="skill-bar">
                             <div class="skill-bar-track">
-                                <div class="skill-bar-fill" data-percent="90"></div>
+                                <div class="skill-bar-fill" data-percent="95"></div>
                             </div>
                         </div>
                     </div>
@@ -454,7 +454,19 @@
                     <div class="skill-row">
                         <div class="skill-head">
                             <div class="skill-label">JavaScript</div>
-                            <div class="skill-value" data-percent="80"></div>
+                            <div class="skill-value">85%</div>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-bar-track">
+                                <div class="skill-bar-fill" data-percent="85"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="skill-row">
+                        <div class="skill-head">
+                            <div class="skill-label">GitHub</div>
+                            <div class="skill-value">80%</div>
                         </div>
                         <div class="skill-bar">
                             <div class="skill-bar-track">
@@ -463,28 +475,14 @@
                         </div>
                     </div>
 
-                    
-
-                    <div class="skill-row">
-                        <div class="skill-head">
-                            <div class="skill-label">GitHub</div>
-                            <div class="skill-value" data-percent="92"></div>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-bar-track">
-                                <div class="skill-bar-fill" data-percent="92"></div>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="skill-row">
                         <div class="skill-head">
                             <div class="skill-label">CodeIgniter</div>
-                            <div class="skill-value" data-percent="70"></div>
+                            <div class="skill-value">80%</div>
                         </div>
                         <div class="skill-bar">
                             <div class="skill-bar-track">
-                                <div class="skill-bar-fill" data-percent="70"></div>
+                                <div class="skill-bar-fill" data-percent="80"></div>
                             </div>
                         </div>
                     </div>
@@ -492,11 +490,11 @@
                     <div class="skill-row">
                         <div class="skill-head">
                             <div class="skill-label">PHP</div>
-                            <div class="skill-value" data-percent="70"></div>
+                            <div class="skill-value">80%</div>
                         </div>
                         <div class="skill-bar">
                             <div class="skill-bar-track">
-                                <div class="skill-bar-fill" data-percent="70"></div>
+                                <div class="skill-bar-fill" data-percent="80"></div>
                             </div>
                         </div>
                     </div>
@@ -504,15 +502,14 @@
                     <div class="skill-row">
                         <div class="skill-head">
                             <div class="skill-label">MySQL</div>
-                            <div class="skill-value" data-percent="60"></div>
+                            <div class="skill-value">75%</div>
                         </div>
                         <div class="skill-bar">
                             <div class="skill-bar-track">
-                                <div class="skill-bar-fill" data-percent="60"></div>
+                                <div class="skill-bar-fill" data-percent="75"></div>
                             </div>
                         </div>
                     </div>
-
 
                 </div>
         </div>

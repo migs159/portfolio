@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
   <meta name="csrf-token" content="<?php echo $this->security->get_csrf_hash(); ?>">
   <title><?php echo isset($page_title) ? htmlspecialchars($page_title) : 'CRUD Dashboard'; ?></title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -230,9 +230,9 @@
   <!-- View Account Modal -->
   <?php $user_email = isset($user['email']) ? $user['email'] : (isset($_SESSION['email']) ? $_SESSION['email'] : 'Not set'); ?>
   <div class="modal fade" id="viewAccountModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg modal-fullscreen-md-down">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
-        <div class="modal-body p-0">
+        <div class="modal-body">
           <div class="view-account-modal-container">
             <div class="view-account-cover-image"></div>
             <div class="view-account-avatar-wrapper">
@@ -289,19 +289,13 @@
 
   <!-- Reusable iframe modal for View/Edit/Manage -->
   <div class="modal fade" id="iframeModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered modal-fullscreen-md-down">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="iframeModalTitle"><i class="fas fa-table me-2"></i><span id="iframeModalLabel">Manage</span></h5>
+          <h5 class="modal-title" id="iframeModalTitle"><i class="fas fa-edit me-2"></i><span id="iframeModalLabel">Edit Project</span></h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body modal-body-custom-padding">
-          <div class="iframe-embedded-header" id="iframeEmbeddedHeader">
-            <div class="view-project-modal-header">
-              <div class="view-project-modal-title">Projects</div>
-              <div class="view-project-modal-subtitle"></div>
-            </div>
-          </div>
+        <div class="modal-body">
           <div class="iframe-loading-hidden" id="iframeLoading"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>
           <iframe id="iframeModalFrame" src="" class="iframe-wrap"></iframe>
         </div>
@@ -311,40 +305,36 @@
 
   <!-- View Project Details Modal -->
   <div class="modal fade" id="viewProjectModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg modal-fullscreen-md-down">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title"><i class="fas fa-info-circle me-2"></i>Project Details</h5>
+          <h5 class="modal-title"><i class="fas fa-eye me-2"></i>View Project</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <div class="view-project-items">
+          <div class="form-row cols-2">
             <div>
-              <label class="view-project-field-label">Title</label>
+              <label class="form-label">Title</label>
               <div id="viewTitle" class="view-project-field-value">-</div>
             </div>
             <div>
-              <label class="view-project-field-label">Description</label>
+              <label class="form-label">Created</label>
+              <div id="viewCreated" class="view-project-field-value">-</div>
+            </div>
+            <div class="form-full-width">
+              <label class="form-label">Description</label>
               <div id="viewDescription" class="view-project-description">-</div>
             </div>
-            <div class="view-project-grid-2col">
-              <div>
-                <label class="view-project-field-label">URL</label>
-                <div id="viewUrl" class="view-project-field-value-break">-</div>
-              </div>
-              <div>
-                <label class="view-project-field-label">Created</label>
-                <div id="viewCreated" class="view-project-field-value">-</div>
-              </div>
-            </div>
-            <div class="view-project-grid-2col">
-              <div>
-                <label class="view-project-field-label">Status</label>
-                <div id="viewStatus" class="view-project-field-value">-</div>
-              </div>
+            <div>
+              <label class="form-label">URL</label>
+              <div id="viewUrl" class="view-project-field-value-break">-</div>
             </div>
             <div>
-              <label class="view-project-field-label">Image</label>
+              <label class="form-label">Status</label>
+              <div id="viewStatus" class="view-project-field-value">-</div>
+            </div>
+            <div>
+              <label class="form-label">Image</label>
               <div id="viewImage" class="view-project-field-value-break">-</div>
             </div>
           </div>

@@ -51,5 +51,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 $route['default_controller'] = 'welcome';
 $route['calculator'] = 'calculator/index';
+
+// Projects routes
+$route['projects/get/(:num)'] = 'projects/get/$1';
+$route['projects/edit/(:num)'] = 'projects/edit/$1';
+$route['projects/delete/(:num)'] = 'projects/delete/$1';
+$route['projects/create'] = 'projects/create';
+
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

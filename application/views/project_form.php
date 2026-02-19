@@ -3,21 +3,20 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
   <title><?php echo isset($project) ? 'Edit' : 'Add'; ?> Project</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="<?php echo htmlspecialchars(function_exists('base_url') ? base_url('assets/css/project-form-custom.css') : '/assets/css/project-form-custom.css'); ?>">
 </head>
 <body>
   <div class="wrap">
-    <div class="card">
-      <h3><?php echo isset($project) ? 'Edit' : 'Add'; ?> Project</h3>
+    <div>
 
       <?php if (!empty($this->session->flashdata('error'))): ?>
         <div class="alert alert-danger"><?php echo htmlspecialchars($this->session->flashdata('error')); ?></div>
       <?php endif; ?>
 
-      <form method="post" enctype="multipart/form-data">
+      <form id="project-form" method="post" enctype="multipart/form-data">
         <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
         <div class="mb-3">
           <label class="form-label">Title</label>
@@ -81,11 +80,16 @@
           <input type="checkbox" id="featuredCheckbox" name="featured" value="1" class="form-check-input" <?php echo (isset($project['featured']) && intval($project['featured'])) ? 'checked' : ''; ?>>
           <label for="featuredCheckbox">Mark as featured</label>
         </div>
-        <div class="d-flex gap-2">
-          <button class="btn btn-primary"><?php echo isset($project) ? 'Save' : 'Create'; ?></button>
-          <a href="<?php echo site_url('projects'); ?>" class="btn btn-outline-secondary">Cancel</a>
-        </div>
       </form>
+      <div class="modal-footer">
+        <?php if (empty($_GET['embedded'])): ?>
+        <a href="<?php echo site_url('projects'); ?>" class="btn-pill btn-ghost">Cancel</a>
+        <button type="submit" form="project-form" class="btn-pill btn-primary-custom"><?php echo isset($project) ? 'Save' : 'Create'; ?></button>
+        <?php else: ?>
+        <button type="button" class="btn-pill btn-ghost" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" form="project-form" class="btn-pill btn-primary-custom"><?php echo isset($project) ? 'Save' : 'Create'; ?></button>
+        <?php endif; ?>
+      </div>
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

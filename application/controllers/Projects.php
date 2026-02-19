@@ -39,9 +39,16 @@ class Projects extends CI_Controller {
 
     public function get($id = null)
     {
-        if (!$this->require_login()) return;
+        if (!$this->session->userdata('logged_in')) {
+            header('Content-Type: application/json');
+            http_response_code(401);
+            echo json_encode(['success' => false, 'message' => 'Not authenticated']);
+            return;
+        }
+        
         if (!$id) {
             header('Content-Type: application/json');
+            http_response_code(400);
             echo json_encode(['success' => false, 'message' => 'Project ID required']);
             return;
         }
@@ -49,9 +56,11 @@ class Projects extends CI_Controller {
         $project = $this->Project_model->get($id);
         if ($project) {
             header('Content-Type: application/json');
+            http_response_code(200);
             echo json_encode(['success' => true, 'project' => $project]);
         } else {
             header('Content-Type: application/json');
+            http_response_code(404);
             echo json_encode(['success' => false, 'message' => 'Project not found']);
         }
     }

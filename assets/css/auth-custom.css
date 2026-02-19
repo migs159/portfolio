@@ -23,7 +23,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: clamp(1rem, 3vw, 2rem);
   background: linear-gradient(135deg, #ffffff 0%, var(--light-bg) 100%);
   position: relative;
   overflow-x: hidden;
@@ -53,7 +53,7 @@ body::before {
 .card-header {
   background: linear-gradient(135deg, var(--primary), var(--secondary));
   color: #fff;
-  padding: 3rem 2rem 2rem;
+  padding: clamp(2rem, 4vw, 3rem) clamp(1.5rem, 3vw, 2rem) clamp(1.5rem, 3vw, 2rem);
   text-align: center;
 }
 
@@ -69,7 +69,7 @@ body::before {
 }
 
 .card-body {
-  padding: 2.5rem;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
 }
 
 /* Login Page - Container Layout */
@@ -101,7 +101,7 @@ body::before {
 
 .login-header {
   background: linear-gradient(135deg, var(--primary), var(--secondary));
-  padding: 3rem 2rem 2rem;
+  padding: clamp(2rem, 4vw, 3rem) clamp(1.5rem, 3vw, 2rem) clamp(1.5rem, 3vw, 2rem);
   text-align: center;
   color: #fff;
 }
@@ -120,29 +120,29 @@ body::before {
 }
 
 .login-body {
-  padding: 2.5rem;
+  padding: clamp(1.5rem, 4vw, 2.5rem);
 }
 
 .login-actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 2rem;
-  gap: 1rem;
+  margin-top: clamp(1.5rem, 3vw, 2rem);
+  gap: clamp(0.75rem, 1.5vw, 1rem);
 }
 
 /* Form Elements (Shared) */
 .form-label {
   font-weight: 600;
   color: var(--accent);
-  margin-bottom: 0.75rem;
+  margin-bottom: clamp(0.5rem, 1.5vw, 0.75rem);
   font-size: 0.95rem;
 }
 
 .form-control {
   border: 2px solid #e2e8f0;
   border-radius: 8px;
-  padding: 0.75rem 1rem;
+  padding: clamp(0.6rem, 1.5vw, 0.75rem) clamp(0.75rem, 1.5vw, 1rem);
   background: var(--light-bg);
   transition: all 0.3s ease;
   font-size: 0.95rem;
@@ -156,7 +156,7 @@ body::before {
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: clamp(1rem, 2vw, 1.5rem);
 }
 
 /* Base Button Pattern */
@@ -177,7 +177,7 @@ button, .btn-register, .btn-signin {
 .btn-signin {
   background-color: var(--primary);
   color: #ffffff;
-  padding: 0.75rem 1.5rem;
+  padding: clamp(0.6rem, 1.5vw, 0.75rem) clamp(1.25rem, 2vw, 1.5rem);
   box-shadow: 0 4px 12px rgba(0, 61, 153, 0.25);
 }
 
@@ -196,7 +196,7 @@ button, .btn-register, .btn-signin {
 
 .btn-signin {
   width: 100%;
-  padding: 0.85rem 1.5rem;
+  padding: clamp(0.65rem, 1.5vw, 0.85rem) clamp(1.25rem, 2vw, 1.5rem);
 }
 
 .btn-link {
@@ -240,7 +240,7 @@ button, .btn-register, .btn-signin {
   transition: all 0.3s ease;
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: clamp(0.3rem, 1vw, 0.5rem);
   padding: 0;
   cursor: pointer;
 }
@@ -277,7 +277,7 @@ button, .btn-register, .btn-signin {
 /* Login Actions - Flex Layout */
 .login-actions > div {
   display: flex;
-  gap: 0.5rem;
+  gap: clamp(0.3rem, 1vw, 0.5rem);
   width: 100%;
 }
 
@@ -287,7 +287,7 @@ button, .btn-register, .btn-signin {
   align-items: center;
   justify-content: center;
   border-radius: 8px;
-  padding: 0.6rem 0.9rem;
+  padding: clamp(0.5rem, 1.5vw, 0.6rem) clamp(0.75rem, 1.5vw, 0.9rem);
 }
 
 .login-action-btn.auth-back-link {
