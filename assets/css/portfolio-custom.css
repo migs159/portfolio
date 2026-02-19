@@ -538,7 +538,7 @@ section:nth-child(even) {
     display:flex;
     justify-content:space-between;
     align-items:center;
-    gap:2rem;
+    gap:1rem;
     margin-bottom:0.5rem;
     position:relative;
 }
@@ -546,19 +546,13 @@ section:nth-child(even) {
 .skill-label {
     font-weight:700;
     color:#003d99;
-    flex:1;
-    min-width:0;
-    white-space:nowrap;
-    overflow:hidden;
-    text-overflow:ellipsis;
 }
 
 .skill-value {
     color:var(--muted);
     font-weight:700;
-    min-width:60px;
+    min-width:48px;
     text-align:right;
-    flex-shrink:0;
     opacity:0;
     transform:translateY(6px);
     transition:opacity 220ms ease, transform 220ms ease;
