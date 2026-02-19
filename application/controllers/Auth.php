@@ -34,7 +34,7 @@ class Auth extends CI_Controller {
                     $this->session->set_userdata('email', $userRow['email']);
                 }
                 // Set a flash message so the dashboard can show a toast after redirect
-                $this->session->set_flashdata('login_success', 'Signed in successfully.');
+                $this->session->set_flashdata('success', 'Signed in successfully.');
                 redirect('crud');
             }
             $data['error'] = 'The username or password you\'ve entered is incorrect';

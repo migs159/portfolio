@@ -95,6 +95,7 @@
                     <td>
                       <div class="project-title-cell">
                         <?php echo htmlspecialchars(isset($e['title']) ? $e['title'] : 'Untitled Project'); ?>
+                        <?php if (isset($e['featured']) && $e['featured']): ?><i class="fas fa-star featured-star"></i><?php endif; ?>
                       </div>
                       <div class="project-desc-cell">
                         <?php echo htmlspecialchars(isset($e['description']) ? mb_substr($e['description'], 0, 60) : ''); ?>
@@ -114,11 +115,7 @@
                       <?php echo htmlspecialchars(isset($e['created_at']) ? date('M d, Y', strtotime($e['created_at'])) : ''); ?>
                     </td>
                     <td>
-                      <?php if (isset($e['featured']) && $e['featured']): ?>
-                        <span class="badge bg-primary text-white badge-featured"><i class="fas fa-star me-1"></i>Featured</span>
-                      <?php else: ?>
-                        <span class="badge bg-light text-muted badge-status">Active</span>
-                      <?php endif; ?>
+                      <span class="badge bg-light text-muted badge-status">Active</span>
                     </td>
                     <?php
                       $pid = null;
@@ -344,10 +341,6 @@
               <div>
                 <label class="view-project-field-label">Status</label>
                 <div id="viewStatus" class="view-project-field-value">-</div>
-              </div>
-              <div>
-                <label class="view-project-field-label">Featured</label>
-                <div id="viewFeatured" class="view-project-field-value">-</div>
               </div>
             </div>
             <div>

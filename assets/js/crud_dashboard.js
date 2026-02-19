@@ -11,7 +11,7 @@ function openIframe(title, url){
   var m = new bootstrap.Modal(iframeModalEl);
   m.show();
   iframe.addEventListener('load', function(){ if(iframeLoading) iframeLoading.style.display = 'none'; }, { once:true });
-  iframeModalEl.addEventListener('hidden.bs.modal', function(){ iframe.src = ''; if(iframeLoading) iframeLoading.style.display = 'none'; }, { once:true });
+  iframeModalEl.addEventListener('hidden.bs.modal', function(){ iframe.src = ''; if(iframeLoading) iframeLoading.style.display = 'none'; location.reload(); }, { once:true });
 }
 
 function handleViewProject(id){
@@ -29,7 +29,6 @@ function handleViewProject(id){
         document.getElementById('viewUrl').textContent = p.url || '-';
         document.getElementById('viewCreated').textContent = p.created_at ? p.created_at.split(' ')[0] : '-';
         document.getElementById('viewStatus').textContent = p.status ? 'Active' : 'Inactive';
-        document.getElementById('viewFeatured').innerHTML = p.featured ? '<span class="badge bg-primary text-white badge-featured"><i class="fas fa-star me-1"></i>Featured</span>' : 'No';
         document.getElementById('viewImage').textContent = p.image || '-';
         
         var modal = new bootstrap.Modal(document.getElementById('viewProjectModal'));
@@ -189,20 +188,20 @@ function getCsrf(){
                 var created_at = p.created_at || new Date().toISOString().split('T')[0];
                 var status = p.status ? 'Active' : 'Inactive';
                 var featured = p.featured ? 1 : 0;
-                var featuredBadge = featured ? '<span class="badge bg-primary text-white badge-featured"><i class="fas fa-star me-1"></i>Featured</span>' : '';
+                var starIcon = featured ? '<i class="fas fa-star featured-star"></i>' : '';
 
                 function escapeHtml(s){ return (''+s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]; }); }
 
                 var row =
                   '<tr>' +
                     '<td>' +
-                      '<div class="project-title-cell">'+ escapeHtml(title) +'</div>' +
+                      '<div class="project-title-cell">'+ escapeHtml(title) + starIcon +'</div>' +
                       '<div class="project-desc-cell">'+ escapeHtml(description) +'</div>' +
                     '</td>' +
                     '<td class="table-cell-muted">-</td>' +
                     '<td class="table-cell-muted">'+ escapeHtml(url) +'</td>' +
                     '<td class="table-cell-muted">'+ escapeHtml(created_at) +'</td>' +
-                    '<td><span class="badge bg-light text-muted badge-status">'+ escapeHtml(status) +'</span>' + featuredBadge + '</td>' +
+                    '<td><span class="badge bg-light text-muted badge-status">'+ escapeHtml(status) +'</span></td>' +
                     '<td>' +
                       '<div class="action-buttons-flex">' +
                         '<button class="btn btn-sm btn-outline-primary btn-view" data-id="'+ escapeHtml(p.id || '') +'" title="View"><i class="fas fa-eye"></i></button>' +
