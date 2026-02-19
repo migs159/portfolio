@@ -60,7 +60,7 @@
                         $profile_exists = $profile_file ? file_exists($profile_file) : false;
                         $profile_url = $profile_exists && function_exists('base_url') ? base_url($profile_rel) : (function_exists('base_url') ? base_url('assets/img/profile.png') : '/assets/img/profile.png');
                     ?>
-                    <img src="<?php echo htmlspecialchars($profile_url); ?>" alt="Miguel Andrei Portrait" class="hero-profile" id="hero-profile-img" onerror="console.warn('Profile image failed to load:', this.src);this.style.display='none';document.getElementById('hero-initial').style.display='flex'">
+                    <img src="<?php echo htmlspecialchars($profile_url); ?>" alt="Miguel Andrei Portrait" class="hero-profile" id="hero-profile-img">
                     <?php if (!$profile_exists): ?>
                         <div class="profile-debug">Debug: profile image file not found on server at <strong><?php echo htmlspecialchars($profile_file ?: 'unknown'); ?></strong></div>
                     <?php endif; ?>
@@ -417,7 +417,8 @@
                                 <div class="edu-year">2023 &ndash; 2026</div>
                                 <div class="edu-body">
                                     <div class="edu-school">St. Dominic College of Asia</div>
-                                    <div class="edu-meta">B.S. Information Technology &mdash; Expected Graduation 2026</div>
+                                    <div class="edu-meta">B.S. Information Technology &mdash; Expected Graduation 2026 </div>
+                                    <div class="edu-meta">Certification: Information Technology Specialist – HTML and CSS (Certiport)</div>
                                 </div>
                             </div>
                         </div>

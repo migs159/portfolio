@@ -376,3 +376,62 @@ document.addEventListener('DOMContentLoaded', function(){
     });
   });
 })();
+
+// Handle flashdata messages and modal initialization
+document.addEventListener('DOMContentLoaded', function(){
+  // Get flash messages from script data attributes
+  var scriptEl = document.querySelector('script[data-flash-success], script[data-flash-error]');
+  if (scriptEl) {
+    var successMsg = scriptEl.getAttribute('data-flash-success') || '';
+    var errorMsg = scriptEl.getAttribute('data-flash-error') || '';
+    
+    if (successMsg.trim()) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: successMsg,
+        confirmButtonColor: '#003d99',
+        timer: 3000
+      });
+      // Close quickCreateModal if open
+      try {
+        var qc = document.getElementById('quickCreateModal');
+        if (qc) {
+          var _m = bootstrap.Modal.getOrCreateInstance(qc);
+          _m.hide();
+        }
+      } catch(e) {}
+    }
+    
+    if (errorMsg.trim()) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: errorMsg,
+        confirmButtonColor: '#003d99'
+      });
+      // Close quickCreateModal if open
+      try {
+        var qc = document.getElementById('quickCreateModal');
+        if (qc) {
+          var _m = bootstrap.Modal.getOrCreateInstance(qc);
+          _m.hide();
+        }
+      } catch(e) {}
+    }
+  }
+
+  // Add meta tags for URLs
+  if (!document.querySelector('meta[name="projects-base-url"]')) {
+    var meta = document.createElement('meta');
+    meta.setAttribute('name', 'projects-base-url');
+    meta.setAttribute('content', '/projects');
+    document.head.appendChild(meta);
+  }
+  if (!document.querySelector('meta[name="csrf-token-name"]')) {
+    var meta = document.createElement('meta');
+    meta.setAttribute('name', 'csrf-token-name');
+    meta.setAttribute('content', 'csrf_token');
+    document.head.appendChild(meta);
+  }
+});

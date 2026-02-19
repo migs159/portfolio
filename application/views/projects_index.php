@@ -129,7 +129,7 @@
               <div class="col-12">
                 <label class="form-label">Framework/Language</label>
                 <select name="type[]" id="edit_type" class="form-control" multiple size="6">
-                  <option value="">-- Select framework / language --</option>
+                  <option value="" disabled>-- Select framework / language --</option>
                   <option value="php">PHP</option>
                   <option value="javascript">JavaScript</option>
                   <option value="html_css">HTML/CSS</option>
@@ -140,7 +140,6 @@
                   <option value="uiux">UI/UX</option>
                   <option value="cli">CLI / Tools</option>
                   <option value="devops">DevOps</option>
-                  <option value="other">Other</option>
                 </select>
                 <div class="form-text">Choose one or more frameworks or languages (hold Ctrl / Cmd to multi-select).</div>
               </div>

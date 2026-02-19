@@ -60,8 +60,7 @@
               'mysql' => 'MySQL',
               'uiux' => 'UI',
               'cli' => 'CLI',
-              'devops' => 'DevOps',
-              'other' => 'Other'
+              'devops' => 'DevOps'
             ];
             $selectedTypes = [];
             if (isset($project['type'])) {
@@ -70,6 +69,7 @@
             }
           ?>
           <select name="type[]" class="form-control" multiple size="6">
+            <option value="" disabled>-- Select framework / language --</option>
             <?php foreach ($typeOptions as $val => $label): $sel = in_array($val, $selectedTypes) ? 'selected' : ''; ?>
               <option value="<?php echo htmlspecialchars($val); ?>" <?php echo $sel; ?>><?php echo htmlspecialchars($label); ?></option>
             <?php endforeach; ?>

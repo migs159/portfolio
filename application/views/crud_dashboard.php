@@ -179,7 +179,7 @@
                 <div class="modal-form-column">
                   <label class="form-label">Framework/Language</label>
                   <select name="type[]" class="form-control" multiple size="6">
-                    <option value="">--Select framework / language-- </option>
+                    <option value="" disabled>--Select framework / language-- </option>
                     <option value="php">PHP</option>
                     <option value="javascript">JavaScript</option>
                     <option value="html_css">HTML/CSS</option>
@@ -192,7 +192,6 @@
                     <option value="uiux">UI/UX</option>
                     <option value="cli">CLI / Tools</option>
                     <option value="devops">DevOps</option>
-                    <option value="other">Other</option>
                   </select>
                   <div class="form-text">Choose one or more frameworks or languages (hold Ctrl / Cmd to multi-select).</div>
                 </div>
@@ -366,57 +365,6 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script>
-    // Handle flashdata messages and modal initialization
-    document.addEventListener('DOMContentLoaded', function(){
-      <?php if (!empty($login_success)): ?>
-        Swal.fire({
-          icon: 'success',
-          title: 'Success',
-          text: <?php echo json_encode($login_success); ?>,
-          confirmButtonColor: '#003d99',
-          timer: 3000
-        });
-      <?php endif; ?>
-      <?php if ($this->session->flashdata('success')): ?>
-        Swal.fire({
-          icon: 'success',
-          title: 'Success',
-          text: <?php echo json_encode($this->session->flashdata('success')); ?>,
-          confirmButtonColor: '#003d99',
-          timer: 3000
-        });
-      <?php endif; ?>
-      <?php if ($this->session->flashdata('error')): ?>
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: <?php echo json_encode($this->session->flashdata('error')); ?>,
-          confirmButtonColor: '#003d99'
-        });
-      <?php endif; ?>
-      // If a create/update/delete happened and we have a flash, ensure quickCreateModal is closed
-      <?php if ($this->session->flashdata('success') || $this->session->flashdata('error')): ?>
-        try { var qc = document.getElementById('quickCreateModal'); if(qc){ var _m = bootstrap.Modal.getOrCreateInstance(qc); _m.hide(); } } catch(e){}
-      <?php endif; ?>
-    });
-
-    // Add PHP-generated meta tags for URLs
-    document.addEventListener('DOMContentLoaded', function(){
-      if(!document.querySelector('meta[name="projects-base-url"]')){
-        var meta = document.createElement('meta');
-        meta.setAttribute('name', 'projects-base-url');
-        meta.setAttribute('content', '<?php echo site_url('projects'); ?>');
-        document.head.appendChild(meta);
-      }
-      if(!document.querySelector('meta[name="csrf-token-name"]')){
-        var meta = document.createElement('meta');
-        meta.setAttribute('name', 'csrf-token-name');
-        meta.setAttribute('content', '<?php echo $this->security->get_csrf_token_name(); ?>');
-        document.head.appendChild(meta);
-      }
-    });
-  </script>
-  <script src="<?php echo htmlspecialchars(function_exists('base_url') ? base_url('assets/js/crud_dashboard.js') : '/assets/js/crud_dashboard.js'); ?>"></script>
+  <script src="<?php echo htmlspecialchars(function_exists('base_url') ? base_url('assets/js/crud_dashboard.js') : '/assets/js/crud_dashboard.js'); ?>" data-flash-success="<?php echo htmlspecialchars($this->session->flashdata('success') ?? '', ENT_QUOTES, 'UTF-8'); ?>" data-flash-error="<?php echo htmlspecialchars($this->session->flashdata('error') ?? '', ENT_QUOTES, 'UTF-8'); ?>"></script>
   </body>
 </html>

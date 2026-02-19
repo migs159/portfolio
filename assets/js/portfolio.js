@@ -7,6 +7,19 @@ if(!document.querySelector('meta[name="asset-base-url"]')){
 }
 
 document.addEventListener('DOMContentLoaded', function(){
+    // Profile image error handler
+    const profileImg = document.getElementById('hero-profile-img');
+    if (profileImg) {
+        profileImg.addEventListener('error', function() {
+            console.warn('Profile image failed to load:', this.src);
+            this.style.display = 'none';
+            const heroInitial = document.getElementById('hero-initial');
+            if (heroInitial) {
+                heroInitial.style.display = 'flex';
+            }
+        });
+    }
+
     // helper: animate numeric count from 0 to target
     // animateCount(el, target, duration, fromOverride, onComplete)
     // - el: element to update (text content will be set to '<n>%')
