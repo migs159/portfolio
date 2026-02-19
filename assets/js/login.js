@@ -1,12 +1,29 @@
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', function(){
-  // Note: Toast config below is deprecated, using centered SweetAlert2 instead
-  // Keeping for reference if needed in future
-  // const Toast = Swal.mixin({
-  //   toast: true,
-  //   position: 'top-end',
-  //   showConfirmButton: false,
-  //   timer: 3500,
-  //   timerProgressBar: true
-  // });
+  // Handle login error/success alerts from data attributes
+  var scriptEl = document.querySelector('script[data-login-error], script[data-login-success]');
+  if (scriptEl) {
+    var errorMsg = scriptEl.getAttribute('data-login-error') || '';
+    var successMsg = scriptEl.getAttribute('data-login-success') || '';
+    
+    if (errorMsg.trim()) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Failed',
+        text: errorMsg,
+        confirmButtonColor: '#003d99',
+        confirmButtonText: 'Try Again'
+      });
+    }
+    
+    if (successMsg.trim()) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: successMsg,
+        confirmButtonColor: '#003d99',
+        timer: 2000
+      });
+    }
+  }
 });

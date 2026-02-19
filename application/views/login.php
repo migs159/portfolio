@@ -46,29 +46,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
-  <script>
-    // Handle login error/success alerts
-    document.addEventListener('DOMContentLoaded', function(){
-      <?php if (!empty($error)): ?>
-        Swal.fire({
-          icon: 'error',
-          title: 'Login Failed',
-          text: <?php echo json_encode($error); ?>,
-          confirmButtonColor: '#003d99',
-          confirmButtonText: 'Try Again'
-        });
-      <?php endif; ?>
-      <?php if (!empty($success)): ?>
-        Swal.fire({
-          icon: 'success',
-          title: 'Success',
-          text: <?php echo json_encode($success); ?>,
-          confirmButtonColor: '#003d99',
-          timer: 2000
-        });
-      <?php endif; ?>
-    });
-  </script>
-  <script src="<?php echo htmlspecialchars(function_exists('base_url') ? base_url('assets/js/login.js') : '/assets/js/login.js'); ?>"></script>
+  <script src="<?php echo htmlspecialchars(function_exists('base_url') ? base_url('assets/js/login.js') : '/assets/js/login.js'); ?>" data-login-error="<?php echo htmlspecialchars($error ?? '', ENT_QUOTES, 'UTF-8'); ?>" data-login-success="<?php echo htmlspecialchars($success ?? '', ENT_QUOTES, 'UTF-8'); ?>"></script>
 </body>
 </html>
