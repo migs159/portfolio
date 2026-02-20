@@ -55,10 +55,10 @@
         <div class="hero-inner">
                     <?php
                         // Prefer PNG (transparent) but check disk in case of name mismatch
-                        $profile_rel = 'assets/img/profile.png';
+                        $profile_rel = 'assets/img/profiles/profile.png';
                         $profile_file = defined('FCPATH') ? rtrim(FCPATH, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$profile_rel : NULL;
                         $profile_exists = $profile_file ? file_exists($profile_file) : false;
-                        $profile_url = $profile_exists && function_exists('base_url') ? base_url($profile_rel) : (function_exists('base_url') ? base_url('assets/img/profile.png') : '/assets/img/profile.png');
+                        $profile_url = $profile_exists && function_exists('base_url') ? base_url($profile_rel) : (function_exists('base_url') ? base_url('assets/img/profiles/profile.png') : '/assets/img/profiles/profile.png');
                     ?>
                     <img src="<?php echo htmlspecialchars($profile_url); ?>" alt="Miguel Andrei Portrait" class="hero-profile" id="hero-profile-img">
                     <?php if (!$profile_exists): ?>
@@ -66,22 +66,28 @@
                     <?php endif; ?>
             <div class="hero-left">
                 <div class="greeting">Welcome to my portfolio</div>
-                <h1 class="name" aria-label="Miguel Andrei del Rosario">
-                    <span class="typed" data-text="Miguel Andrei del Rosario"></span>
+                <h1 class="name" aria-label="<?php echo isset($portfolio_data['hero_title']) ? htmlspecialchars($portfolio_data['hero_title']) : ''; ?>">
+                    <span class="typed" data-text="<?php echo isset($portfolio_data['hero_title']) ? htmlspecialchars($portfolio_data['hero_title']) : ''; ?>"></span>
                     <span class="typing-cursor" aria-hidden="true"></span>
                 </h1>
-                <p class="subtitle">A Web Developer Trainee</p>
+                <p class="subtitle"><?php echo isset($portfolio_data['hero_subtitle']) ? htmlspecialchars($portfolio_data['hero_subtitle']) : ''; ?></p>
                 
                 <div class="socials">
-                    <a href="https://github.com/migs159" target="_blank" rel="noopener noreferrer" title="GitHub">
+                    <?php if (!empty($portfolio_data['github_url'])): ?>
+                    <a href="<?php echo htmlspecialchars($portfolio_data['github_url']); ?>" target="_blank" rel="noopener noreferrer" title="GitHub">
                         <i class="fab fa-github"></i>
                     </a>
-                    <a href="https://www.linkedin.com/in/miguel-andrei-del-rosario-a291693b1/" target="_blank" rel="noopener noreferrer" title="LinkedIn">
+                    <?php endif; ?>
+                    <?php if (!empty($portfolio_data['linkedin_url'])): ?>
+                    <a href="<?php echo htmlspecialchars($portfolio_data['linkedin_url']); ?>" target="_blank" rel="noopener noreferrer" title="LinkedIn">
                         <i class="fab fa-linkedin"></i>
                     </a>
-                    <a href="mailto:miguelandrei@sdca.edu.ph" title="Email">
+                    <?php endif; ?>
+                    <?php if (!empty($portfolio_data['email'])): ?>
+                    <a href="mailto:<?php echo htmlspecialchars($portfolio_data['email']); ?>" title="Email">
                         <i class="fas fa-envelope"></i>
                     </a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -99,82 +105,84 @@
 
             <div class="row g-4">
                 <!-- Featured projects from database -->
-                <?php 
-                    $featured_projects = [];
-                    $regular_projects = [];
-                    $has_aconnect = false;
-                    $has_crud = false;
-                    
-                    if (!empty($projects) && is_array($projects)) {
-                        foreach ($projects as $p) {
-                            // Check if project is featured - must be explicitly 1 or true
-                            $is_featured = (isset($p['featured']) && ($p['featured'] == 1 || $p['featured'] === true )) ? true : false;
-                            
-                            if ($is_featured) {
-                                $featured_projects[] = $p;
-                            } else {
-                                $regular_projects[] = $p;
-                            }
-                        }
-                    }
-                    
-                    // Display featured projects from database
-                    foreach ($featured_projects as $fp):
-                        $ftitle = isset($fp['title']) ? $fp['title'] : 'Featured Project';
-                        $fdesc = isset($fp['description']) ? $fp['description'] : '';
-                        $fimg = isset($fp['image']) && $fp['image'] ? $fp['image'] : 'https://via.placeholder.com/1200x450?text=Featured';
-                        // Apply base_url() to relative paths for uploaded images
-                        if ($fimg && strpos($fimg, 'http') !== 0 && strpos($fimg, '//') !== 0) {
-                            $fimg = base_url($fimg);
-                        }
-                        $furl = isset($fp['url']) ? $fp['url'] : '#';
+                <div class="col-12">
+                    <div class="featured-projects-scroll">
+                    <?php 
+                        $featured_projects = [];
+                        $regular_projects = [];
+                        $has_aconnect = false;
+                        $has_crud = false;
                         
-                        // Decode type field
-                        $ftypes = [];
-                        if (isset($fp['type']) && $fp['type']) {
-                            if (is_array($fp['type'])) {
-                                $ftypes = $fp['type'];
-                            } else {
-                                $raw = trim((string) $fp['type']);
-                                $decoded = json_decode($raw, true);
-                                if (is_array($decoded)) {
-                                    $ftypes = $decoded;
-                                } elseif ($raw !== '') {
-                                    $ftypes = array_filter(array_map('trim', explode(',', $raw)));
+                        if (!empty($projects) && is_array($projects)) {
+                            foreach ($projects as $p) {
+                                // Check if project is featured - must be explicitly 1 or true
+                                $is_featured = (isset($p['featured']) && ($p['featured'] == 1 || $p['featured'] === true )) ? true : false;
+                                
+                                if ($is_featured) {
+                                    $featured_projects[] = $p;
+                                } else {
+                                    $regular_projects[] = $p;
                                 }
                             }
                         }
                         
-                        $ftypeLabels = [
-                            'php' => 'PHP', 'javascript' => 'JS', 'html_css' => 'HTML/CSS',
-                            'nodejs' => 'Node', 'react' => 'React', 'vue' => 'Vue',
-                            'angular' => 'Angular', 'uiux' => 'UI', 'cli' => 'CLI',
-                            'devops' => 'DevOps', 'other' => 'Other'
-                        ];
-                ?>
-                <div class="col-12">
-                    <div class="card project-card featured h-100">
-                        <div class="badge-featured" aria-hidden="true">Featured</div>
-                        <a href="<?php echo htmlspecialchars($furl); ?>" target="_blank" rel="noopener" class="stretched-link link-overlay">
-                            <img src="<?php echo htmlspecialchars($fimg); ?>" class="card-img-top project-img featured-img" alt="<?php echo htmlspecialchars($ftitle); ?>">
-                        </a>
-                        <div class="card-body">
-                            <h5 class="card-title"><?php echo htmlspecialchars($ftitle); ?></h5>
-                            <p class="card-text"><?php echo htmlspecialchars($fdesc); ?></p>
-                            <div class="project-tags">
-                                <?php
-                                    foreach ($ftypes as $ft) {
-                                        $key = trim((string) $ft);
-                                        if ($key === '') continue;
-                                        $label = isset($ftypeLabels[$key]) ? $ftypeLabels[$key] : $key;
-                                        echo '<span class="tag">' . htmlspecialchars($label) . '</span>';
+                        // Display featured projects from database
+                        foreach ($featured_projects as $fp):
+                            $ftitle = isset($fp['title']) ? $fp['title'] : 'Featured Project';
+                            $fdesc = isset($fp['description']) ? $fp['description'] : '';
+                            $fimg = isset($fp['image']) && $fp['image'] ? $fp['image'] : 'https://via.placeholder.com/1200x450?text=Featured';
+                            // Apply base_url() to relative paths for uploaded images
+                            if ($fimg && strpos($fimg, 'http') !== 0 && strpos($fimg, '//') !== 0) {
+                                $fimg = base_url($fimg);
+                            }
+                            $furl = isset($fp['url']) ? $fp['url'] : '#';
+                            
+                            // Decode type field
+                            $ftypes = [];
+                            if (isset($fp['type']) && $fp['type']) {
+                                if (is_array($fp['type'])) {
+                                    $ftypes = $fp['type'];
+                                } else {
+                                    $raw = trim((string) $fp['type']);
+                                    $decoded = json_decode($raw, true);
+                                    if (is_array($decoded)) {
+                                        $ftypes = $decoded;
+                                    } elseif ($raw !== '') {
+                                        $ftypes = array_filter(array_map('trim', explode(',', $raw)));
                                     }
-                                ?>
+                                }
+                            }
+                            
+                            $ftypeLabels = [
+                                'php' => 'PHP', 'javascript' => 'JS', 'html_css' => 'HTML/CSS',
+                                'nodejs' => 'Node', 'react' => 'React', 'vue' => 'Vue',
+                                'angular' => 'Angular', 'uiux' => 'UI', 'cli' => 'CLI',
+                                'devops' => 'DevOps', 'other' => 'Other'
+                            ];
+                    ?>
+                        <div class="card project-card featured h-100">
+                            <div class="badge-featured" aria-hidden="true">Featured</div>
+                            <a href="<?php echo htmlspecialchars($furl); ?>" target="_blank" rel="noopener" class="stretched-link link-overlay">
+                                <img src="<?php echo htmlspecialchars($fimg); ?>" class="card-img-top project-img featured-img" alt="<?php echo htmlspecialchars($ftitle); ?>">
+                            </a>
+                            <div class="card-body">
+                                <h5 class="card-title"><?php echo htmlspecialchars($ftitle); ?></h5>
+                                <p class="card-text"><?php echo htmlspecialchars($fdesc); ?></p>
+                                <div class="project-tags">
+                                    <?php
+                                        foreach ($ftypes as $ft) {
+                                            $key = trim((string) $ft);
+                                            if ($key === '') continue;
+                                            $label = isset($ftypeLabels[$key]) ? $ftypeLabels[$key] : $key;
+                                            echo '<span class="tag">' . htmlspecialchars($label) . '</span>';
+                                        }
+                                    ?>
+                                </div>
                             </div>
                         </div>
+                    <?php endforeach; ?>
                     </div>
                 </div>
-                <?php endforeach; ?>
                 
                 <!-- Regular projects -->
                 <?php if (!empty($regular_projects) && is_array($regular_projects)): ?>
@@ -360,67 +368,38 @@
         <div class="container">
             <div class="section-header">
                 <h2>About Me</h2>
-                <p>Get to know me better</p>
+                <p>Get to know me better and my academic journey</p>
             </div>
-            <div class="row">
-                <div class="col-lg-8">
+            <div class="row g-4">
+                <div class="col-lg-6">
+                    <h3 class="column-title">About Me</h3>
                     <div class="about-content">
-                        <p>I'm a motivated Information Technology student passionate about creating innovative web solutions. Currently working on completing my On-the-Job Training (OJT) to gain hands-on experience in a real-world tech environment.</p>
-                        <p>I specialize in front-end development and have a solid foundation in web technologies. I'm dedicated to continuous learning and always excited to tackle new challenges and contribute meaningfully to any organization.</p>
-                        <p>When I'm not coding, you can find me exploring new technologies, contributing to open-source projects, or working on personal projects to expand my skill set.</p>
+                        <p><?php echo isset($portfolio_data['about_content']) ? htmlspecialchars($portfolio_data['about_content']) : ''; ?></p>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
 
-    <section id="education">
-        <div class="container">
-            <div class="section-header">
-                <h2>Education</h2>
-                <p>Academic background and qualifications</p>
-            </div>
-
-            <div class="row">
-                <div class="col-lg-8">
+                <div class="col-lg-6" id="education">
+                    <h3 class="column-title">Education</h3>
                     <div class="education-card">
-                        <div class="edu-timeline">
-                            <div class="edu-item">
-                                <div class="edu-initial" aria-hidden="true">T</div>
-                                <div class="edu-year">2008 &ndash; 2014</div>
-                                <div class="edu-body">
-                                    <div class="edu-school">Talon Elementary School</div>
-                                    <div class="edu-meta">Graduated 2014</div>
-                                </div>
-                            </div>
-
-                            <div class="edu-item">
-                                <div class="edu-initial" aria-hidden="true">C</div>
-                                <div class="edu-year">2015 &ndash; 2019</div>
-                                <div class="edu-body">
-                                    <div class="edu-school">City of Bacoor National High School &mdash; Springville Campus</div>
-                                    <div class="edu-meta">Graduated 2019</div>
-                                </div>
-                            </div>
-
-                            <div class="edu-item">
-                                <div class="edu-initial" aria-hidden="true">L</div>
-                                <div class="edu-year">2020 &ndash; 2021</div>
-                                <div class="edu-body">
-                                    <div class="edu-school">Las Piñas City National Senior High School &mdash; Doña Josefa Campus</div>
-                                    <div class="edu-meta">ICT Strand  &mdash; Graduated 2021</div>
-                                </div>
-                            </div>
-
-                            <div class="edu-item">
-                                <div class="edu-initial" aria-hidden="true">S</div>
-                                <div class="edu-year">2023 &ndash; 2026</div>
-                                <div class="edu-body">
-                                    <div class="edu-school">St. Dominic College of Asia</div>
-                                    <div class="edu-meta">B.S. Information Technology &mdash; Expected Graduation 2026 </div>
-                                    <div class="edu-meta">Certification: Information Technology Specialist – HTML and CSS (Certiport)</div>
-                                </div>
-                            </div>
+                        <div class="education-list">
+                            <?php
+                            $education_items = [
+                                'education_elementary' => 'Elementary School',
+                                'education_high_school' => 'High School',
+                                'education_senior_high' => 'Senior High School',
+                                'education_college' => 'College / University',
+                                'education_certification' => 'Certification'
+                            ];
+                            
+                            foreach ($education_items as $key => $label) {
+                                $value = isset($portfolio_data[$key]) && !empty($portfolio_data[$key]) ? htmlspecialchars($portfolio_data[$key]) : null;
+                                if ($value) {
+                                    echo '<div class="education-item">';
+                                    echo '<strong>' . htmlspecialchars($label) . ':</strong> ' . $value;
+                                    echo '</div>';
+                                }
+                            }
+                            ?>
                         </div>
                     </div>
                 </div>
@@ -439,77 +418,21 @@
 
             <!-- Horizontal skill rows (existing layout) -->
             <div class="skills-grid rows">
+                    <?php if (isset($portfolio_data['skills']) && is_array($portfolio_data['skills'])): ?>
+                        <?php foreach ($portfolio_data['skills'] as $skill): ?>
                     <div class="skill-row">
                         <div class="skill-head">
-                            <div class="skill-label">HTML5 / CSS3</div>
-                            <div class="skill-value">95%</div>
+                            <div class="skill-label"><?php echo htmlspecialchars($skill['name']); ?></div>
+                            <div class="skill-value"><?php echo htmlspecialchars($skill['percent']); ?>%</div>
                         </div>
                         <div class="skill-bar">
                             <div class="skill-bar-track">
-                                <div class="skill-bar-fill" data-percent="95"></div>
+                                <div class="skill-bar-fill" data-percent="<?php echo htmlspecialchars($skill['percent']); ?>"></div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="skill-row">
-                        <div class="skill-head">
-                            <div class="skill-label">JavaScript</div>
-                            <div class="skill-value">85%</div>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-bar-track">
-                                <div class="skill-bar-fill" data-percent="85"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="skill-row">
-                        <div class="skill-head">
-                            <div class="skill-label">GitHub</div>
-                            <div class="skill-value">80%</div>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-bar-track">
-                                <div class="skill-bar-fill" data-percent="80"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="skill-row">
-                        <div class="skill-head">
-                            <div class="skill-label">CodeIgniter</div>
-                            <div class="skill-value">80%</div>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-bar-track">
-                                <div class="skill-bar-fill" data-percent="80"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="skill-row">
-                        <div class="skill-head">
-                            <div class="skill-label">PHP</div>
-                            <div class="skill-value">80%</div>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-bar-track">
-                                <div class="skill-bar-fill" data-percent="80"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="skill-row">
-                        <div class="skill-head">
-                            <div class="skill-label">MySQL</div>
-                            <div class="skill-value">75%</div>
-                        </div>
-                        <div class="skill-bar">
-                            <div class="skill-bar-track">
-                                <div class="skill-bar-fill" data-percent="75"></div>
-                            </div>
-                        </div>
-                    </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
 
                 </div>
         </div>
@@ -536,30 +459,59 @@
                     <div class="contact-card">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="contact-item">
-                                        <strong><i class="fas fa-envelope me-2"></i>Email</strong>
-                                        <a href="mailto:miguelandrei@sdca.edu.ph">miguelandrei@sdca.edu.ph</a>
+                                <?php if (!empty($portfolio_data['contacts']) && is_array($portfolio_data['contacts'])): ?>
+                                    <?php foreach ($portfolio_data['contacts'] as $contact): ?>
+                                    <?php
+                                    // Map contact types to Font Awesome icons
+                                    $iconMap = [
+                                        'Email' => 'fas fa-envelope',
+                                        'Phone' => 'fas fa-phone',
+                                        'GitHub' => 'fab fa-github',
+                                        'LinkedIn' => 'fab fa-linkedin',
+                                        'Twitter' => 'fab fa-twitter',
+                                        'Facebook' => 'fab fa-facebook',
+                                        'Instagram' => 'fab fa-instagram',
+                                        'YouTube' => 'fab fa-youtube',
+                                        'TikTok' => 'fab fa-tiktok',
+                                        'Discord' => 'fab fa-discord',
+                                        'Telegram' => 'fab fa-telegram',
+                                        'WhatsApp' => 'fab fa-whatsapp',
+                                        'Website' => 'fas fa-globe',
+                                        'Portfolio' => 'fas fa-briefcase',
+                                        'Address' => 'fas fa-map-marker-alt',
+                                        'Skype' => 'fab fa-skype',
+                                        'Slack' => 'fab fa-slack',
+                                        'Other' => 'fas fa-link'
+                                    ];
+                                    $iconClass = isset($iconMap[$contact['type']]) ? $iconMap[$contact['type']] : 'fas fa-address-card';
+                                    ?>
+                                    <div class="col-md-6">
+                                        <div class="contact-item">
+                                            <strong><i class="<?php echo $iconClass; ?> me-2"></i><?php echo htmlspecialchars($contact['type']); ?></strong>
+                                            <?php 
+                                            $value = $contact['value'];
+                                            $contactType = strtolower($contact['type']);
+                                            $isEmail = ($contactType === 'email' || strpos($value, '@') !== false);
+                                            $isLink = (strpos($value, 'http') === 0);
+                                            $isPhone = ($contactType === 'phone' || $contactType === 'whatsapp');
+                                            
+                                            if ($isEmail): ?>
+                                            <a href="mailto:<?php echo htmlspecialchars($value); ?>"><?php echo htmlspecialchars($value); ?></a>
+                                            <?php elseif ($isPhone && !$isLink): ?>
+                                            <a href="tel:<?php echo htmlspecialchars(preg_replace('/[^0-9+]/', '', $value)); ?>"><?php echo htmlspecialchars($value); ?></a>
+                                            <?php elseif ($isLink): ?>
+                                            <a href="<?php echo htmlspecialchars($value); ?>" target="_blank" rel="noopener noreferrer"><?php echo htmlspecialchars($value); ?></a>
+                                            <?php else: ?>
+                                            <p><?php echo htmlspecialchars($value); ?></p>
+                                            <?php endif; ?>
+                                        </div>
                                     </div>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                <div class="col-12">
+                                    <p class="text-center text-muted">No contact information available.</p>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="contact-item">
-                                        <strong><i class="fas fa-mobile-alt me-2"></i>Phone</strong>
-                                        <p>639096059630</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="contact-item">
-                                        <strong><i class="fab fa-github me-2"></i>GitHub</strong>
-                                        <a href="https://github.com/migs159" target="_blank" rel="noopener noreferrer">github.com/migs159</a>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="contact-item">
-                                        <strong><i class="fab fa-linkedin me-2"></i>LinkedIn</strong>
-                                        <a href="https://www.linkedin.com/in/miguel-andrei-del-rosario-a291693b1/" target="_blank" rel="noopener noreferrer">linkedin.com/in/miguel-andrei-del-rosario-a291693b1</a>
-                                    </div>
-                                </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>

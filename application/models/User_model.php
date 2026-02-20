@@ -65,4 +65,13 @@ class User_model extends CI_Model {
         }
         return false;
     }
+
+    /**
+     * Update user profile data by username
+     */
+    public function update_user_profile($username, array $data)
+    {
+        $data['updated_at'] = date('Y-m-d H:i:s');
+        return $this->db->where('username', $username)->update('users', $data);
+    }
 }
