@@ -1,11 +1,22 @@
 /* Portfolio Page - Custom Styles */
 
+:root {
+  /* Font System - Strict */
+  --font-family-body: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  --font-family-heading: 'Poppins', sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+}
+
 * { scroll-behavior: smooth; }
 
 html { scroll-behavior: smooth; }
 
 body {
-    font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+    font-family: var(--font-family-body);
     padding-top:70px;
     background:#fafbfc;
     color:#1e293b;
@@ -149,7 +160,7 @@ body::before {
 }
 
 .hero-left .name {
-    font-family:'Poppins',sans-serif;
+    font-family: var(--font-family-heading);
     font-size:clamp(1.5rem, 4vw, 2rem);
     line-height:1.2;
     font-weight:800;
@@ -216,8 +227,8 @@ body::before {
     justify-content:center;
     background:linear-gradient(135deg,#003d99,#002550);
     color:#fff;
-    font-size:72px;
-    font-weight:800;
+    font-size:4.5rem;
+    font-weight: var(--font-weight-extrabold);
     box-shadow:0 25px 60px rgba(0,61,153,0.18);
     border:3px solid rgba(255,255,255,0.85);
 }
@@ -270,9 +281,9 @@ section:nth-child(even) {
 }
 
 .section-header h2 {
-    font-family:'Poppins',sans-serif;
+    font-family: var(--font-family-heading);
     font-size:2.4rem;
-    font-weight:800;
+    font-weight: var(--font-weight-extrabold);
     line-height:1.15;
     color:#003d99;
     margin-bottom:1.2rem;
@@ -290,9 +301,9 @@ section:nth-child(even) {
 }
 
 .column-title {
-    font-family:'Poppins',sans-serif;
+    font-family: var(--font-family-heading);
     font-size:1.5rem;
-    font-weight:700;
+    font-weight: var(--font-weight-bold);
     color:#003d99;
     margin-bottom:1.5rem;
     line-height:1.3;
@@ -376,8 +387,8 @@ section:nth-child(even) {
 }
 
 .project-card.featured .card-title {
-    font-family:'Poppins',sans-serif;
-    font-weight:700;
+    font-family: var(--font-family-heading);
+    font-weight: var(--font-weight-bold);
     color:#003d99;
     margin-bottom:0.6rem;
     font-size:clamp(1.1rem, 2.2vw, 1.35rem);
@@ -497,11 +508,11 @@ section:nth-child(even) {
 }
 
 .project-card .card-title {
-    font-family:'Poppins',sans-serif;
-    font-weight:700;
+    font-family: var(--font-family-heading);
+    font-weight: var(--font-weight-bold);
     color:#003d99;
     margin-bottom:0.75rem;
-    font-size:1.2rem;
+    font-size:1.25rem;
     line-height:1.3;
 }
 
@@ -593,8 +604,8 @@ section:nth-child(even) {
     border-radius:10px;
     background:rgba(0,61,153,0.06);
     color:#003d99;
-    font-weight:700;
-    font-family:'Poppins',sans-serif;
+    font-weight: var(--font-weight-bold);
+    font-family: var(--font-family-heading);
     font-size:0.95rem;
     box-shadow:0 2px 8px rgba(16,24,40,0.03);
     margin-top:2px;
@@ -622,8 +633,8 @@ section:nth-child(even) {
 .edu-body { flex:1; }
 
 .edu-school {
-    font-family:'Poppins',sans-serif;
-    font-weight:700;
+    font-family: var(--font-family-heading);
+    font-weight: var(--font-weight-bold);
     color:#003d99;
     font-size:1.05rem;
     margin-bottom:6px;

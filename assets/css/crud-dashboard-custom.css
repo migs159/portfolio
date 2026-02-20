@@ -1989,7 +1989,7 @@ body::before {
   border-right: 1px solid rgba(0, 61, 153, 0.05);
   cursor: pointer;
   color: #475569;
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--font-family-heading);
   font-weight: 600;
   font-size: 0.95rem;
   transition: all 0.3s ease;
@@ -2029,7 +2029,8 @@ body::before {
   border-radius: 6px;
   padding: 0.5rem 1rem;
   height: auto;
-  font-size: 0.875rem;
+  font-size: 15.2px;
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
   color: #475569;
   flex: none;
 }
@@ -2042,7 +2043,7 @@ body::before {
 .sections-nav-tabs-navbar .section-nav-btn.active {
   background: transparent;
   color: #003d99;
-  font-weight: 700;
+  font-weight: 400;
 }
 
 /* Section Content Styling */
@@ -2078,7 +2079,7 @@ body::before {
 }
 
 .section-header-card h2 {
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--font-family-heading);
   font-size: 1.5rem;
   font-weight: 700;
   color: #003d99;
@@ -2169,7 +2170,7 @@ body::before {
 }
 
 .modal-title {
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--font-family-heading);
   font-weight: 700;
   color: #003d99;
   font-size: 1.15rem;

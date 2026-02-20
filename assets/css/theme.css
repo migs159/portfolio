@@ -1,4 +1,25 @@
 :root{
+  /* Font System - Strict */
+  --font-family-body: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  --font-family-heading: 'Poppins', sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  
+  /* Font Size Scale - Strict (rem only) */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-md: 1.125rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.5rem;
+  --font-size-2xl: 1.875rem;
+  --font-size-3xl: 2.25rem;
+  --font-size-4xl: 3rem;
+  
+  /* Color Palette */
   --primary:#003d99;
   --secondary:#002550;
   --accent:#003d99;
@@ -11,7 +32,7 @@
 
 /* Base body and page styling */
 body {
-    font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    font-family: var(--font-family-body);
     background: #ffffff;
     color: var(--accent);
     position: relative;
