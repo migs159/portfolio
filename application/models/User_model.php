@@ -74,4 +74,15 @@ class User_model extends CI_Model {
         $data['updated_at'] = date('Y-m-d H:i:s');
         return $this->db->where('username', $username)->update('users', $data);
     }
+
+    /**
+     * Update a user's password by email address.
+     * Returns true on success.
+     */
+    public function update_password_by_email($email, $new_password)
+    {
+        $hashed = password_hash($new_password, PASSWORD_BCRYPT);
+        $data = ['password' => $hashed, 'updated_at' => date('Y-m-d H:i:s')];
+        return $this->db->where('email', $email)->update('users', $data);
+    }
 }

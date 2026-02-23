@@ -1,28 +1,10 @@
 /* Projects Index - Custom Styles */
 
-:root {
-  /* Font System - Strict */
-  --font-family-body: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-  --font-family-heading: 'Poppins', sans-serif;
-  --font-weight-regular: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-  --font-weight-bold: 700;
-  --font-weight-extrabold: 800;
-  
-  /* Color Palette */
-  --primary: #4f46e5;
-  --primary-dark: #3730a3;
-  --accent: #0f172a;
-  --muted: #6b7280;
-  --light-bg: #f8fafc;
-  --surface: #ffffff;
-}
+/* Project index uses the base `theme.css` variables. */
 
 body {
-  font-family: var(--font-family-body);
   margin: 0;
-  background: linear-gradient(135deg, #fff, var(--light-bg));
+  background: linear-gradient(135deg, #fff, rgba(248,250,252,0.95));
 }
 
 .wrap {
@@ -190,7 +172,7 @@ body {
 }
 
 .modal-header {
-  background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+  background: #003d99;
   color: #fff;
   border-bottom: 0;
   padding: 1rem 1.25rem;

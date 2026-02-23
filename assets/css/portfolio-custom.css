@@ -1,24 +1,14 @@
 /* Portfolio Page - Custom Styles */
 
-:root {
-  /* Font System - Strict */
-  --font-family-body: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-  --font-family-heading: 'Poppins', sans-serif;
-  --font-weight-regular: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-  --font-weight-bold: 700;
-  --font-weight-extrabold: 800;
-}
-
 * { scroll-behavior: smooth; }
 
 html { scroll-behavior: smooth; }
 
+/* Portfolio page uses `theme.css` for base variables and layout. */
+* { scroll-behavior: smooth; }
+
 body {
-    font-family: var(--font-family-body);
     padding-top:70px;
-    background:#fafbfc;
     color:#1e293b;
     position:relative;
     overflow-x:hidden;
@@ -38,11 +28,39 @@ body::before {
 
 /* Clean, calm navbar */
 .navbar {
-    background:rgba(250,251,252,0.98) !important;
-    backdrop-filter:blur(8px);
-    border-bottom:1px solid rgba(0,0,0,0.03);
+    background: transparent !important;
+    backdrop-filter: none;
+    border-bottom: none;
     z-index:1200;
-    transition:all 0.4s ease;
+    transition: all 0.25s ease;
+}
+
+/* Standardize navbar container width and spacing so portfolio and CRUD match */
+.navbar .container {
+    max-width: 1200px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.navbar .navbar-brand { padding-left: 0; }
+
+/* Standardize navbar sizing and alignment */
+.navbar, .navbar .container {
+    min-height: 64px;
+}
+.navbar .container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.navbar-brand {
+    font-size: 1.3rem !important;
+    font-weight: 700 !important;
+}
+.navbar .nav-link {
+    font-size: 0.95rem !important;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
 }
 
 .navbar.scrolled {
@@ -50,16 +68,16 @@ body::before {
 }
 
 .navbar-brand {
-    font-weight:700;
-    font-size:1.3rem;
+    font-weight:900;
+    font-size:1.9rem;
     color:#003d99;
     letter-spacing:-0.5px;
 }
 
 .navbar .nav-link {
     color:#64748b !important;
-    font-weight:500;
-    font-size:0.95rem;
+    font-weight:600;
+    font-size:1.1rem;
     position:relative;
     transition:color 0.4s ease;
     margin:0 clamp(0.3rem, 1vw, 0.5rem);
@@ -90,14 +108,14 @@ body::before {
     background:#003d99;
     color:#fff !important;
     border:0;
-    font-weight:600;
+    font-weight:700;
     transition:all 0.4s ease;
     box-shadow:0 4px 12px rgba(0,61,153,0.25);
     text-decoration:none !important;
     display:inline-flex;
     align-items:center;
     justify-content:center;
-    font-size:0.95rem;
+    font-size:1.1rem;
 }
 
 .contact-btn:hover {
@@ -161,9 +179,9 @@ body::before {
 
 .hero-left .name {
     font-family: var(--font-family-heading);
-    font-size:clamp(1.5rem, 4vw, 2rem);
+    font-size:clamp(2.5rem, 4vw, 2.5rem);
     line-height:1.2;
-    font-weight:800;
+    font-weight:1000;
     color:#003d99;
     margin:0;
     letter-spacing:-1px;
@@ -282,7 +300,7 @@ section:nth-child(even) {
 
 .section-header h2 {
     font-family: var(--font-family-heading);
-    font-size:2.4rem;
+    font-size:3rem;
     font-weight: var(--font-weight-extrabold);
     line-height:1.15;
     color:#003d99;
@@ -712,9 +730,9 @@ section:nth-child(even) {
 }
 
 .skill-label {
-    font-weight:700;
+    font-weight:800;
     color:#003d99;
-    font-size:1rem;
+    font-size:1.1rem;
 }
 
 .skill-value {
@@ -1245,6 +1263,42 @@ footer .heart-icon {
     white-space:nowrap;
 }
 
+/* Projects panel: transparent background with its own vertical scrolling */
+.projects-panel {
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(6px);
+    padding: 1rem;
+    border-radius: 12px;
+    max-height: 72vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(2,6,23,0.06);
+}
+
+.projects-panel .row.g-4 {
+    margin-bottom: 0;
+}
+
+/* Custom scrollbar for the projects panel */
+.projects-panel::-webkit-scrollbar {
+    width: 10px;
+}
+.projects-panel::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.02);
+    border-radius: 999px;
+}
+.projects-panel::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.12);
+    border-radius: 999px;
+}
+.projects-panel::-webkit-scrollbar-thumb:hover {
+    background: rgba(0,0,0,0.18);
+}
+
+/* Ensure featured horizontal scroller keeps its behavior inside the panel */
+.projects-panel .featured-projects-scroll {
+    padding-bottom: 0.5rem;
+}
+
 .name .typed {
     display:inline;
     white-space:normal;
@@ -1269,3 +1323,50 @@ footer .heart-icon {
         opacity:0;
     }
 }
+
+/* Override: remove portfolio navbar underline to match CRUD design */
+.navbar .nav-link::after {
+    display: none !important;
+    width: 0 !important;
+    visibility: hidden !important;
+}
+
+.navbar .nav-link:hover::after {
+    width: 0 !important;
+}
+
+.site-bg-overlay {
+    /* Full-viewport decorative background with optional image + blur */
+    content: '';
+    position:fixed;
+    inset:0;
+    z-index:-2;
+    pointer-events:none;
+    background-image: var(--portfolio-bg-image, radial-gradient(circle at 20% 30%, rgba(0,61,153,0.06), transparent 20%), radial-gradient(circle at 85% 75%, rgba(0,61,153,0.04), transparent 30%));
+    background-size: cover, cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    filter: blur(10px) saturate(1.05) contrast(0.98);
+    opacity:0.65;
+}
+
+/* If you'd like to use a static background image, set this CSS variable
+   on :root or body, e.g.: --portfolio-bg-image: url('/assets/img/portfolio-bg.jpg'); */
+
+/* Slightly lift content contrast when background is present */
+body { background-blend-mode: normal; }
+.container, .projects-panel { backdrop-filter: none; }
+
+.project-card { transition:transform 0.45s cubic-bezier(.2,.9,.25,1), box-shadow 0.45s ease, border-color 0.45s ease; }
+.project-card .card-body { background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.96)); }
+
+.hero { background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(249,251,253,0.85)); }
+
+.navbar .nav-link {
+    /* keep hover color but no underline */
+    color: #64748b !important;
+}
+
+/* Ensure the overlay element exists by adding it to the page via CSS pseudo-element on body */
+body::after { content: ''; position:fixed; inset:0; z-index:-2; pointer-events:none; background-image: var(--portfolio-bg-image, radial-gradient(circle at 20% 30%, rgba(0,61,153,0.06), transparent 20%), radial-gradient(circle at 85% 75%, rgba(0,61,153,0.04), transparent 30%)); background-size:cover; background-repeat:no-repeat; background-position:center center; filter: blur(10px) saturate(1.05) contrast(0.98); opacity:0.65; }
+

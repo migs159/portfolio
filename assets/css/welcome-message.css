@@ -10,11 +10,14 @@
   color: white;
 }
 
+/* Keep lightweight welcome styles, but inherit primary font from `theme.css`. */
 body {
   background-color: #fff;
   margin: 2.5rem;
-  font: 13px/20px normal Helvetica, Arial, sans-serif;
   color: #4F5155;
+  font-family: var(--font-family-body, Helvetica, Arial, sans-serif);
+  font-size: 13px;
+  line-height: 20px;
 }
 
 a {
@@ -39,7 +42,7 @@ h1 {
 }
 
 code {
-  font-family: Consolas, Monaco, Courier New, Courier, monospace;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 12px;
   background-color: #f9f9f9;
   border: 1px solid #D0D0D0;

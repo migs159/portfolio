@@ -12,6 +12,39 @@ var iframeTitle = null;
   }
 })();
 
+// Navbar behavior (scroll effect + smooth anchor scroll) - aligned with portfolio.js
+document.addEventListener('DOMContentLoaded', function(){
+  try {
+    var navbar = document.querySelector('.navbar');
+    if (navbar) {
+      window.addEventListener('scroll', function(){
+        if (window.scrollY > 100){
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+      });
+    }
+
+    // Smooth scroll for anchor links (close mobile navbar if open)
+    document.querySelectorAll('a[href^="#"]').forEach(function(anchor){
+      anchor.addEventListener('click', function(e){
+        var href = this.getAttribute('href');
+        if (href !== '#' && document.querySelector(href)){
+          e.preventDefault();
+          document.querySelector(href).scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+          // Close navbar if open on mobile
+          var navbarToggle = document.querySelector('.navbar-toggler');
+          if (navbarToggle && navbarToggle.offsetParent !== null){
+            navbarToggle.click();
+          }
+        }
+      });
+    });
+  } catch (err){ console.warn('Navbar behavior init error', err); }
+});
+
 function initIframeModal() {
   if (!iframeModalEl) {
     iframeModalEl = document.getElementById('iframeModal');
@@ -562,7 +595,7 @@ document.addEventListener('DOMContentLoaded', function(){
     if(skillName && skillPercent) {
       document.getElementById('viewFieldValue').innerHTML = '<strong>' + skillName + '</strong><br>Proficiency: ' + skillPercent + '%';
     } else if(type === 'image' && value) {
-      document.getElementById('viewFieldValue').innerHTML = '<img src="' + value + '?t=' + Date.now() + '" alt="' + label + '" style="max-width: 200px; max-height: 200px; border-radius: 8px;">';
+      document.getElementById('viewFieldValue').innerHTML = '<img class="view-field-image" src="' + value + '?t=' + Date.now() + '" alt="' + label + '">';
     } else {
       document.getElementById('viewFieldValue').textContent = value || 'Not set';
     }
@@ -1301,5 +1334,24 @@ document.addEventListener('DOMContentLoaded', function(){
       .catch(err => Swal.fire({ icon: 'error', title: 'Error', text: err.message, confirmButtonColor: '#003d99' }));
     });
   })();
+});
+
+// Show login success SweetAlert2 if flashdata is present
+// This must run after DOM is loaded
+
+document.addEventListener('DOMContentLoaded', function() {
+  var scriptTag = document.querySelector('script[data-flash-success], script[data-flash-error]');
+  if (scriptTag) {
+    var successMsg = scriptTag.getAttribute('data-flash-success') || '';
+    if (successMsg.trim()) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: successMsg,
+        confirmButtonColor: '#003d99',
+        timer: 2000
+      });
+    }
+  }
 });
 

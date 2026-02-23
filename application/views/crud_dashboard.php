@@ -58,7 +58,7 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end p-3" aria-labelledby="profileDropdown">
               <li>
-                <a href="#" class="dropdown-item d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#viewAccountModal">
+                <a href="<?php echo site_url('crud/profile'); ?>" class="dropdown-item d-flex align-items-center">
                   <div class="profile-initial me-2"><?php echo htmlspecialchars($__profile_initial); ?></div>
                   <div>
                     <div class="fw-bold">View Account</div>

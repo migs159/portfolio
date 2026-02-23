@@ -3,8 +3,8 @@
 /* ========== STRICT DESIGN SYSTEM ========== */
 :root {
   /* Font System - Strict */
-  --font-family-body: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-  --font-family-heading: 'Poppins', sans-serif;
+  --font-family-body: 'Plus Jakarta Sans', sans-serif;
+  --font-family-heading: 'Plus Jakarta Sans', sans-serif;
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
@@ -86,6 +86,19 @@
   --card-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
   --footer-bg: #2d3748;
   --footer-text: #ffffff;
+}
+
+/* Remove global site background image for CRUD pages (override from theme.css) */
+body::after,
+body::before {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Ensure CRUD pages use a calm, neutral background color */
+body {
+  background: var(--color-bg-light) !important;
 }
 
 /* Page header styles - Calm background */
@@ -288,10 +301,10 @@
 }
 
 .table-section table thead th {
-  font-weight: 700;
+  font-weight: 800;
   padding: 1rem;
   text-align: left;
-  font-size: 0.9rem;
+  font-size: 1rem;
   letter-spacing: 0.3px;
 }
 
@@ -497,6 +510,15 @@
 .image-preview img {
   max-width: 140px;
   max-height: 140px;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Image used in "View Field" modal (was inline style in JS) */
+.view-field-image {
+  max-width: 200px;
+  max-height: 200px;
   border-radius: 8px;
   object-fit: cover;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -904,10 +926,12 @@ a {
 
 .navbar .nav-link {
   color: #64748b !important;
-  font-weight: 500;
-  font-size: 0.95rem;
+  font-weight: 600;
+  font-size: 1.1rem;
   position: relative;
   transition: color 0.4s ease;
+  margin: 0 clamp(0.3rem, 1vw, 0.5rem);
+  display: inline-block;
 }
 
 .navbar .nav-link::after {
@@ -1023,6 +1047,35 @@ a {
   transform: translateY(-8vh) !important;
 }
 
+
+  /* Stronger underline rules to ensure visible on buttons and links */
+  .navbar .nav-link::after,
+  .sections-nav-tabs-navbar .section-nav-btn::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--color-primary);
+    transform-origin: left center;
+    transform: scaleX(0);
+    transition: transform 240ms ease;
+    pointer-events: none;
+  }
+  .navbar .nav-link:hover::after,
+  .sections-nav-tabs-navbar .section-nav-btn:hover::after,
+  .navbar .nav-link.active::after,
+  .sections-nav-tabs-navbar .section-nav-btn.active::after {
+    transform: scaleX(1);
+  }
+
+  /* Ensure nav items allow space for underline */
+  .navbar .nav-link,
+  .sections-nav-tabs-navbar .section-nav-btn {
+    display: inline-flex !important;
+    align-items: center;
+    position: relative !important;
+  }
 .view-account-badge {
   background: linear-gradient(90deg, #22c55e, #16a34a);
   color: #fff;
@@ -2029,10 +2082,12 @@ body::before {
   border-radius: 6px;
   padding: 0.5rem 1rem;
   height: auto;
-  font-size: 15.2px;
-  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  font-size: 17.2px;
+  font-family: 'Inter', system-ui, 'Plus Jakarta Sans', sans-serif;
   color: #475569;
   flex: none;
+  position: relative;
+  display: inline-flex;
 }
 
 .sections-nav-tabs-navbar .section-nav-btn:hover {
@@ -2044,6 +2099,21 @@ body::before {
   background: transparent;
   color: #003d99;
   font-weight: 400;
+}
+
+/* Underline hover effect for navbar section buttons (match portfolio) */
+.sections-nav-tabs-navbar .section-nav-btn::after {
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--color-primary);
+  transition: width 0.32s ease;
+}
+.sections-nav-tabs-navbar .section-nav-btn:hover::after {
+  width: 100%;
 }
 
 /* Section Content Styling */
@@ -2164,15 +2234,16 @@ body::before {
 }
 
 .modal-header {
-  background: #f9fbfd;
-  border-bottom: 1px solid rgba(0, 61, 153, 0.05);
+  background: #003d99;
+  color: #fff;
+  border-bottom: 0;
   padding: 1.5rem;
 }
 
 .modal-title {
   font-family: var(--font-family-heading);
   font-weight: 700;
-  color: #003d99;
+  color: #fff;
   font-size: 1.15rem;
 }
 
@@ -2264,4 +2335,42 @@ body::before {
 /* Skill percent wrapper (hidden by default, shown via JS) */
 #editSkillPercentWrapper {
   display: none;
+}
+
+/* Strongly-scoped underline (portfolio-style) for CRUD navbar
+   Targets both anchor links and button-based section tabs and forces visibility */
+.navbar.sticky-top .sections-nav-tabs-navbar .nav-link,
+.navbar.sticky-top .sections-nav-tabs-navbar .section-nav-btn {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center;
+  padding-bottom: 0.375rem;
+}
+
+.navbar.sticky-top .sections-nav-tabs-navbar .nav-link::after,
+.navbar.sticky-top .sections-nav-tabs-navbar .section-nav-btn::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  transform-origin: center center;
+  bottom: -6px;
+  width: 60%;
+  height: 3px;
+  background: var(--color-primary, #003d99) !important;
+  transition: transform 220ms cubic-bezier(.2,.8,.2,1);
+  z-index: 6;
+  border-radius: 4px;
+}
+
+.navbar.sticky-top .sections-nav-tabs-navbar .nav-link:hover::after,
+.navbar.sticky-top .sections-nav-tabs-navbar .section-nav-btn:hover::after,
+.navbar.sticky-top .sections-nav-tabs-navbar .nav-link.active::after,
+.navbar.sticky-top .sections-nav-tabs-navbar .section-nav-btn.active::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+.navbar.sticky-top .sections-nav-tabs-navbar .section-nav-btn.active,
+.navbar.sticky-top .sections-nav-tabs-navbar .nav-link.active {
+  color: var(--color-primary) !important;
 }

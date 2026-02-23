@@ -11,6 +11,7 @@
 ?><!doctype html>
 <html lang="en">
 <head>
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
     <title><?php echo isset($site_title) ? htmlspecialchars($site_title) : 'Portfolio'; ?></title>
@@ -103,6 +104,7 @@
                 <p>Explore some of my recent work and projects</p>
             </div>
 
+            <div class="projects-panel">
             <div class="row g-4">
                 <!-- Featured projects from database -->
                 <div class="col-12">
@@ -435,6 +437,7 @@
                     <?php endif; ?>
 
                 </div>
+            </div><!-- /.projects-panel -->
         </div>
     </section>
 

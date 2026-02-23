@@ -1,7 +1,7 @@
 :root{
   /* Font System - Strict */
-  --font-family-body: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-  --font-family-heading: 'Poppins', sans-serif;
+    --font-family-body: 'Plus Jakarta Sans', sans-serif;
+    --font-family-heading: 'Plus Jakarta Sans', sans-serif;
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
@@ -28,12 +28,15 @@
   --surface:#ffffff;
   --footer-bg: #6b7280;
   --footer-text: #ffffff;
+    /* Site background color + overlay */
+    --site-bg-color: #f4f7fb; /* base page background color */
+    --site-bg-overlay: rgba(255,255,255,0.28); /* semi-transparent overlay layer */
 }
 
 /* Base body and page styling */
 body {
     font-family: var(--font-family-body);
-    background: #ffffff;
+    background: var(--site-bg-color);
     color: var(--accent);
     position: relative;
     overflow-x: hidden;
@@ -50,6 +53,53 @@ body::before {
                 radial-gradient(circle at 80% 80%, rgba(0, 61, 153, 0.05), transparent 50%);
     pointer-events: none;
     z-index: -1;
+}
+
+/* Full-viewport decorative background image (configurable) */
+:root {
+    /* Primary: local image (assets/img/site-bg.jpg). Secondary: remote fallback so pages show a background until the local file is added. */
+    /* Use only the local image so the exact file you provided is shown. */
+    --site-bg-image: url('../img/backgorund.png');
+}
+
+body::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        z-index: -2;
+        pointer-events: none;
+        /* Use only the provided image (no decorative gradients) so there
+           are no unexpected star-like artifacts. */
+        background-image: var(--site-bg-image);
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-attachment: fixed;
+        /* Apply subtle color tuning only. */
+        background-blend-mode: normal;
+        filter: saturate(1.02) contrast(0.98);
+        opacity: 1;
+}
+
+/* Page-specific full-viewport background (uses the same image)
+   Applies on pages that render a top-level `.hero` (portfolio.php)
+   or `.page-header-top` (crud_dashboard.php). This draws a fixed,
+   blurred background behind the whole page without changing body
+   defaults for other pages. Place the attached image at
+   /assets/img/site-bg.jpg to use it. */
+/* (Removed page-specific fixed background pseudo-elements per revert request) */
+
+/* Add a subtle translucent layer above the blurred background to tone colors */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(180deg, var(--site-bg-overlay), rgba(255,255,255,0.02));
+    /* removed backdrop blur for a crisp background */
+    backdrop-filter: none;
+    opacity: 0.98;
 }
 
 /* Modern navbar */
@@ -98,19 +148,73 @@ body::before {
     width: 100%;
 }
 
+/* Global buttons */
+.btn {
+    font-family: var(--font-family-body);
+    border-radius: 8px;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+}
+
+.btn-primary, .btn.btn-primary-custom {
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    color: #fff;
+    border: 0;
+    box-shadow: 0 8px 24px rgba(2,6,23,0.08);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 36px rgba(2,6,23,0.12);
+}
+
+/* Inputs / form controls */
+input, textarea, select {
+    border-radius: 8px;
+    border: 1px solid rgba(15,23,42,0.06);
+    padding: 0.6rem 0.9rem;
+    transition: box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    box-shadow: 0 6px 20px rgba(0,61,153,0.08);
+    border-color: rgba(0,61,153,0.14);
+}
+
+/* Card defaults */
+.card, .project-card, .proj-card {
+    background: var(--surface);
+    border-radius: 12px;
+    box-shadow: 0 8px 28px rgba(2,6,23,0.06);
+    border: 1px solid rgba(2,6,23,0.04);
+}
+
+/* Modal header unify */
+.modal-header { background: var(--primary) !important; color: #fff !important; }
+
+
 /* Footer */
 footer {
-    background: #2d3748 !important;
-    color: var(--footer-text) !important;
+    background: #2d3748v ar(--footer-bg, #2d3748) !important;
+    color: var(--footer-text, #ffffff) !important;
     padding: clamp(1.5rem, 4vw, 2rem) 0;
     text-align: center;
     margin-top: clamp(2.5rem, 6vw, 4rem);
-    border-top: 1px solid rgba(59, 130, 246, 0.1);
+    -webkit-font-smoothing: antialiased;
 }
 
 footer p {
     margin: 0;
-    opacity: 0.8;
+    opacity: 1;
+    color: var(--footer-text, #ffffff) !important;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+footer a, footer a:visited {
+    color: var(--footer-text, #ffffff) !important;
+    text-decoration: underline;
+    opacity: 1;
 }
 
 /* Utility classes */
@@ -118,4 +222,47 @@ footer p {
 .bg-primary { background: var(--primary) !important; }
 .bg-surface { background: var(--surface) !important; }
 .gradient-primary { background: linear-gradient(135deg, var(--primary), var(--secondary)); }
+/* Layout container */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+/* Typography scale and headings */
+h1, h2, h3, h4, h5 { font-family: var(--font-family-heading); margin: 0 0 0.6rem 0; color: #ffffff; }
+h1 { font-size: var(--font-size-4xl); line-height: 1.05; }
+h2 { font-size: var(--font-size-3xl); }
+h3 { font-size: var(--font-size-2xl); }
+h4 { font-size: var(--font-size-xl); }
+p { margin: 0 0 1rem 0; color: #243240; }
+
+/* Links */
+a { color: var(--primary); text-decoration: none; transition: color 0.18s ease, transform 0.18s ease; }
+a:hover { color: var(--secondary); text-decoration: underline; }
+
+/* Images */
+img { max-width: 100%; height: auto; display: block; }
+
+/* Improve spacing for sections */
+section { padding: clamp(2rem, 5vw, 4rem) 0; }
+
+/* Responsive helpers */
+@media (max-width: 768px) {
+    :root {
+        --font-size-4xl: 2rem;
+        --font-size-3xl: 1.6rem;
+    }
+    .navbar { padding: 0.4rem 1rem; }
+    body { padding-top: 64px; }
+}
+
+@media (max-width: 480px) {
+    h1 { font-size: 1.6rem; }
+    .navbar-brand { font-size: 1.05rem; }
+    .btn { border-radius: 10px; }
+}
 

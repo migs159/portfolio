@@ -1,12 +1,8 @@
-:root {
-    --bg: #f8fafc;
-    --card: #ffffff;
-    --accent: #1e40af;
-    --muted: #6b7280;
-    --key: #f1f5f9;
-    --soft: #eef2ff;
-    --shadow: rgba(14, 30, 70, 0.08);
+* {
+    box-sizing: border-box;
 }
+
+/* Calculator page: rely on `theme.css` for font and base colors. */
 
 * {
     box-sizing: border-box;
@@ -15,7 +11,6 @@
 html, body {
     height: 100%;
     margin: 0;
-    font-family: Inter, Segoe UI, Arial, Helvetica, sans-serif;
     background: #fafbfc;
     color: #0f172a;
     position: relative;
