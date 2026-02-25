@@ -37,12 +37,26 @@
     </div>
   </div>
 
+  <div class="row">
+    <div class="col-lg-12 col-md-6 col-sm-12 d-none">
+      <div class="alert alert-info text-center mb-4">
+        <i class="fas fa-info-circle me-2"></i>
+        Welcome to the Admin Dashboard. Manage your portfolio content here.
+      </div>
+    </div>
+     <div class="col-lg-12 col-md-6 col-sm-12">
+      <div class="alert alert-info text-center mb-4">
+        <i class="fas fa-info-circle me-2"></i>
+        Welcome to the Admin Dashboard. Manage your portfolio content here.
+      </div>
+    </div>
+  </div>
   <!-- Main Content -->
   <div class="container-main main-content">
 
     <!-- HOME SECTION -->
     <div class="section-content section-content-hidden" id="home-section">
-      <div class="table-section">
+      <div class="col-lg-12 col-md-6 col-sm-12">
         <div class="table-section-wrapper">
           <div class="table-overflow-wrapper">
             <table class="table table-borderless">

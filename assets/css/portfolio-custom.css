@@ -28,8 +28,8 @@ body::before {
 
 /* Clean, calm navbar */
 .navbar {
-    background: transparent !important;
-    backdrop-filter: none;
+    background: rgba(255,255,255,0.98) !important;
+    backdrop-filter: blur(6px);
     border-bottom: none;
     z-index:1200;
     transition: all 0.25s ease;
@@ -116,6 +116,19 @@ body::before {
     align-items:center;
     justify-content:center;
     font-size:1.1rem;
+}
+
+/* Ensure collapsed navbar links are visible on small screens (override hiding in theme.css) */
+@media (max-width: 768px) {
+    .navbar .collapse .nav-link {
+        display: block !important;
+        width: 100%;
+        padding: 0.6rem 0.75rem;
+        color: #475569 !important;
+        background: transparent;
+    }
+    .navbar .collapse .nav-item { width:100%; }
+    .navbar .collapse .dropdown-menu { position: static; float: none; box-shadow: none; border: 0; }
 }
 
 .contact-btn:hover {
@@ -1427,4 +1440,50 @@ body::after { content: ''; position:fixed; inset:0; z-index:-2; pointer-events:n
 }
 
 /* End design refresh */
+
+/* === NAV PERSISTENCE & ACTIVE STYLING === */
+/* Ensure collapsed navbar links remain visible and tappable */
+@media (max-width: 768px) {
+    .navbar .collapse .nav-link {
+        display: block !important;
+        width: 100%;
+        padding: 0.75rem 1rem;
+        color: #475569 !important;
+        background: transparent;
+    }
+    .navbar .collapse { position: relative !important; z-index:1200; }
+    .navbar .navbar-toggler { z-index:1400; background: rgba(255,255,255,0.92); border-radius:8px; }
+}
+
+/* Active button styling to match CRUD header */
+.sections-nav-tabs-navbar .section-nav-btn { background: transparent; border: none; border-radius: 6px; padding: .5rem .75rem; }
+.sections-nav-tabs-navbar .section-nav-btn:hover { background:#f5f8fd; color:#003d99; }
+.sections-nav-tabs-navbar .section-nav-btn.active {
+    background: transparent !important;
+    color: #003d99 !important;
+    font-weight: 700;
+}
+
+/* Make fixed-top behave as sticky on small screens so collapse pushes content */
+@media (max-width: 992px) {
+    .navbar.fixed-top { position: sticky !important; top: 0; }
+    .navbar .collapse { position: relative !important; }
+}
+
+/* Mobile spacing: remove extra top padding so navbar container sits flush
+   This applies when the navbar is sticky (mobile/tablet). */
+@media (max-width: 992px) {
+    body {
+        padding-top: 0 !important;
+    }
+    /* give the navbar its own small vertical padding so it doesn't feel cramped */
+    .navbar {
+        padding-top: 0.4rem;
+        padding-bottom: 0.4rem;
+    }
+    .navbar .container {
+        padding-top: 0; /* already handled by navbar */
+        padding-bottom: 0;
+    }
+}
 

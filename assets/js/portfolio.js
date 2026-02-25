@@ -244,4 +244,32 @@ document.addEventListener('DOMContentLoaded', function(){
         // small delay so other hero animations run first
         setTimeout(step, 220);
     } catch (e) { console.warn('Typing animation error', e); }
+
+    // Make section nav buttons functional on the portfolio page
+    try {
+        var sectionButtons = document.querySelectorAll('.section-nav-btn');
+        if (sectionButtons && sectionButtons.length) {
+            sectionButtons.forEach(function(btn){
+                btn.addEventListener('click', function(e){
+                    var section = btn.getAttribute('data-section');
+                    if (!section) return;
+
+                    // Toggle active state (single active at a time)
+                    try {
+                        sectionButtons.forEach(function(b){ b.classList.remove('active'); b.removeAttribute('aria-current'); });
+                        btn.classList.add('active');
+                        btn.setAttribute('aria-current', 'true');
+                    } catch (errInner) {}
+
+                    var targetSelector = section === 'home' ? 'header.hero' : ('#' + section);
+                    var target = document.querySelector(targetSelector);
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+
+                    // Keep the navbar collapse open (don't auto-close)
+                });
+            });
+        }
+    } catch (err) { console.warn('section-nav-btn handler error', err); }
 });
