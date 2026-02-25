@@ -1,0 +1,22 @@
+/* Shared styles extracted for reuse across pages */
+
+/* Buttons */
+.btn { border-radius:10px; transition:transform .16s ease, box-shadow .16s ease; }
+.btn:active { transform:translateY(1px); }
+
+/* Form controls */
+.form-control { border-radius:10px; padding:0.7rem 0.9rem; border:1px solid rgba(15,23,42,0.06); }
+.form-control:focus { box-shadow:0 10px 30px rgba(0,61,153,0.08); border-color:#003d99; }
+
+/* Navbar basics */
+.navbar { background: rgba(255,255,255,0.95); backdrop-filter: blur(6px); }
+.navbar .nav-link { color:#64748b !important; }
+
+/* Project card base */
+.project-card, .proj-card { background:#fff; border-radius:12px; box-shadow:0 8px 28px rgba(2,6,23,0.06); border:1px solid rgba(2,6,23,0.04); overflow:hidden; }
+.project-card .card-body, .proj-card .card-body { padding:1rem; }
+.project-card .card-title, .proj-card .proj-title { color:#003d99; font-weight:700; }
+
+/* Utility */
+.centered { text-align:center; }
+.muted { color:#64748b; }

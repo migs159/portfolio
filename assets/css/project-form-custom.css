@@ -131,3 +131,10 @@ body {
 .btn-ghost:hover {
     background: rgba(0, 61, 153, 0.04);
 }
+
+/* Assistant: small form visual updates for project form */
+.auth-form-like { max-width:760px; margin:1rem auto; background:#fff; border-radius:12px; padding:1rem; box-shadow:0 10px 26px rgba(2,6,23,0.04); border:1px solid rgba(3,37,75,0.03); }
+.form-control { border-radius:10px; border:1px solid rgba(15,23,42,0.06); padding:0.7rem 0.9rem; }
+.image-preview img { max-width:220px; max-height:160px; border-radius:8px; }
+.btn-primary-custom { border-radius:10px; }
+

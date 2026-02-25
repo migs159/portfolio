@@ -111,59 +111,17 @@
                         
                         // Display featured projects from database
                         foreach ($featured_projects as $fp):
-                            $ftitle = isset($fp['title']) ? $fp['title'] : 'Featured Project';
-                            $fdesc = isset($fp['description']) ? $fp['description'] : '';
-                            $fimg = isset($fp['image']) && $fp['image'] ? $fp['image'] : 'https://via.placeholder.com/1200x450?text=Featured';
-                            // Apply base_url() to relative paths for uploaded images
-                            if ($fimg && strpos($fimg, 'http') !== 0 && strpos($fimg, '//') !== 0) {
-                                $fimg = base_url($fimg);
-                            }
-                            $furl = isset($fp['url']) ? $fp['url'] : '#';
-                            
-                            // Decode type field
-                            $ftypes = [];
-                            if (isset($fp['type']) && $fp['type']) {
-                                if (is_array($fp['type'])) {
-                                    $ftypes = $fp['type'];
-                                } else {
-                                    $raw = trim((string) $fp['type']);
-                                    $decoded = json_decode($raw, true);
-                                    if (is_array($decoded)) {
-                                        $ftypes = $decoded;
-                                    } elseif ($raw !== '') {
-                                        $ftypes = array_filter(array_map('trim', explode(',', $raw)));
-                                    }
+                            // Render featured project via partial
+                            if (function_exists('get_instance')) {
+                                $ci = &get_instance();
+                                $ci->load->view('partials/project_card', ['project' => $fp, 'featured' => true]);
+                            } else {
+                                if (isset($this) && method_exists($this->load, 'view')) {
+                                    $this->load->view('partials/project_card', ['project' => $fp, 'featured' => true]);
                                 }
                             }
-                            
-                            $ftypeLabels = [
-                                'php' => 'PHP', 'javascript' => 'JS', 'html_css' => 'HTML/CSS',
-                                'nodejs' => 'Node', 'react' => 'React', 'vue' => 'Vue',
-                                'angular' => 'Angular', 'uiux' => 'UI', 'cli' => 'CLI',
-                                'devops' => 'DevOps', 'other' => 'Other'
-                            ];
-                    ?>
-                        <div class="card project-card featured h-100">
-                            <div class="badge-featured" aria-hidden="true">Featured</div>
-                            <a href="<?php echo htmlspecialchars($furl); ?>" target="_blank" rel="noopener" class="stretched-link link-overlay">
-                                <img src="<?php echo htmlspecialchars($fimg); ?>" class="card-img-top project-img featured-img" alt="<?php echo htmlspecialchars($ftitle); ?>">
-                            </a>
-                            <div class="card-body">
-                                <h5 class="card-title"><?php echo htmlspecialchars($ftitle); ?></h5>
-                                <p class="card-text"><?php echo htmlspecialchars($fdesc); ?></p>
-                                <div class="project-tags">
-                                    <?php
-                                        foreach ($ftypes as $ft) {
-                                            $key = trim((string) $ft);
-                                            if ($key === '') continue;
-                                            $label = isset($ftypeLabels[$key]) ? $ftypeLabels[$key] : $key;
-                                            echo '<span class="tag">' . htmlspecialchars($label) . '</span>';
-                                        }
-                                    ?>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
+                        ?>
+                        <?php endforeach; ?>
                     </div>
                 </div>
                 
@@ -174,102 +132,19 @@
                     ?>
                     <?php foreach ($regular_projects as $p): 
                         $title = isset($p['title']) ? $p['title'] : 'Untitled';
-                        $desc  = isset($p['description']) ? $p['description'] : '';
-                        $img   = isset($p['image']) && $p['image'] ? $p['image'] : 'https://via.placeholder.com/800x450?text=Project';
-                        // Apply base_url() to relative paths for uploaded images
-                        if ($img && strpos($img, 'http') !== 0 && strpos($img, '//') !== 0) {
-                            $img = base_url($img);
-                        }
-                        $url   = isset($p['url']) ? $p['url'] : '#';
-                        // Compute image basename
-                        $img_basename_check = '';
-                        $tmp = basename(parse_url($img, PHP_URL_PATH) ?: $img);
-                        if ($tmp) $img_basename_check = strtolower($tmp);
-                        $tags  = isset($p['tags']) && is_array($p['tags']) ? $p['tags'] : [];
-
                         if (stripos($title, 'crud') !== false) { $crud_project = $p; continue; }
-
                     ?>
                     <div class="col-12 col-md-6 col-lg-4">
-                        <div class="card project-card h-100">
-                                <a href="<?php echo htmlspecialchars($url); ?>" target="_blank" rel="noopener" class="stretched-link link-overlay">
-                                <?php $img_basename = basename(parse_url($img, PHP_URL_PATH) ?: $img); ?>
-                                <img src="<?php echo htmlspecialchars($img); ?>" class="card-img-top project-img" alt="<?php echo htmlspecialchars($title); ?>" data-basename="<?php echo htmlspecialchars($img_basename); ?>">
-                            </a>
-                            <div class="card-body">
-                                <h5 class="card-title"><?php echo htmlspecialchars($title); ?></h5>
-                                <p class="card-text"><?php echo htmlspecialchars($desc); ?></p>
-                                <?php
-                                    // Normalize types (may be array, CSV string, JSON array, or from database)
-                                    $types = [];
-                                    // Accept multiple possible fields that might contain type info
-                                    $typeSource = null;
-                                    if (isset($p['type'])) $typeSource = $p['type'];
-                                    elseif (isset($p['types'])) $typeSource = $p['types'];
-
-                                    if ($typeSource !== null) {
-                                        if (is_array($typeSource)) {
-                                            $types = $typeSource;
-                                        } else {
-                                            $raw = trim((string) $typeSource);
-                                            // Try JSON decode first (handles database JSON field or form submission)
-                                            $decoded = null;
-                                            if ($raw !== '') {
-                                                $json = json_decode($raw, true);
-                                                if (json_last_error() === JSON_ERROR_NONE && is_array($json)) {
-                                                    $decoded = $json;
-                                                }
-                                            }
-                                            if (is_array($decoded)) {
-                                                $types = $decoded;
-                                            } elseif ($raw !== '') {
-                                                // Fallback to CSV parsing
-                                                $types = array_filter(array_map('trim', explode(',', $raw)));
-                                            }
-                                        }
-                                    }
-
-                                    $typeLabels = [
-                                        'php' => 'PHP',
-                                        'javascript' => 'JS',
-                                        'html_css' => 'HTML/CSS',
-                                        'nodejs' => 'Node',
-                                        'react' => 'React',
-                                        'vue' => 'Vue',
-                                        'angular' => 'Angular',
-                                        'uiux' => 'UI',
-                                        'cli' => 'CLI',
-                                        'devops' => 'DevOps',
-                                        'other' => 'Other'
-                                    ];
-                                ?>
-                                <div class="project-tags">
-                                    <?php
-                                        // Render types first, mapping keys to readable labels
-                                        $printed = [];
-                                        foreach ($types as $tt) {
-                                            $key = trim((string) $tt);
-                                            if ($key === '') continue;
-                                            $label = isset($typeLabels[$key]) ? $typeLabels[$key] : $key;
-                                            $printed[strtolower($label)] = true;
-                                            echo '<span class="tag">' . htmlspecialchars($label) . '</span>';
-                                        }
-
-                                        // Render tags but avoid duplicates of types
-                                        foreach ($tags as $t) {
-                                            $tag = trim((string) $t);
-                                            if ($tag === '') continue;
-                                            if (isset($printed[strtolower($tag)])) continue;
-                                            // Also skip if tag matches one of the raw type keys (case-insensitive)
-                                            $match = false;
-                                            foreach ($types as $tt) { if (strcasecmp(trim((string)$tt), $tag) === 0) { $match = true; break; } }
-                                            if ($match) continue;
-                                            echo '<span class="tag">' . htmlspecialchars($tag) . '</span>';
-                                        }
-                                    ?>
-                                </div>
-                            </div>
-                        </div>
+                        <?php
+                            if (function_exists('get_instance')) {
+                                $ci = &get_instance();
+                                $ci->load->view('partials/project_card', ['project' => $p, 'featured' => false]);
+                            } else {
+                                if (isset($this) && method_exists($this->load, 'view')) {
+                                    $this->load->view('partials/project_card', ['project' => $p, 'featured' => false]);
+                                }
+                            }
+                        ?>
                     </div>
                     <?php endforeach; ?>
                     <?php
@@ -445,51 +320,16 @@
                             <div class="row">
                                 <?php if (!empty($portfolio_data['contacts']) && is_array($portfolio_data['contacts'])): ?>
                                     <?php foreach ($portfolio_data['contacts'] as $contact): ?>
-                                    <?php
-                                    // Map contact types to Font Awesome icons
-                                    $iconMap = [
-                                        'Email' => 'fas fa-envelope',
-                                        'Phone' => 'fas fa-phone',
-                                        'GitHub' => 'fab fa-github',
-                                        'LinkedIn' => 'fab fa-linkedin',
-                                        'Twitter' => 'fab fa-twitter',
-                                        'Facebook' => 'fab fa-facebook',
-                                        'Instagram' => 'fab fa-instagram',
-                                        'YouTube' => 'fab fa-youtube',
-                                        'TikTok' => 'fab fa-tiktok',
-                                        'Discord' => 'fab fa-discord',
-                                        'Telegram' => 'fab fa-telegram',
-                                        'WhatsApp' => 'fab fa-whatsapp',
-                                        'Website' => 'fas fa-globe',
-                                        'Portfolio' => 'fas fa-briefcase',
-                                        'Address' => 'fas fa-map-marker-alt',
-                                        'Skype' => 'fab fa-skype',
-                                        'Slack' => 'fab fa-slack',
-                                        'Other' => 'fas fa-link'
-                                    ];
-                                    $iconClass = isset($iconMap[$contact['type']]) ? $iconMap[$contact['type']] : 'fas fa-address-card';
-                                    ?>
-                                    <div class="col-md-6">
-                                        <div class="contact-item">
-                                            <strong><i class="<?php echo $iconClass; ?> me-2"></i><?php echo htmlspecialchars($contact['type']); ?></strong>
-                                            <?php 
-                                            $value = $contact['value'];
-                                            $contactType = strtolower($contact['type']);
-                                            $isEmail = ($contactType === 'email' || strpos($value, '@') !== false);
-                                            $isLink = (strpos($value, 'http') === 0);
-                                            $isPhone = ($contactType === 'phone' || $contactType === 'whatsapp');
-                                            
-                                            if ($isEmail): ?>
-                                            <a href="mailto:<?php echo htmlspecialchars($value); ?>"><?php echo htmlspecialchars($value); ?></a>
-                                            <?php elseif ($isPhone && !$isLink): ?>
-                                            <a href="tel:<?php echo htmlspecialchars(preg_replace('/[^0-9+]/', '', $value)); ?>"><?php echo htmlspecialchars($value); ?></a>
-                                            <?php elseif ($isLink): ?>
-                                            <a href="<?php echo htmlspecialchars($value); ?>" target="_blank" rel="noopener noreferrer"><?php echo htmlspecialchars($value); ?></a>
-                                            <?php else: ?>
-                                            <p><?php echo htmlspecialchars($value); ?></p>
-                                            <?php endif; ?>
-                                        </div>
-                                    </div>
+                                        <?php
+                                            if (function_exists('get_instance')) {
+                                                $ci = &get_instance();
+                                                $ci->load->view('partials/contact_item', ['contact' => $contact]);
+                                            } else {
+                                                if (isset($this) && method_exists($this->load, 'view')) {
+                                                    $this->load->view('partials/contact_item', ['contact' => $contact]);
+                                                }
+                                            }
+                                        ?>
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                 <div class="col-12">

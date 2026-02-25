@@ -1,3 +1,5 @@
+@import url('shared.css');
+
 :root{
   /* Font System - Strict */
     --font-family-body: 'Plus Jakarta Sans', sans-serif;
@@ -195,7 +197,7 @@ input:focus, textarea:focus, select:focus {
 
 /* Footer */
 footer {
-    background: #2d3748v ar(--footer-bg, #2d3748) !important;
+    background: var(--footer-bg, #2d3748) !important;
     color: var(--footer-text, #ffffff) !important;
     padding: clamp(1.5rem, 4vw, 2rem) 0;
     text-align: center;
@@ -265,4 +267,14 @@ section { padding: clamp(2rem, 5vw, 4rem) 0; }
     .navbar-brand { font-size: 1.05rem; }
     .btn { border-radius: 10px; }
 }
+
+/* Assistant: small global enhancements to align design refresh across files */
+.form-control:focus { box-shadow:0 10px 30px rgba(0,61,153,0.08); border-color:#003d99; }
+.buttons .btn { border-radius:10px; transition:transform .16s ease, box-shadow .16s ease; }
+.buttons .btn:active { transform:translateY(1px); }
+@media (max-width:768px) {
+    .navbar .nav-link { display:none; }
+    .navbar .navbar-toggler { display:inline-flex; }
+}
+
 

@@ -131,6 +131,12 @@ body {
   box-shadow: 0 8px 28px rgba(239, 68, 68, 0.14);
 }
 
+/* Assistant: shared tweaks for projects list to match refreshed UI */
+.card-grid .proj-card { border-radius:12px; transition:transform 0.35s ease, box-shadow 0.35s ease; }
+.card-grid .proj-card:hover { transform:translateY(-8px); box-shadow:0 16px 40px rgba(2,6,23,0.08); }
+.btn-pill { border-radius:10px; }
+
+
 /* Use the same primary gradient for view/edit actions to keep colors strict */
 .btn-edit {
   display: inline-flex;

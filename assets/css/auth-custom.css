@@ -305,3 +305,9 @@ button, .btn-register, .btn-signin {
 .swal2-container.swal2-top-toast {
   z-index: 3200 !important;
 }
+
+/* Assistant: small shared design tweaks to align with portfolio refresh */
+.auth-form { max-width:420px; margin:2rem auto; background:#fff; border-radius:12px; padding:1.6rem; box-shadow:0 10px 26px rgba(2,6,23,0.06); border:1px solid rgba(3,37,75,0.04); }
+.auth-form .form-control { border-radius:10px; padding:0.8rem; border:1px solid rgba(3,37,75,0.12); }
+.auth-form .btn-primary, .btn-register, .btn-signin { border-radius:10px; padding:0.75rem 1rem; background:#003d99; border-color:#003d99; box-shadow:0 8px 20px rgba(0,61,153,0.12); }
+.form-control:focus { box-shadow:0 10px 30px rgba(0,61,153,0.08); border-color:#003d99; }

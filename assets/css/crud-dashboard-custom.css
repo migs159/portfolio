@@ -2374,3 +2374,12 @@ body::before {
 .navbar.sticky-top .sections-nav-tabs-navbar .nav-link.active {
   color: var(--color-primary) !important;
 }
+
+/* Assistant: additional CRUD table and button polish for consistency */
+.crud-table { width:100%; border-collapse:collapse; font-size:0.95rem; }
+.crud-table th, .crud-table td { padding:0.85rem 0.9rem; border-bottom:1px solid rgba(0,0,0,0.04); }
+.crud-table thead th { background:var(--color-bg-lighter); color:var(--color-primary); font-weight:700; border-bottom:1px solid var(--color-border-medium); }
+.crud-table tbody tr:hover { background: linear-gradient(90deg, rgba(0,61,153,0.02), transparent); }
+.buttons .btn { border-radius:10px; transition:transform .16s ease, box-shadow .16s ease; }
+.buttons .btn:active { transform:translateY(1px); }
+
