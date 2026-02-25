@@ -12,6 +12,23 @@
 .navbar { background: rgba(255,255,255,0.95); backdrop-filter: blur(6px); }
 .navbar .nav-link { color:#64748b !important; }
 
+/* Standardize header height/spacing so CRUD and Public headers match */
+.navbar.standardized {
+	min-height: 68px;
+	padding-top: 0.45rem;
+	padding-bottom: 0.45rem;
+}
+.navbar.standardized .navbar-brand {
+	font-size: 1.05rem;
+	padding: 0.35rem 0.75rem;
+}
+.navbar.standardized .navbar-nav .nav-link {
+	padding: 0.45rem 0.6rem;
+}
+.navbar.standardized .navbar-toggler {
+	margin-top: 0.15rem;
+}
+
 /* Project card base */
 .project-card, .proj-card { background:#fff; border-radius:12px; box-shadow:0 8px 28px rgba(2,6,23,0.06); border:1px solid rgba(2,6,23,0.04); overflow:hidden; }
 .project-card .card-body, .proj-card .card-body { padding:1rem; }

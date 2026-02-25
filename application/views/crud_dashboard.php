@@ -623,59 +623,60 @@
     </div>
   </div>
 
-  <!-- View Account Modal -->
-  <?php $user_email = isset($user['email']) ? $user['email'] : (isset($_SESSION['email']) ? $_SESSION['email'] : 'Not set'); ?>
+  <!-- View Account Modal (redesigned) -->
+  <?php $user_email = isset($user['email']) ? $user['email'] : (isset($_SESSION['email']) ? $_SESSION['email'] : 'Not set');
+        $profile_initial = isset($_SESSION['username']) && $_SESSION['username'] ? strtoupper(substr(trim($_SESSION['username']),0,1)) : 'M';
+        $profile_name = isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username']) : 'Miguel Del Rosario';
+  ?>
   <div class="modal fade" id="viewAccountModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
       <div class="modal-content">
-        <div class="modal-body">
-          <div class="view-account-modal-container">
-            <div class="view-account-cover-image"></div>
-            <div class="view-account-avatar-wrapper">
-              <div class="profile-initial-large">
-                <?php echo htmlspecialchars($__profile_initial); ?>
-              </div>
+        <div class="modal-body p-0">
+          <div class="account-card">
+            <div class="account-cover" role="img" aria-label="Cover image">
+              <button class="btn btn-sm btn-outline-light edit-cover" title="Edit Cover"><i class="fas fa-camera"></i> Edit Cover</button>
             </div>
-            <!-- Edit Profile button removed per request -->
-          </div>
-          <div class="view-account-content-wrapper">
-            <div class="view-account-content-inner">
-              <div class="view-account-header-layout">
-                <div>
-                  <div class="view-account-username-text">
-                    <?php echo isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username']) : 'User'; ?>
+            <div class="account-card-inner container">
+              <div class="d-flex align-items-start justify-content-between pt-4">
+                <div class="d-flex align-items-center">
+                  <div class="avatar me-4">
+                    <?php if (isset($profile_img) && $profile_img): ?>
+                      <img src="<?php echo htmlspecialchars($profile_img); ?>" alt="Profile" />
+                    <?php else: ?>
+                      <span class="avatar-initial"><?php echo htmlspecialchars($profile_initial); ?></span>
+                    <?php endif; ?>
                   </div>
-                  <div class="view-account-member-since">Member since: <?php echo date('Y'); ?></div>
+                  <div>
+                    <h3 class="mb-1 account-name"><?php echo $profile_name; ?></h3>
+                    <div class="text-muted small">BS in Information Technology</div>
+                    <div class="d-flex gap-3 text-muted small mt-2">
+                      <div><i class="fas fa-graduation-cap me-1"></i>Graduated 2026</div>
+                      <div><i class="fas fa-id-card me-1"></i>ID: 202201070</div>
+                    </div>
+                  </div>
                 </div>
-                <div class="view-account-badge-container">
-                  <span class="view-account-badge">Active</span>
+                <div class="ms-3">
+                  <button class="btn btn-primary btn-edit-profile"><i class="fas fa-edit me-1"></i>Edit Profile</button>
                 </div>
               </div>
-              <hr class="view-account-divider">
-              <div class="view-account-grid-container">
-                <div>
-                  <div class="view-account-item-label"><i class="fas fa-envelope me-2"></i>EMAIL</div>
-                  <div class="view-account-item-value">
-                    <?php echo !empty($user_email) ? htmlspecialchars($user_email) : 'Not set'; ?>
-                  </div>
+
+              <hr class="my-4">
+
+              <div class="row mb-4">
+                <div class="col-md-4">
+                  <div class="text-muted small">EMAIL</div>
+                  <div class="fw-bold"><?php echo !empty($user_email) ? htmlspecialchars($user_email) : 'Not set'; ?></div>
                 </div>
-                <div>
-                  <div class="view-account-item-label"><i class="fas fa-id-badge me-2"></i>USERNAME</div>
-                  <div class="view-account-item-value">
-                    <?php echo isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username']) : 'User'; ?>
-                  </div>
+                <div class="col-md-4">
+                  <div class="text-muted small">ALTERNATE EMAIL</div>
+                  <div class="fw-bold">Not Set</div>
                 </div>
-                <div>
-                  <div class="view-account-item-label"><i class="fas fa-phone me-2"></i>PHONE</div>
-                  <div class="view-account-item-value">
-                    <?php echo isset($_SESSION['phone']) ? htmlspecialchars($_SESSION['phone']) : 'Not set'; ?>
-                  </div>
-                </div>
-                <div>
-                  <div class="view-account-item-label"><i class="fas fa-clock me-2"></i>LAST LOGIN</div>
-                  <div class="view-account-item-value">Just now</div>
+                <div class="col-md-4">
+                  <div class="text-muted small">PHONE</div>
+                  <div class="fw-bold"><?php echo isset($_SESSION['phone']) ? htmlspecialchars($_SESSION['phone']) : 'Not set'; ?></div>
                 </div>
               </div>
+
             </div>
           </div>
         </div>

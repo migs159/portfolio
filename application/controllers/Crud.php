@@ -545,4 +545,32 @@ $this->output->set_header('Content-Security-Policy', "default-src 'self'; script
         $this->session->unset_userdata('logged_in');
         redirect('portfolio');
     }
+
+    /**
+     * Profile page for the current logged in user.
+     * Previously the header linked to `crud/profile` which caused a 404
+     * because no handler existed. This provides a simple account page.
+     */
+    public function profile()
+    {
+        $username = $this->session->userdata('username');
+        if (!$username) {
+            redirect('auth/login');
+        }
+
+        $userRow = $this->User_model->get_by_username($username);
+        $data = [];
+        $data['user'] = $userRow ?: [];
+        $data['__profile_initial'] = $username ? strtoupper(mb_substr($username, 0, 1)) : 'U';
+        $data['page_title'] = 'Your Account';
+
+        // Provide portfolio-like data for compatibility with some views
+        $data['portfolio'] = [
+            'hero_title' => !empty($userRow['hero_title']) ? $userRow['hero_title'] : '',
+            'hero_subtitle' => !empty($userRow['hero_subtitle']) ? $userRow['hero_subtitle'] : '',
+            'about_content' => !empty($userRow['about_content']) ? $userRow['about_content'] : ''
+        ];
+
+        $this->load->view('crud_profile', $data);
+    }
 }

@@ -1,8 +1,8 @@
 <?php
-// Partial: footer_calculator.php
-?>
-<footer class="calc-footer-container">
-    <div class="calc-footer-content">
-        <p class="calc-footer-text">&copy; <?php echo date('Y'); ?> <?php echo isset($site_title) ? htmlspecialchars($site_title) : 'My Portfolio'; ?>. All rights reserved.</p>
-    </div>
-</footer>
+// Proxy loader: footer_calculator moved to partials/footers/
+if (function_exists('get_instance')) {
+    get_instance()->load->view('partials/footers/footer_calculator');
+    return;
+}
+include __DIR__ . '/footers/footer_calculator.php';
+

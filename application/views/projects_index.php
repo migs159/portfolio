@@ -11,6 +11,14 @@
   <!-- replaced iziToast with SweetAlert2 -->
 </head>
 <?php
+// Ensure $embedded is defined in this view's scope. The loader includes
+// views inside the loader's method scope so variables set there may not
+// be visible here; define explicitly from GET as a reliable fallback.
+$embedded = false;
+if (isset($_GET['embedded']) && ($_GET['embedded'] === '1' || $_GET['embedded'] == 1)) {
+  $embedded = true;
+}
+
 if (function_exists('get_instance')) {
   $ci = &get_instance();
   $ci->load->view('partials/embedded_flag');

@@ -15,11 +15,12 @@
 <body>
   <?php if (function_exists('get_instance')) {
     $ci = &get_instance();
-    $ci->load->view('partials/header_public');
+    $ci->load->view('partials/header_auth');
   } else {
     if (isset($this) && method_exists($this->load, 'view')) {
-      $this->load->view('partials/header_public');
+      $this->load->view('partials/header_auth');
     }
+
   }
   ?>
   <div class="card">
