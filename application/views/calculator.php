@@ -10,14 +10,15 @@
     <link rel="stylesheet" href="<?php echo htmlspecialchars(function_exists('base_url') ? base_url('assets/css/calculator-page.css') : '/assets/css/calculator-page.css'); ?>">
 </head>
 <body>
-<header class="calc-header-container">
-    <nav class="calc-header-nav">
-        <h1 class="calc-header-logo">Calculator</h1>
-        <a href="<?php echo htmlspecialchars(function_exists('site_url') ? site_url('portfolio') : '/portfolio'); ?>" class="calc-header-link">
-            <i class="fas fa-arrow-left"></i> Portfolio
-        </a>
-    </nav>
-</header>
+<?php if (function_exists('get_instance')) {
+    $ci = &get_instance();
+    $ci->load->view('partials/header_public');
+} else {
+    if (isset($this) && method_exists($this->load, 'view')) {
+        $this->load->view('partials/header_public');
+    }
+}
+?>
 <div class="wrap">
     <div class="app" role="application">
         <div class="card" aria-labelledby="calcTitle">
@@ -70,11 +71,15 @@
     </div>
 </div>
 
-<footer class="calc-footer-container">
-    <div class="calc-footer-content">
-        <p class="calc-footer-text">&copy; 2026 My Portfolio. All rights reserved.</p>
-    </div>
-</footer>
+<?php if (function_exists('get_instance')) {
+    $ci = &get_instance();
+    $ci->load->view('partials/footer_calculator');
+} else {
+    if (isset($this) && method_exists($this->load, 'view')) {
+        $this->load->view('partials/footer_calculator');
+    }
+}
+?>
 
 <script src="<?php echo htmlspecialchars(function_exists('base_url') ? base_url('assets/js/calculator.js') : '/assets/js/calculator.js'); ?>"></script>
 </body>

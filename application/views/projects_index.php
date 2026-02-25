@@ -10,8 +10,17 @@
   <link rel="stylesheet" href="<?php echo htmlspecialchars(function_exists('base_url') ? base_url('assets/css/projects-custom.css') : '/assets/css/projects-custom.css'); ?>">
   <!-- replaced iziToast with SweetAlert2 -->
 </head>
-<?php $embedded = isset($_GET['embedded']) && $_GET['embedded'] == '1'; ?>
-<?php // when embedded, we still show all projects so the iframe displays the full list ?>
+<?php
+if (function_exists('get_instance')) {
+  $ci = &get_instance();
+  $ci->load->view('partials/embedded_flag');
+} else {
+  if (isset($this) && method_exists($this->load, 'view')) {
+    $this->load->view('partials/embedded_flag');
+  }
+}
+// when embedded, we still show all projects so the iframe displays the full list
+?>
 <body>
 <div class="container py-4">
   <?php if (empty($embedded)): ?>

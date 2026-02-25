@@ -48,33 +48,15 @@
         <div class="mb-3">
           <label class="form-label">Framework/Language</label>
           <?php
-            $typeOptions = [
-              'php' => 'PHP',
-              'javascript' => 'JS',
-              'html_css' => 'HTML/CSS',
-              'nodejs' => 'Node',
-              'react' => 'React',
-              'vue' => 'Vue',
-              'angular' => 'Angular',
-              'sql' => 'SQL',
-              'mysql' => 'MySQL',
-              'uiux' => 'UI',
-              'cli' => 'CLI',
-              'devops' => 'DevOps'
-            ];
-            $selectedTypes = [];
-            if (isset($project['type'])) {
-              if (is_array($project['type'])) $selectedTypes = $project['type'];
-              else $selectedTypes = array_map('trim', explode(',', $project['type']));
+            if (function_exists('get_instance')) {
+              $ci = &get_instance();
+              $ci->load->view('partials/project_type_select', isset($project) ? ['project' => $project] : []);
+            } else {
+              if (isset($this) && method_exists($this->load, 'view')) {
+                $this->load->view('partials/project_type_select', isset($project) ? ['project' => $project] : []);
+              }
             }
           ?>
-          <select name="type[]" class="form-control" multiple size="6">
-            <option value="" disabled>-- Select framework / language --</option>
-            <?php foreach ($typeOptions as $val => $label): $sel = in_array($val, $selectedTypes) ? 'selected' : ''; ?>
-              <option value="<?php echo htmlspecialchars($val); ?>" <?php echo $sel; ?>><?php echo htmlspecialchars($label); ?></option>
-            <?php endforeach; ?>
-          </select>
-          <div class="form-text">Choose one or more frameworks or languages (hold Ctrl / Cmd to multi-select).</div>
         </div>
         <div class="featured-checkbox-wrapper">
           <input type="hidden" name="featured" value="0">

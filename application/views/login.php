@@ -14,6 +14,15 @@
   <link rel="stylesheet" href="<?php echo htmlspecialchars(function_exists('base_url') ? base_url('assets/css/auth-custom.css') : '/assets/css/auth-custom.css'); ?>">
 </head>
 <body>
+  <?php if (function_exists('get_instance')) {
+    $ci = &get_instance();
+    $ci->load->view('partials/header_public');
+  } else {
+    if (isset($this) && method_exists($this->load, 'view')) {
+      $this->load->view('partials/header_public');
+    }
+  }
+  ?>
   <div class="login-container">
     <div class="login-card">
       <div class="login-header">

@@ -1757,7 +1757,7 @@ body::before {
 /* Project title in table */
 .project-title-cell {
   font-weight: 700;
-  color: var(--color-accent);
+  color: #000000;
 }
 
 /* Project description in table */

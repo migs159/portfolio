@@ -22,49 +22,30 @@
     <link rel="stylesheet" href="<?php echo htmlspecialchars(function_exists('base_url') ? base_url('assets/css/portfolio-custom.css') : '/assets/css/portfolio-custom.css'); ?>">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light fixed-top">
-    <div class="container">
-        <a class="navbar-brand" href="<?php echo htmlspecialchars(function_exists('site_url') ? site_url() : '/'); ?>">My Portfolio</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="nav">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="<?php echo htmlspecialchars(function_exists('site_url') ? site_url('portfolio') : '/portfolio'); ?>">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="#projects">Projects</a></li>
-                <li class="nav-item"><a class="nav-link" href="#about">About Me</a></li>
-                <li class="nav-item"><a class="nav-link" href="#skills">Skills</a></li>
-                <?php
-                    $ci = &get_instance();
-                    $ci->load->library('session');
-                    $logged = $ci->session->userdata('logged_in');
-                ?>
-                <?php if ($logged): ?>
-                    <li class="nav-item"><a class="nav-link" href="<?php echo htmlspecialchars(function_exists('site_url') ? site_url('crud') : '/crud'); ?>">Admin</a></li>
-                    <li class="nav-item"><a class="nav-link" href="<?php echo htmlspecialchars(function_exists('site_url') ? site_url('auth/logout') : '/auth/logout'); ?>">Logout</a></li>
-                <?php endif; ?>
-                <li class="nav-item ms-3 d-none d-lg-block"><a class="contact-btn" href="#contact">Get in Touch</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
+<?php if (function_exists('get_instance')) {
+    $ci = &get_instance();
+    $ci->load->view('partials/header_public');
+} else {
+    if (isset($this) && method_exists($this->load, 'view')) {
+        $this->load->view('partials/header_public');
+    }
+
+}
+?>
 
 <header class="hero">
     <div class="container">
-        <?php $initial = isset($site_title) ? strtoupper(substr(trim($site_title),0,1)) : 'M'; ?>
-        <div id="hero-initial" aria-hidden="true"><?php echo htmlspecialchars($initial); ?></div>
-        <div class="hero-inner">
-                    <?php
-                        // Prefer PNG (transparent) but check disk in case of name mismatch
-                        $profile_rel = 'assets/img/profiles/profile.png';
-                        $profile_file = defined('FCPATH') ? rtrim(FCPATH, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$profile_rel : NULL;
-                        $profile_exists = $profile_file ? file_exists($profile_file) : false;
-                        $profile_url = $profile_exists && function_exists('base_url') ? base_url($profile_rel) : (function_exists('base_url') ? base_url('assets/img/profiles/profile.png') : '/assets/img/profiles/profile.png');
-                    ?>
-                    <img src="<?php echo htmlspecialchars($profile_url); ?>" alt="Miguel Andrei Portrait" class="hero-profile" id="hero-profile-img">
-                    <?php if (!$profile_exists): ?>
-                        <div class="profile-debug">Debug: profile image file not found on server at <strong><?php echo htmlspecialchars($profile_file ?: 'unknown'); ?></strong></div>
-                    <?php endif; ?>
+        <?php if (function_exists('get_instance')) {
+            $ci = &get_instance();
+            // Load partial that defines $initial and profile variables and prints the hero-initial and image
+            $ci->load->view('partials/vars');
+        } else {
+            // Fallback if $this is available in the view
+            if (isset($this) && method_exists($this->load, 'view')) {
+                $this->load->view('partials/vars');
+            }
+        }
+        ?>
             <div class="hero-left">
                 <div class="greeting">Welcome to my portfolio</div>
                 <h1 class="name" aria-label="<?php echo isset($portfolio_data['hero_title']) ? htmlspecialchars($portfolio_data['hero_title']) : ''; ?>">
@@ -524,14 +505,15 @@
     </section>
 </main>
 
-<footer>
-    <div class="container">
-        <p>&copy; <?php echo date('Y'); ?> <?php echo isset($site_title) ? htmlspecialchars($site_title) : 'Miguel Andrei del Rosario'; ?>. All rights reserved.</p>
-        <div class="mt-2 footer-credit">
-            <p>Crafted with <i class="fas fa-heart heart-icon"></i> for excellence in web development</p>
-        </div>
-    </div>
-</footer>
+<?php if (function_exists('get_instance')) {
+    $ci = &get_instance();
+    $ci->load->view('partials/footer');
+} else {
+    if (isset($this) && method_exists($this->load, 'view')) {
+        $this->load->view('partials/footer');
+    }
+    }
+    ?>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="<?php echo htmlspecialchars(function_exists('base_url') ? base_url('assets/js/portfolio.js') : '/assets/js/portfolio.js'); ?>" data-asset-path="<?php echo htmlspecialchars(base_url('assets/img/'), ENT_QUOTES, 'UTF-8'); ?>"></script>
