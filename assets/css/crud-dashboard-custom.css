@@ -1734,6 +1734,31 @@ body::before {
   flex-wrap: wrap;
 }
 
+/* Home section: use same layout as other table sections so content
+   expands to the card width instead of being centered in the page. */
+#home-section .table-section-wrapper {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+#home-section .table-overflow-wrapper {
+  /* don't center the inner table — allow it to flow like other sections */
+  display: block;
+  min-height: 0;
+  padding: 0.75rem 1rem;
+  box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+  #home-section .table-overflow-wrapper {
+    padding: 0.5rem;
+  }
+}
+
 /* Search filter section with buttons on right */
 .search-filter-section {
   display: flex;

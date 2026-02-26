@@ -56,9 +56,10 @@
 
     <!-- HOME SECTION -->
     <div class="section-content section-content-hidden" id="home-section">
-      <div class="col-lg-12 col-md-6 col-sm-12">
-        <div class="table-section-wrapper">
-          <div class="table-overflow-wrapper">
+      <div class="col-12">
+        <div class="table-section">
+          <div class="table-section-wrapper">
+            <div class="table-overflow-wrapper">
             <table class="table table-borderless">
               <thead>
                 <tr>
@@ -96,6 +97,7 @@
                 </tr>
               </tbody>
             </table>
+            </div>
           </div>
         </div>
       </div>
