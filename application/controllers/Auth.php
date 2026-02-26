@@ -65,6 +65,10 @@ class Auth extends CI_Controller {
                 $data['error'] = 'Please enter a valid email address.';
             } elseif ($password !== $confirm) {
                 $data['error'] = 'Passwords do not match.';
+            } elseif (!preg_match('/\d/', $password)) {
+                $data['error'] = 'Password must include at least one number.';
+            } elseif (!preg_match('/[!@#$%^&*()_+\-=[\]{};\':"\\\\|,.<>\/?]/', $password)) {
+                $data['error'] = 'Password must include at least one special character.';
             } else {
                 // Check uniqueness
                 if ($this->User_model->get_by_username($username)) {

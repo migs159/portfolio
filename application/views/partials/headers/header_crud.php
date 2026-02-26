@@ -5,10 +5,9 @@ $__profile_initial = isset($_SESSION['username']) && $_SESSION['username'] ? str
 ?>
 <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top standardized shadow-sm">
   <div class="container">
-    <a class="navbar-brand d-flex align-items-center" href="<?php echo site_url('portfolio'); ?>" aria-label="Portfolio home">
-      
+    <div class="navbar-brand d-flex align-items-center" aria-label="Portfolio home">
       <span class="brand-text">My Portfolio</span>
-    </a>
+    </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>

@@ -295,9 +295,16 @@
     <div class="section-content" id="projects-section">
       <!-- Search and table section modeled after the provided template -->
       <div class="search-filter-section">
-        <div class="search-wrapper">
+        <div class="search-wrapper" style="position:relative">
           <input type="search" id="projectSearch" class="form-control search-input" placeholder="Search projects by name..." autocomplete="off">
           <div id="projectSearchSuggestions" class="project-search-suggestions d-none" aria-hidden="true"></div>
+          <style>
+            .project-search-suggestions{position:absolute;left:0;right:0;top:100%;z-index:1100;background:#fff;border:1px solid rgba(0,0,0,.08);box-shadow:0 6px 18px rgba(0,0,0,.06);max-height:240px;overflow:auto;border-radius:6px;margin-top:6px}
+            .project-search-suggestions .suggestion-item{padding:10px 12px;cursor:pointer;border-bottom:1px solid rgba(0,0,0,.03)}
+            .project-search-suggestions .suggestion-item:last-child{border-bottom:0}
+            .project-search-suggestions .suggestion-item:hover{background:#f6f8fa}
+            .project-search-suggestions .suggestion-highlight{font-weight:600}
+          </style>
         </div>
         <div class="filter-actions">
           <button class="btn-pill btn-primary-custom" data-bs-toggle="modal" data-bs-target="#quickCreateModal"><i class="fas fa-plus me-2"></i>Create Project</button>

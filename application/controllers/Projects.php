@@ -95,6 +95,23 @@ class Projects extends CI_Controller {
                     $payload['type'] = [];
                 }
                 
+                // Check for duplicate project title before attempting upload/insert
+                $titleCheck = isset($payload['title']) ? trim($payload['title']) : '';
+                if ($titleCheck !== '') {
+                    $existing = $this->Project_model->exists_by_title($titleCheck);
+                    if ($existing) {
+                        if ($this->input->is_ajax_request()) {
+                            header('Content-Type: application/json');
+                            http_response_code(409);
+                            echo json_encode(['success' => false, 'message' => 'A project with that title already exists.']);
+                            return;
+                        }
+                        $this->session->set_flashdata('error', 'A project with that title already exists.');
+                        redirect('projects/index?embedded=1');
+                        return;
+                    }
+                }
+
                 // Handle file upload if image file was provided
                 if ($_FILES && isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                     $uploadedPath = $this->handleImageUpload($_FILES['image']);

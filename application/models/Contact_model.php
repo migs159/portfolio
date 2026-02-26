@@ -4,6 +4,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Contact_model extends CI_Model {
     protected $table = 'contacts';
 
+    protected function has_deleted_at()
+    {
+        return $this->db->field_exists('deleted_at', $this->table);
+    }
+
     public function __construct()
     {
         parent::__construct();
@@ -15,13 +20,11 @@ class Contact_model extends CI_Model {
      */
     public function get_by_user($user_id)
     {
-        return $this->db
-            ->where('user_id', $user_id)
-            ->where('deleted_at', NULL)
-            ->order_by('sort_order', 'ASC')
-            ->order_by('id', 'ASC')
-            ->get($this->table)
-            ->result_array();
+        $qb = $this->db->where('user_id', $user_id);
+        if ($this->has_deleted_at()) {
+            $qb->where('deleted_at', NULL);
+        }
+        return $qb->order_by('sort_order', 'ASC')->order_by('id', 'ASC')->get($this->table)->result_array();
     }
 
     /**
@@ -29,11 +32,11 @@ class Contact_model extends CI_Model {
      */
     public function get($id)
     {
-        return $this->db
-            ->where('id', $id)
-            ->where('deleted_at', NULL)
-            ->get($this->table)
-            ->row_array();
+        $qb = $this->db->where('id', $id);
+        if ($this->has_deleted_at()) {
+            $qb->where('deleted_at', NULL);
+        }
+        return $qb->get($this->table)->row_array();
     }
 
     /**
@@ -41,12 +44,11 @@ class Contact_model extends CI_Model {
      */
     public function get_by_type($user_id, $type)
     {
-        return $this->db
-            ->where('user_id', $user_id)
-            ->where('type', $type)
-            ->where('deleted_at', NULL)
-            ->get($this->table)
-            ->row_array();
+        $qb = $this->db->where('user_id', $user_id)->where('type', $type);
+        if ($this->has_deleted_at()) {
+            $qb->where('deleted_at', NULL);
+        }
+        return $qb->get($this->table)->row_array();
     }
 
     /**
@@ -93,7 +95,10 @@ class Contact_model extends CI_Model {
      */
     public function delete($id)
     {
-        $this->db->where('id', $id);
-        return $this->db->update($this->table, ['deleted_at' => date('Y-m-d H:i:s')]);
+        if ($this->has_deleted_at()) {
+            $this->db->where('id', $id);
+            return $this->db->update($this->table, ['deleted_at' => date('Y-m-d H:i:s')]);
+        }
+        return $this->db->where('id', $id)->delete($this->table);
     }
 }

@@ -53,8 +53,8 @@
         </div>
         <div class="mb-3">
           <label class="form-label">Password</label>
-          <input name="password" type="password" class="form-control" required>
-        </div>
+            <input name="password" type="password" class="form-control" required pattern="(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':&quot;\\|,.<>\/?]).+" title="Password must include at least one number and one special character">
+         
         <div class="mb-3">
           <label class="form-label">Confirm Password</label>
           <input name="confirm" type="password" class="form-control" required>

@@ -25,7 +25,11 @@ class Project_model extends CI_Model {
     protected function makeUniqueSlug($baseSlug)
     {
         // Check if slug already exists (using get() instead of count_all_results for reliability)
-        $query = $this->db->select('id')->where('slug', $baseSlug)->where('deleted_at', NULL)->get($this->table, 1);
+        $qb = $this->db->select('id')->where('slug', $baseSlug);
+        if ($this->db->field_exists('deleted_at', $this->table)) {
+            $qb->where('deleted_at', NULL);
+        }
+        $query = $qb->get($this->table, 1);
         
         if ($query->num_rows() === 0) {
             return $baseSlug;
@@ -38,7 +42,11 @@ class Project_model extends CI_Model {
     public function get_all()
     {
         // Sort by featured DESC (featured first), then by created_at DESC (newest first)
-        $projects = $this->db->where('deleted_at', NULL)->order_by('featured', 'DESC')->order_by('created_at', 'DESC')->get($this->table)->result_array();
+        $qb = $this->db;
+        if ($this->db->field_exists('deleted_at', $this->table)) {
+            $qb = $qb->where('deleted_at', NULL);
+        }
+        $projects = $qb->order_by('featured', 'DESC')->order_by('created_at', 'DESC')->get($this->table)->result_array();
         
         // Decode the type JSON field for each project
         foreach ($projects as &$project) {
@@ -55,7 +63,11 @@ class Project_model extends CI_Model {
 
     public function get($id)
     {
-        $project = $this->db->where('id', $id)->where('deleted_at', NULL)->get($this->table)->row_array();
+        $qb = $this->db->where('id', $id);
+        if ($this->db->field_exists('deleted_at', $this->table)) {
+            $qb->where('deleted_at', NULL);
+        }
+        $project = $qb->get($this->table)->row_array();
         
         // Decode the type JSON field back to an array for use in forms
         if ($project && isset($project['type']) && !empty($project['type'])) {
@@ -109,6 +121,21 @@ class Project_model extends CI_Model {
         }
     }
 
+    /**
+     * Check whether a non-deleted project with the given title already exists.
+     * Returns the project row array if found, or null otherwise.
+     */
+    public function exists_by_title($title)
+    {
+        if ($title === null || $title === '') return null;
+        $qb = $this->db->where('title', $title);
+        if ($this->db->field_exists('deleted_at', $this->table)) {
+            $qb->where('deleted_at', NULL);
+        }
+        $query = $qb->get($this->table, 1);
+        return $query->num_rows() ? $query->row_array() : null;
+    }
+
     public function update($id, $payload)
     {
         $now = date('Y-m-d H:i:s');
@@ -117,7 +144,11 @@ class Project_model extends CI_Model {
         if (isset($payload['slug'])) {
             $baseSlug = $payload['slug'] !== '' ? $payload['slug'] : $this->slugify($payload['title'] ?? 'project');
             // When updating, check for duplicate but exclude current record
-            $existing = $this->db->where('slug', $baseSlug)->where('id !=', $id)->where('deleted_at', NULL)->count_all_results($this->table);
+            $qb = $this->db->where('slug', $baseSlug)->where('id !=', $id);
+            if ($this->db->field_exists('deleted_at', $this->table)) {
+                $qb->where('deleted_at', NULL);
+            }
+            $existing = $qb->count_all_results($this->table);
             $data['slug'] = ($existing === 0) ? $baseSlug : ($baseSlug . '-' . time());
         }
         // Handle type array (framework/language selections)
@@ -150,7 +181,11 @@ class Project_model extends CI_Model {
     {
         // Soft delete: mark as deleted instead of removing the record
         $now = date('Y-m-d H:i:s');
-        $this->db->where('id', $id);
-        return (bool) $this->db->update($this->table, ['deleted_at' => $now]);
+        if ($this->db->field_exists('deleted_at', $this->table)) {
+            $this->db->where('id', $id);
+            return (bool) $this->db->update($this->table, ['deleted_at' => $now]);
+        }
+        // fallback to hard delete
+        return (bool) $this->db->where('id', $id)->delete($this->table);
     }
 }

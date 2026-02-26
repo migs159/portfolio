@@ -44,21 +44,37 @@ class User_model extends CI_Model {
         $fullname = '';
         if (!empty($data['fullname'])) {
             $fullname = $data['fullname'];
-        } else {
-            $first = isset($data['first_name']) ? trim($data['first_name']) : '';
-            $last  = isset($data['last_name']) ? trim($data['last_name']) : '';
+        }
+
+        $first = isset($data['first_name']) ? trim($data['first_name']) : '';
+        $last  = isset($data['last_name']) ? trim($data['last_name']) : '';
+        // prefer provided fullname, otherwise build from first/last
+        if (empty($fullname)) {
             $fullname = trim($first . ' ' . $last);
         }
 
+        // Base insert fields
         $insert = [
             'username' => isset($data['username']) ? $data['username'] : null,
             'password' => password_hash($data['password'], PASSWORD_BCRYPT),
             'email'    => isset($data['email']) ? $data['email'] : null,
-            'fullname' => $fullname,
             'role'     => isset($data['role']) ? $data['role'] : 'user',
             'created_at' => $now,
             'updated_at' => null,
         ];
+
+        // If the legacy `fullname` column exists, populate it; otherwise populate `first_name`/`last_name` if available
+        if ($this->db->field_exists('fullname', 'users')) {
+            $insert['fullname'] = $fullname;
+        } else {
+            // Add first_name/last_name if they exist in the table
+            if ($this->db->field_exists('first_name', 'users')) {
+                $insert['first_name'] = $first;
+            }
+            if ($this->db->field_exists('last_name', 'users')) {
+                $insert['last_name'] = $last;
+            }
+        }
 
         if ($this->db->insert('users', $insert)) {
             return $this->db->insert_id();
