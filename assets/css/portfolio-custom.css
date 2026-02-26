@@ -519,6 +519,11 @@ section:nth-child(even) {
     image-rendering:crisp-edges;
 }
 
+.project-img.placeholder-img {
+    height: 160px;
+    background: #f3f4f6;
+    display: block;
+}
 .project-card .card-img-top.calculator-img {
     height:160px;
     max-height:160px;

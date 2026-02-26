@@ -60,14 +60,14 @@ if ($featured) : ?>
             </div>
         </div>
     </div>
-<?php else: ?>
-    <div class="card project-card h-100">
+        <?php else: ?>
+            <div class="card project-card h-100">
         <?php if ($img): ?>
             <a href="<?php echo htmlspecialchars($url); ?>" target="_blank" rel="noopener" class="stretched-link link-overlay">
                 <img src="<?php echo htmlspecialchars($img ?: 'https://via.placeholder.com/800x450?text=Project'); ?>" class="card-img-top project-img" alt="<?php echo htmlspecialchars($title); ?>">
             </a>
         <?php else: ?>
-            <div class="card-img-top project-img" style="height:160px;background:#f3f4f6"></div>
+            <div class="card-img-top project-img placeholder-img"></div>
         <?php endif; ?>
         <div class="card-body">
             <h5 class="card-title"><?php echo htmlspecialchars($title); ?></h5>

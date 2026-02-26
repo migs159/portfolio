@@ -13,7 +13,7 @@
 <?php if (function_exists('get_instance')) { $ci = &get_instance(); $ci->load->view('partials/header_crud'); } else { if (isset($this) && method_exists($this->load,'view')) { $this->load->view('partials/header_crud'); } } ?>
 
 <div class="container py-4">
-  <div class="card mx-auto" style="max-width:720px;">
+  <div class="card mx-auto profile-card-max">
     <div class="card-body text-center">
       <div class="profile-initial-large mb-3"><?php echo htmlspecialchars(isset($__profile_initial) ? $__profile_initial : ($this->session->userdata('username') ? strtoupper(substr($this->session->userdata('username'),0,1)) : 'U')); ?></div>
       <h3><?php echo htmlspecialchars(isset($user['username']) ? $user['username'] : ($this->session->userdata('username') ?: 'User')); ?></h3>

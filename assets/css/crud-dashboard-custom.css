@@ -233,6 +233,34 @@ body {
   color: var(--color-text-muted);
 }
 
+/* Project search suggestions (moved from inline <style> in view) */
+.search-wrapper { position: relative; }
+.project-search-suggestions{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  z-index: 1100;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,.08);
+  box-shadow: 0 6px 18px rgba(0,0,0,.06);
+  max-height: 240px;
+  overflow: auto;
+  border-radius: 6px;
+  margin-top: 6px;
+}
+.project-search-suggestions .suggestion-item{
+  padding: 10px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(0,0,0,.03);
+}
+.project-search-suggestions .suggestion-item:last-child{ border-bottom: 0; }
+.project-search-suggestions .suggestion-item:hover{ background: #f6f8fa; }
+.project-search-suggestions .suggestion-highlight{ font-weight: 600; }
+
+/* Utility for profile card max width */
+.profile-card-max { max-width: 720px; }
+
 .btn-actions {
   display: flex;
   gap: 0.5rem;
