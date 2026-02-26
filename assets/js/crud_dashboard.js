@@ -1355,3 +1355,52 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
+// Project search suggestions (client-side, shows after 3 characters)
+document.addEventListener('DOMContentLoaded', function(){
+  try{
+    var input = document.getElementById('projectSearch');
+    var suggestionsEl = document.getElementById('projectSearchSuggestions');
+    if(!input || !suggestionsEl) return;
+
+    // Collect project titles from the projects table
+    var titleEls = Array.from(document.querySelectorAll('#projects-section .project-title-cell'));
+    var titles = titleEls.map(function(el){ return (el.textContent || '').trim(); }).filter(Boolean);
+    titles = Array.from(new Set(titles)); // unique
+
+    function escapeHtml(s){ return (''+s).replace(/[&<>"]|'/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"})[c]; }); }
+
+    input.addEventListener('input', function(){
+      var q = (this.value || '').trim();
+      suggestionsEl.innerHTML = '';
+      suggestionsEl.classList.add('d-none');
+      if(q.length < 3) return;
+      var ql = q.toLowerCase();
+      var matches = titles.filter(function(t){ return t.toLowerCase().indexOf(ql) !== -1; }).slice(0, 10);
+      if(matches.length === 0) return;
+
+      matches.forEach(function(m){
+        var idx = m.toLowerCase().indexOf(ql);
+        var item = document.createElement('div');
+        item.className = 'suggestion-item';
+        if(idx !== -1){
+          var before = m.substring(0, idx);
+          var match = m.substring(idx, idx + q.length);
+          var after = m.substring(idx + q.length);
+          item.innerHTML = escapeHtml(before) + '<span class="suggestion-highlight">' + escapeHtml(match) + '</span>' + escapeHtml(after);
+        } else {
+          item.textContent = m;
+        }
+
+        // Click (use mousedown to avoid blur before click on some browsers)
+        item.addEventListener('mousedown', function(ev){ ev.preventDefault(); input.value = m; input.dispatchEvent(new Event('input', { bubbles: true })); suggestionsEl.classList.add('d-none'); });
+        suggestionsEl.appendChild(item);
+      });
+
+      suggestionsEl.classList.remove('d-none');
+    });
+
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', function(ev){ if(!suggestionsEl.contains(ev.target) && ev.target !== input) suggestionsEl.classList.add('d-none'); });
+  }catch(e){ console.warn('Project suggestions init error', e); }
+});
+
